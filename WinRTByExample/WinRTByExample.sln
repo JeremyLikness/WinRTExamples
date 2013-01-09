@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{559FBC20-0AF5-4DA5-B3C9-3E4DE5613A8B}"
+	ProjectSection(SolutionItems) = preProject
+		CommonAssemblyInfo.cs = CommonAssemblyInfo.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter1", "Chapter1", "{FEE7601A-BE47-4027-8E69-15D831CE7FDB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopWinRT", "DesktopWinRT\DesktopWinRT.csproj", "{341DD961-5647-4163-9579-0B77A08180A4}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 2
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs04
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = DesktopWinRT\\DesktopWinRT.csproj
+		SccProjectTopLevelParentUniqueName1 = WinRTByExample.sln
+		SccProjectName1 = DesktopWinRT
+		SccLocalPath1 = DesktopWinRT
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{341DD961-5647-4163-9579-0B77A08180A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{341DD961-5647-4163-9579-0B77A08180A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{341DD961-5647-4163-9579-0B77A08180A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{341DD961-5647-4163-9579-0B77A08180A4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{341DD961-5647-4163-9579-0B77A08180A4} = {FEE7601A-BE47-4027-8E69-15D831CE7FDB}
+	EndGlobalSection
+EndGlobal
