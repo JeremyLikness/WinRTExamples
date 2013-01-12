@@ -7,7 +7,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyright("Copyright (c) Jeremy Likness 2013")]
 [assembly: AssemblyTrademark("")]
 
+#if !NETFX_CORE
 [assembly: CLSCompliant(true)]
+#endif
 
 [assembly: ComVisible(false)]
 
