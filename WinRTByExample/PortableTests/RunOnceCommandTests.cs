@@ -28,7 +28,7 @@ namespace PortableTests
             var target = new RunOnceCommand(() => { });
             Assert.IsTrue(
                 target.CanExecute(null),
-                "Test failed: can execute should return true when command has not been execute.");
+                "Test failed: can execute should return true when command has not been executed.");
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace PortableTests
             target.Execute(null);
             Assert.IsFalse(
                 target.CanExecute(null),
-                "Test failed: can execute should return false when command has been execute.");
+                "Test failed: can execute should return false when command has been executed.");
         }
 
         /// <summary>
