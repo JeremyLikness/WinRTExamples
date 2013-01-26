@@ -11,7 +11,9 @@ using System.Runtime.InteropServices;
 [assembly: CLSCompliant(true)]
 #endif
 
+#if !PORTABLE
 [assembly: ComVisible(false)]
+#endif
 
 [assembly: AssemblyVersion("1.0.0.0")]
 
