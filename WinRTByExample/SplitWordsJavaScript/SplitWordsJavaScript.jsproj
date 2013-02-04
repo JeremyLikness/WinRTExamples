@@ -57,11 +57,19 @@
     <AppxManifest Include="package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <Content Include="..\Common\Logo.png">
+      <Link>images\Logo.png</Link>
+    </Content>
+    <Content Include="..\Common\SmallLogo.png">
+      <Link>images\SmallLogo.png</Link>
+    </Content>
+    <Content Include="..\Common\SplashScreen.png">
+      <Link>images\SplashScreen.png</Link>
+    </Content>
+    <Content Include="..\Common\StoreLogo.png">
+      <Link>images\StoreLogo.png</Link>
+    </Content>
     <Content Include="default.html" />
-    <Content Include="images\logo.png" />
-    <Content Include="images\smalllogo.png" />
-    <Content Include="images\splashscreen.png" />
-    <Content Include="images\storelogo.png" />
     <Content Include="js\default.js" />
     <Content Include="css\default.css" />
     <None Include="SplitWordsJavaScript_TemporaryKey.pfx" />
@@ -71,6 +79,9 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MyLibrary\MyLibrary.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="images\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\$(WMSJSProjectDirectory)\Microsoft.VisualStudio.$(WMSJSProject).targets" />
   <!-- To modify your build process, add your task inside one of the targets below then uncomment
