@@ -28,31 +28,19 @@ namespace DataBindingExample
             "Percentage", typeof(double), typeof(DependencyModel), new PropertyMetadata(0.0, OnPropertyChange));
 
         /// <summary>
-        /// The get percentage.
+        /// Gets or sets the percentage.
         /// </summary>
-        /// <param name="obj">
-        /// The object.
-        /// </param>
-        /// <returns>
-        /// The <see cref="double"/>.
-        /// </returns>
-        public static double GetPercentage(DependencyObject obj)
+        public double Percentage
         {
-            return (double)obj.GetValue(PercentageProperty);
-        }
+            get
+            {
+                return (double)this.GetValue(PercentageProperty);
+            }
 
-        /// <summary>
-        /// The set percentage.
-        /// </summary>
-        /// <param name="obj">
-        /// The object.
-        /// </param>
-        /// <param name="value">
-        /// The value.
-        /// </param>
-        public static void SetPercentage(DependencyObject obj, double value)
-        {
-            obj.SetValue(PercentageProperty, value);
+            set
+            {
+                this.SetValue(PercentageProperty, value);
+            }
         }
 
         /// <summary>
