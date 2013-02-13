@@ -50,9 +50,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataBindingExample", "DataB
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimationsExample", "AnimationsExample\AnimationsExample.csproj", "{416B112A-AF75-4C3B-9C25-229A882F3BBE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualStateExample", "VisualStateExample\VisualStateExample.csproj", "{BBE41617-5A8C-4939-8DAE-C3B6D1C4E2C6}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 18
+		SccNumberOfProjects = 19
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs04
 		SccLocalPath0 = .
@@ -124,6 +126,10 @@ Global
 		SccProjectTopLevelParentUniqueName17 = WinRTByExample.sln
 		SccProjectName17 = AnimationsExample
 		SccLocalPath17 = AnimationsExample
+		SccProjectUniqueName18 = VisualStateExample\\VisualStateExample.csproj
+		SccProjectTopLevelParentUniqueName18 = WinRTByExample.sln
+		SccProjectName18 = VisualStateExample
+		SccLocalPath18 = VisualStateExample
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -456,6 +462,30 @@ Global
 		{416B112A-AF75-4C3B-9C25-229A882F3BBE}.Release|x86.ActiveCfg = Release|x86
 		{416B112A-AF75-4C3B-9C25-229A882F3BBE}.Release|x86.Build.0 = Release|x86
 		{416B112A-AF75-4C3B-9C25-229A882F3BBE}.Release|x86.Deploy.0 = Release|x86
+		{BBE41617-5A8C-4939-8DAE-C3B6D1C4E2C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBE41617-5A8C-4939-8DAE-C3B6D1C4E2C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBE41617-5A8C-4939-8DAE-C3B6D1C4E2C6}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{BBE41617-5A8C-4939-8DAE-C3B6D1C4E2C6}.Debug|ARM.ActiveCfg = Debug|ARM
+		{BBE41617-5A8C-4939-8DAE-C3B6D1C4E2C6}.Debug|ARM.Build.0 = Debug|ARM
+		{BBE41617-5A8C-4939-8DAE-C3B6D1C4E2C6}.Debug|ARM.Deploy.0 = Debug|ARM
+		{BBE41617-5A8C-4939-8DAE-C3B6D1C4E2C6}.Debug|x64.ActiveCfg = Debug|x64
+		{BBE41617-5A8C-4939-8DAE-C3B6D1C4E2C6}.Debug|x64.Build.0 = Debug|x64
+		{BBE41617-5A8C-4939-8DAE-C3B6D1C4E2C6}.Debug|x64.Deploy.0 = Debug|x64
+		{BBE41617-5A8C-4939-8DAE-C3B6D1C4E2C6}.Debug|x86.ActiveCfg = Debug|x86
+		{BBE41617-5A8C-4939-8DAE-C3B6D1C4E2C6}.Debug|x86.Build.0 = Debug|x86
+		{BBE41617-5A8C-4939-8DAE-C3B6D1C4E2C6}.Debug|x86.Deploy.0 = Debug|x86
+		{BBE41617-5A8C-4939-8DAE-C3B6D1C4E2C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBE41617-5A8C-4939-8DAE-C3B6D1C4E2C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBE41617-5A8C-4939-8DAE-C3B6D1C4E2C6}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{BBE41617-5A8C-4939-8DAE-C3B6D1C4E2C6}.Release|ARM.ActiveCfg = Release|ARM
+		{BBE41617-5A8C-4939-8DAE-C3B6D1C4E2C6}.Release|ARM.Build.0 = Release|ARM
+		{BBE41617-5A8C-4939-8DAE-C3B6D1C4E2C6}.Release|ARM.Deploy.0 = Release|ARM
+		{BBE41617-5A8C-4939-8DAE-C3B6D1C4E2C6}.Release|x64.ActiveCfg = Release|x64
+		{BBE41617-5A8C-4939-8DAE-C3B6D1C4E2C6}.Release|x64.Build.0 = Release|x64
+		{BBE41617-5A8C-4939-8DAE-C3B6D1C4E2C6}.Release|x64.Deploy.0 = Release|x64
+		{BBE41617-5A8C-4939-8DAE-C3B6D1C4E2C6}.Release|x86.ActiveCfg = Release|x86
+		{BBE41617-5A8C-4939-8DAE-C3B6D1C4E2C6}.Release|x86.Build.0 = Release|x86
+		{BBE41617-5A8C-4939-8DAE-C3B6D1C4E2C6}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -478,5 +508,6 @@ Global
 		{75C875CA-7C49-48B0-B876-BC66D1012891} = {8826C3A0-45EC-454A-BB13-A20E94FC0FF4}
 		{441B9B41-C085-4422-B823-477DAA380A1C} = {6F23A0BB-209C-49C7-9345-2D7782016FD5}
 		{416B112A-AF75-4C3B-9C25-229A882F3BBE} = {6F23A0BB-209C-49C7-9345-2D7782016FD5}
+		{BBE41617-5A8C-4939-8DAE-C3B6D1C4E2C6} = {6F23A0BB-209C-49C7-9345-2D7782016FD5}
 	EndGlobalSection
 EndGlobal
