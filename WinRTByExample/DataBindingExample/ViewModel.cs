@@ -26,9 +26,28 @@ namespace DataBindingExample
         private double percentage;
 
         /// <summary>
-        /// The property changed.
+        /// The property changed event handler.
         /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged
+        {
+          add
+          {
+              Debug.WriteLine("Property changed was subscribed to.");
+              this.EventHandler += value;
+          }
+
+          remove
+          {
+              Debug.WriteLine("Property changed was unsubscribed.");
+              this.EventHandler -= value;
+          }
+        }
+
+        /// <summary>
+        /// The _event handler.
+        /// </summary>
+        [UsedImplicitly]
+        private event PropertyChangedEventHandler EventHandler = delegate { };        
 
         /// <summary>
         /// Gets or sets the percentage.
@@ -62,12 +81,8 @@ namespace DataBindingExample
         /// </param>
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChangedEventHandler handler = this.PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
+        {            
+            this.EventHandler(this, new PropertyChangedEventArgs(propertyName));            
         }
     }
 }
