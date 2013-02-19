@@ -52,9 +52,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimationsExample", "Animat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualStateExample", "VisualStateExample\VisualStateExample.csproj", "{BBE41617-5A8C-4939-8DAE-C3B6D1C4E2C6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TemplatesExample", "TemplatesExample\TemplatesExample.csproj", "{CD1B34E1-216A-4243-BE99-7D29A51A5A2E}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 19
+		SccNumberOfProjects = 20
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs04
 		SccLocalPath0 = .
@@ -130,6 +132,10 @@ Global
 		SccProjectTopLevelParentUniqueName18 = WinRTByExample.sln
 		SccProjectName18 = VisualStateExample
 		SccLocalPath18 = VisualStateExample
+		SccProjectUniqueName19 = TemplatesExample\\TemplatesExample.csproj
+		SccProjectTopLevelParentUniqueName19 = WinRTByExample.sln
+		SccProjectName19 = TemplatesExample
+		SccLocalPath19 = TemplatesExample
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -486,6 +492,30 @@ Global
 		{BBE41617-5A8C-4939-8DAE-C3B6D1C4E2C6}.Release|x86.ActiveCfg = Release|x86
 		{BBE41617-5A8C-4939-8DAE-C3B6D1C4E2C6}.Release|x86.Build.0 = Release|x86
 		{BBE41617-5A8C-4939-8DAE-C3B6D1C4E2C6}.Release|x86.Deploy.0 = Release|x86
+		{CD1B34E1-216A-4243-BE99-7D29A51A5A2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD1B34E1-216A-4243-BE99-7D29A51A5A2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD1B34E1-216A-4243-BE99-7D29A51A5A2E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{CD1B34E1-216A-4243-BE99-7D29A51A5A2E}.Debug|ARM.ActiveCfg = Debug|ARM
+		{CD1B34E1-216A-4243-BE99-7D29A51A5A2E}.Debug|ARM.Build.0 = Debug|ARM
+		{CD1B34E1-216A-4243-BE99-7D29A51A5A2E}.Debug|ARM.Deploy.0 = Debug|ARM
+		{CD1B34E1-216A-4243-BE99-7D29A51A5A2E}.Debug|x64.ActiveCfg = Debug|x64
+		{CD1B34E1-216A-4243-BE99-7D29A51A5A2E}.Debug|x64.Build.0 = Debug|x64
+		{CD1B34E1-216A-4243-BE99-7D29A51A5A2E}.Debug|x64.Deploy.0 = Debug|x64
+		{CD1B34E1-216A-4243-BE99-7D29A51A5A2E}.Debug|x86.ActiveCfg = Debug|x86
+		{CD1B34E1-216A-4243-BE99-7D29A51A5A2E}.Debug|x86.Build.0 = Debug|x86
+		{CD1B34E1-216A-4243-BE99-7D29A51A5A2E}.Debug|x86.Deploy.0 = Debug|x86
+		{CD1B34E1-216A-4243-BE99-7D29A51A5A2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD1B34E1-216A-4243-BE99-7D29A51A5A2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD1B34E1-216A-4243-BE99-7D29A51A5A2E}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{CD1B34E1-216A-4243-BE99-7D29A51A5A2E}.Release|ARM.ActiveCfg = Release|ARM
+		{CD1B34E1-216A-4243-BE99-7D29A51A5A2E}.Release|ARM.Build.0 = Release|ARM
+		{CD1B34E1-216A-4243-BE99-7D29A51A5A2E}.Release|ARM.Deploy.0 = Release|ARM
+		{CD1B34E1-216A-4243-BE99-7D29A51A5A2E}.Release|x64.ActiveCfg = Release|x64
+		{CD1B34E1-216A-4243-BE99-7D29A51A5A2E}.Release|x64.Build.0 = Release|x64
+		{CD1B34E1-216A-4243-BE99-7D29A51A5A2E}.Release|x64.Deploy.0 = Release|x64
+		{CD1B34E1-216A-4243-BE99-7D29A51A5A2E}.Release|x86.ActiveCfg = Release|x86
+		{CD1B34E1-216A-4243-BE99-7D29A51A5A2E}.Release|x86.Build.0 = Release|x86
+		{CD1B34E1-216A-4243-BE99-7D29A51A5A2E}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -509,5 +539,6 @@ Global
 		{441B9B41-C085-4422-B823-477DAA380A1C} = {6F23A0BB-209C-49C7-9345-2D7782016FD5}
 		{416B112A-AF75-4C3B-9C25-229A882F3BBE} = {6F23A0BB-209C-49C7-9345-2D7782016FD5}
 		{BBE41617-5A8C-4939-8DAE-C3B6D1C4E2C6} = {6F23A0BB-209C-49C7-9345-2D7782016FD5}
+		{CD1B34E1-216A-4243-BE99-7D29A51A5A2E} = {6F23A0BB-209C-49C7-9345-2D7782016FD5}
 	EndGlobalSection
 EndGlobal
