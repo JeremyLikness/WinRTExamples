@@ -14,6 +14,11 @@
             <Style x:Key="DefaultEllipse" TargetType="Ellipse">
                 <Setter Property="Height" Value="100"></Setter>
                 <Setter Property="Width" Value="100"></Setter>
+                <Setter Property="RenderTransform">
+                    <Setter.Value>
+                        <TranslateTransform/>
+                    </Setter.Value>
+                </Setter>
                 <Setter Property="Fill" Value="Coral"></Setter>
                 <Setter Property="Stroke" Value="Chocolate"></Setter>
                 <Setter Property="StrokeThickness" Value="2"></Setter>
@@ -54,9 +59,6 @@
         <Ellipse x:Name="MainEllipse" HorizontalAlignment="Center" VerticalAlignment="Center"
                  Tapped="MainEllipse_OnTapped"
                  Style="{StaticResource DefaultEllipse}">  
-            <Ellipse.RenderTransform>
-                <TranslateTransform/>
-            </Ellipse.RenderTransform>
         </Ellipse>
     </Grid>
 </UserControl>
