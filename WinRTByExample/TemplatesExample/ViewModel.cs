@@ -46,15 +46,15 @@ namespace TemplatesExample
             this.AddMessage = new AddMessageCommand(this.GenerateMessage);
             this.Messages = new ObservableCollection<MessageInstance>();
 
-            if (!Windows.ApplicationModel.DesignMode.DesignModeEnabled)
-            {
-                return;
-            }
+        if (!Windows.ApplicationModel.DesignMode.DesignModeEnabled)
+        {
+            return;
+        }
 
-            for (var x = 0; x < 5; x++)
-            {
-                this.AddMessage.Execute(null);
-            }
+        for (var x = 0; x < 5; x++)
+        {
+            this.AddMessage.Execute(null);
+        }
         }
 
         /// <summary>
