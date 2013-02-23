@@ -28,64 +28,71 @@
                                 Style="{StaticResource SubtitleTextStyle}"></TextBlock>
             </DataTemplate>
             <CollectionViewSource x:Name="ShapesGrouped"
-                                  Source="{Binding Source={StaticResource ViewModel}, Path=ShapesGrouped}"
-                                  IsSourceGrouped="True"/>
+                                    Source="{Binding Source={StaticResource ViewModel}, Path=ShapesGrouped}"
+                                    IsSourceGrouped="True"/>
             <CollectionViewSource x:Name="ShapesNotGrouped"
-                                  Source="{Binding Source={StaticResource ViewModel}, Path=ShapesNotGrouped}"
-                                  IsSourceGrouped="False"/>
+                                    Source="{Binding Source={StaticResource ViewModel}, Path=ShapesNotGrouped}"
+                                    IsSourceGrouped="False"/>
         </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <ComboBox Width="200" 
-                  HorizontalAlignment="Left" 
-                  Margin="5"
-                  ItemsSource="{Binding Source={StaticResource ViewModel}, Path=States}"
-                  SelectedItem="{Binding Source={StaticResource ViewModel}, Path=CurrentState, Mode=TwoWay}"></ComboBox>
-        <ListBox x:Name="ViewListBox"
-                 Visibility="Visible"
-                 Grid.Row="1" 
-                 ItemsSource="{Binding Source={StaticResource ShapesNotGrouped}}"
-                 ItemTemplate="{StaticResource ShapeTemplate}">
-        </ListBox>
-        <ItemsControl x:Name="ViewItemsControl" 
+        <StackPanel Orientation="Horizontal">
+            <ComboBox Width="200" 
+                        HorizontalAlignment="Left" 
+                        Margin="5"
+                        ItemsSource="{Binding Source={StaticResource ViewModel}, Path=States}"
+                        SelectedItem="{Binding Source={StaticResource ViewModel}, Path=CurrentState, Mode=TwoWay}"></ComboBox>
+            <ComboBox Width="200" 
+                      HorizontalAlignment="Left" 
+                      Margin="5"
+                      ItemsSource="{Binding Source={StaticResource ViewModel}, Path=Stretch}"
+                      SelectedItem="{Binding Source={StaticResource ViewModel}, Path=CurrentStretch, Mode=TwoWay}"></ComboBox>
+        </StackPanel>
+        <Viewbox Grid.Row="1" x:Name="ViewBoxInstance" Stretch="None">
+            <Grid HorizontalAlignment="Center" VerticalAlignment="Center"
+                  Width="2048" Height="1080">
+                <ListBox x:Name="ViewListBox"
+                    Visibility="Visible"
+                    ItemsSource="{Binding Source={StaticResource ShapesNotGrouped}}"
+                    ItemTemplate="{StaticResource ShapeTemplate}">
+                </ListBox>
+                <ItemsControl x:Name="ViewItemsControl" 
                       Visibility="Collapsed"
-                      Grid.Row="1"
                       ItemsSource="{Binding Source={StaticResource ShapesNotGrouped}}"
                       ItemTemplate="{StaticResource ShapeTemplate}"/>
-        <GridView x:Name="ViewGridView"
+                <GridView x:Name="ViewGridView"
                   Visibility="Collapsed"
                   IsSwipeEnabled="True"
-                  Grid.Row="1"
                   ItemsSource="{Binding Source={StaticResource ShapesGrouped}}"
                   ItemTemplate="{StaticResource ShapeTemplate}">
-            <GridView.GroupStyle>
-                <GroupStyle HeaderTemplate="{StaticResource HeaderTemplate}">
-                    <GroupStyle.Panel>
-                        <ItemsPanelTemplate>
-                            <VariableSizedWrapGrid Orientation="Vertical"></VariableSizedWrapGrid>
-                        </ItemsPanelTemplate>
-                    </GroupStyle.Panel>
-                </GroupStyle>
-            </GridView.GroupStyle>
-        </GridView>
-        <ListView x:Name="ViewListView"
+                    <GridView.GroupStyle>
+                        <GroupStyle HeaderTemplate="{StaticResource HeaderTemplate}">
+                            <GroupStyle.Panel>
+                                <ItemsPanelTemplate>
+                                    <VariableSizedWrapGrid Orientation="Vertical"></VariableSizedWrapGrid>
+                                </ItemsPanelTemplate>
+                            </GroupStyle.Panel>
+                        </GroupStyle>
+                    </GridView.GroupStyle>
+                </GridView>
+                <ListView x:Name="ViewListView"
                   Visibility="Collapsed"
                   IsSwipeEnabled="True"
-                  Grid.Row="1"
                   ItemsSource="{Binding Source={StaticResource ShapesGrouped}}"
                   ItemTemplate="{StaticResource ShapeTemplate}">
-            <ListView.GroupStyle>
-                <GroupStyle HeaderTemplate="{StaticResource HeaderTemplate}"/>
-            </ListView.GroupStyle>
-        </ListView>
-        <FlipView x:Name="ViewFlipView"
+                    <ListView.GroupStyle>
+                        <GroupStyle HeaderTemplate="{StaticResource HeaderTemplate}"/>
+                    </ListView.GroupStyle>
+                </ListView>
+                <FlipView x:Name="ViewFlipView"
                   Visibility="Collapsed"
-                  Grid.Row="1"
                   ItemsSource="{Binding Source={StaticResource ShapesNotGrouped}}"
-                  ItemTemplate="{StaticResource ShapeTemplate}">            
-        </FlipView>
+                  ItemTemplate="{StaticResource ShapeTemplate}">
+                </FlipView>
+            </Grid>
+        </Viewbox>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="LayoutStates">
                 <VisualState x:Name="ViewListBoxState"/>

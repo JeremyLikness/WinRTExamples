@@ -36,9 +36,25 @@ namespace LayoutsExample
                                                };
 
         /// <summary>
+        /// The stretch.
+        /// </summary>
+        private readonly string[] stretch = new[]
+                                                {
+                                                    "None", 
+                                                    "Fill", 
+                                                    "Uniform", 
+                                                    "UniformToFill"
+                                                };
+
+        /// <summary>
         /// The current state.
         /// </summary>
         private string state = string.Empty;
+
+        /// <summary>
+        /// The current stretch.
+        /// </summary>
+        private string currentStretch = string.Empty;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewModel"/> class.
@@ -52,16 +68,27 @@ namespace LayoutsExample
 
             if (this.GoToVisualState == null)
             {
-                this.GoToVisualState = state => { };
+                this.GoToVisualState = state => { };                
+            }
+
+            if (this.GoToStretch == null)
+            {
+                this.GoToStretch = stretch => { };
             }
 
             this.CurrentState = this.states[0];
+            this.CurrentStretch = this.stretch[0];
         }
 
         /// <summary>
         /// Gets or sets the delegate to transition to a visual state
         /// </summary>
         public Action<string> GoToVisualState { get; set; }
+
+        /// <summary>
+        /// Gets or sets the delegate to change the stretch mode
+        /// </summary>
+        public Action<string> GoToStretch { get; set; }
 
         /// <summary>
         /// Gets the states.
@@ -98,24 +125,60 @@ namespace LayoutsExample
         }
 
         /// <summary>
+        /// Gets the stretch modes.
+        /// </summary>
+        public IEnumerable<string> Stretch
+        {
+            get
+            {
+                return this.stretch;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the current stretch.
+        /// </summary>
+        public string CurrentStretch
+        {
+            get
+            {
+                return this.currentStretch;
+            }
+
+            set
+            {
+                if (string.IsNullOrEmpty(value) || this.currentStretch.Equals(value))
+                {
+                    return;
+                }
+
+                this.currentStretch = value;
+                this.GoToStretch(value);
+            }
+        }
+
+        /// <summary>
         /// Gets the shapes not grouped.
         /// </summary>
         public IEnumerable<ShapeInstance> ShapesNotGrouped
         {
             get
             {
-                return this.shapes.AsQueryable();
+                return this.shapes;
             }
         }
 
         /// <summary>
         /// Gets the shapes grouped.
         /// </summary>
-        public IOrderedEnumerable<IGrouping<ShapeType, ShapeInstance>> ShapesGrouped
+        public IOrderedEnumerable<IGrouping<ShapeType, 
+            ShapeInstance>> ShapesGrouped
         {
             get
             {
-                return this.shapes.GroupBy(shape => shape.Type).OrderBy(g => g.Key);
+                return this.shapes
+                    .GroupBy(shape => shape.Type)
+                    .OrderBy(g => g.Key);
             }
         }
     }

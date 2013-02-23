@@ -9,7 +9,11 @@
 
 namespace LayoutsExample
 {
+    using System;
+
     using Windows.UI.Xaml;
+    using Windows.UI.Xaml.Controls;
+    using Windows.UI.Xaml.Media;
     using Windows.UI.Xaml.Navigation;
 
     /// <summary>
@@ -41,6 +45,12 @@ namespace LayoutsExample
             if (viewModel != null)
             {
                 viewModel.GoToVisualState = state => VisualStateManager.GoToState(this, state, true);
+                viewModel.GoToStretch =
+                    stretch =>
+                        {
+                            var newStretch = (Stretch)Enum.Parse(typeof(Stretch), stretch);
+                            ViewBoxInstance.SetValue(Viewbox.StretchProperty, newStretch); 
+                        };
             }
         }
 
