@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<head>
+<title>SVG Example</title>
+<meta charset="utf-8" />
+</head>
+<body>
+<h2>Example of SVG Using the WebView Control</h2>
+<svg id="svgelem" height="400" xmlns="http://www.w3.org/2000/svg">
+   <defs>
+      <radialGradient id="gradient" cx="50%" cy="50%" r="50%"
+      fx="50%" fy="50%">
+      <stop offset="0%" style="stop-color:rgb(0,200,0);
+      stop-opacity:0"/>
+      <stop offset="100%" style="stop-color:rgb(255,0,127);
+      stop-opacity:1"/>
+      </radialGradient>
+   </defs>
+   <ellipse cx="200" cy="100" rx="200" ry="100" 
+      style="fill:url(#gradient)" />
+</svg>
+</body>
+</html>
+
