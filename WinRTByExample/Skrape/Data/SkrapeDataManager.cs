@@ -70,11 +70,6 @@ namespace Skrape.Data
         private Uri currentImage;
 
         /// <summary>
-        /// The current paste URL
-        /// </summary>
-        private Uri currentPasteUri;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="SkrapeDataManager"/> class.
         /// </summary>
         public SkrapeDataManager()
@@ -159,23 +154,6 @@ namespace Skrape.Data
         }
 
         /// <summary>
-        /// Gets or sets the current paste uri.
-        /// </summary>
-        public Uri CurrentPasteUri
-        {
-            get
-            {
-                return this.currentPasteUri;
-            }
-
-            set
-            {
-                this.currentPasteUri = value;
-                this.OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
         /// The initialize.
         /// </summary>
         /// <returns>
@@ -187,9 +165,7 @@ namespace Skrape.Data
             {
                 return;
             }
-
-            Windows.ApplicationModel.DataTransfer.Clipboard.ContentChanged += this.ClipboardContentChanged;
-
+            
             foreach (var group in await this.Manager.RestoreGroups())
             {
                 this.groups.Add(group);
@@ -345,28 +321,6 @@ namespace Skrape.Data
             }
         }
 
-        /// <summary>
-        /// The clipboard_ content changed.
-        /// </summary>
-        /// <param name="sender">
-        /// The sender.
-        /// </param>
-        /// <param name="e">
-        /// The e.
-        /// </param>
-        private async void ClipboardContentChanged(object sender, object e)
-        {
-            var clipboardData = Windows.ApplicationModel.DataTransfer.Clipboard.GetContent();
-            if (!clipboardData.Contains(Windows.ApplicationModel.DataTransfer.StandardDataFormats.Uri))
-            {
-                this.CurrentPasteUri = null;
-                return;
-            }
-
-            var uri = await clipboardData.GetUriAsync();
-            this.CurrentPasteUri = uri;
-        }
-        
         /// <summary>
         /// The generate test data method.
         /// </summary>
