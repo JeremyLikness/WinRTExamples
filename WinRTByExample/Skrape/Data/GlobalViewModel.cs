@@ -65,7 +65,7 @@ namespace Skrape.Data
 
             this.PasteCommand = new ActionCommand(
                 async () => await this.Paste(), 
-                () => this.CanPaste);
+                () => true);
         }
 
         /// <summary>
@@ -139,9 +139,9 @@ namespace Skrape.Data
                         ((ActionCommand)this.DeleteCommand).RaiseExecuteChanged();
                         ((ActionCommand)this.FavoriteCommand).RaiseExecuteChanged();
                         ((ActionCommand)this.RefreshCommand).RaiseExecuteChanged();
-                        ((ActionCommand)this.CopyCommand).RaiseExecuteChanged();
-                        ((ActionCommand)this.PasteCommand).RaiseExecuteChanged();
+                        ((ActionCommand)this.CopyCommand).RaiseExecuteChanged();                        
                     };
+
 // ReSharper restore ExplicitCallerInfoArgument
                 this.OnPropertyChanged();
             }
@@ -181,17 +181,6 @@ namespace Skrape.Data
         }
 
         /// <summary>
-        /// Gets a value indicating whether can paste.
-        /// </summary>
-        private bool CanPaste
-        {
-            get
-            {
-                return this.DataManager.CurrentPasteUri != null;
-            }
-        }
-
-        /// <summary>
         /// The on property changed event.
         /// </summary>
         /// <param name="propertyName">
@@ -212,8 +201,9 @@ namespace Skrape.Data
         {
             var package = new DataPackage();
             package.SetText(this.DataManager.CurrentPage.Text);            
+            package.SetHtmlFormat(HtmlFormatHelper.CreateHtmlFormat(this.DataManager.CurrentPage.Html));
             Clipboard.SetContent(package);
-            var dialog = new MessageDialog("The text for the web page was successfully copied to the clipboard.");
+            var dialog = new MessageDialog("The web page was successfully copied to the clipboard.");
             await dialog.ShowAsync();
         }
 
@@ -225,8 +215,28 @@ namespace Skrape.Data
         /// </returns>
         private async Task Paste()
         {
-            await this.DataManager.AddUrl(this.DataManager.CurrentPasteUri);
-            DataManager.CurrentPasteUri = null;
+            MessageDialog dialog;
+            try
+            {
+                var clipboardData = Clipboard.GetContent();
+
+                if (!clipboardData.Contains(StandardDataFormats.Uri))
+                {
+                    dialog = new MessageDialog("There is no URL in the clipboard.");
+                }
+                else
+                {
+                    var uri = await clipboardData.GetUriAsync();
+                    await this.DataManager.AddUrl(uri);
+                    dialog = new MessageDialog("The URL was added.");
+                }
+            }
+            catch (Exception ex)
+            {
+                dialog = new MessageDialog(ex.Message, "An Error Occurred");
+            }
+
+            await dialog.ShowAsync();
         }
 
         /// <summary>

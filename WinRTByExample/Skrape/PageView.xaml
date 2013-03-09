@@ -56,14 +56,14 @@
                               OnContent="Text"
                               Toggled="ToggleSwitch_OnToggled"/>
                 <TextBlock Grid.Row="1"
-                           Margin="6 0 0 0"
+                           Margin="6"
                            Text="Thumbnail"
                            Style="{StaticResource SubtitleTextStyle}"/>
                 <Image Style="{StaticResource ThumbnailStyle}"
                        Grid.Row="2"
                        Source="{Binding ThumbnailPath}"/>
                 <TextBlock Grid.Row="3"
-                           Margin="6 0 0 0"
+                           Margin="6"
                            Text="Images"
                            Style="{StaticResource SubtitleTextStyle}"/>
                 <FlipView SelectionChanged="FlipViewOnSelectionChanged"
