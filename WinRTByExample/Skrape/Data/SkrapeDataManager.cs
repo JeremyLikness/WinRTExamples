@@ -254,6 +254,7 @@ namespace Skrape.Data
             if (group != null)
             {
                 group.Pages.Add(page);
+                await this.Manager.SaveGroup(group);
             }
             else
             {
