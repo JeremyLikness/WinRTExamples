@@ -226,6 +226,7 @@ namespace Skrape.Data
         private async Task Paste()
         {
             await this.DataManager.AddUrl(this.DataManager.CurrentPasteUri);
+            DataManager.CurrentPasteUri = null;
         }
 
         /// <summary>
@@ -241,6 +242,7 @@ namespace Skrape.Data
                 this.dataManager.CurrentImage,
                 this.dataManager.CurrentPage.Id);
             this.dataManager.CurrentPage.ThumbnailPath = uri;
+            await this.DataManager.Manager.SavePage(this.dataManager.CurrentPage);
         }
 
         /// <summary>

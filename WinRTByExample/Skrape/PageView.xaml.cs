@@ -140,7 +140,6 @@ namespace Skrape
         /// </returns>
         private async Task Refresh()
         {
-            ToggleHtml.IsEnabled = false;
             var page = CurrentViewModel.DataManager.CurrentPage;
 
             if (page == null || NetworkInformation.GetInternetConnectionProfile() == null)
@@ -148,12 +147,16 @@ namespace Skrape
                 return;
             }
 
+            ToggleHtml.IsEnabled = false;
+            
             VisualStateManager.GoToState(this, "LoadingState", false);
             VisualStateManager.GoToState(this, "HtmlState", false);
 
             await CurrentViewModel.DataManager.Scraper.GetHtmlForWebPage(page);
             page.Loaded = true;
             await CurrentViewModel.DataManager.Manager.SavePage(page);
+
+            this.WebControl.Navigate(page.Url);
 
             if (!ToggleHtml.IsEnabled)
             {

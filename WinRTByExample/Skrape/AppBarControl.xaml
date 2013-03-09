@@ -19,6 +19,13 @@
                 Command="{Binding Source={StaticResource GlobalResources}, Path=GoHomeCommand}"    
                 HorizontalAlignment="Left"
                 Style="{StaticResource HomeAppBarButtonStyle}"/>
+            <Button x:Name="CopyButton"
+                    Margin="20 0 0 0"
+                    Style="{StaticResource CopyAppBarButtonStyle}"
+                    Command="{Binding Source={StaticResource GlobalResources}, Path=CopyCommand}"/>
+            <Button x:Name="PasteButton"
+                    Style="{StaticResource PasteAppBarButtonStyle}"
+                    Command="{Binding Source={StaticResource GlobalResources}, Path=PasteCommand}"/>
         </StackPanel>
         <StackPanel Grid.Column="1"
                     HorizontalAlignment="Right"
@@ -28,9 +35,6 @@
             <Button x:Name="RefreshButton"
                     Style="{StaticResource RefreshAppBarButtonStyle}"
                     Command="{Binding Source={StaticResource GlobalResources}, Path=RefreshCommand}"/>
-            <Button x:Name="CopyButton"
-                    Style="{StaticResource CopyAppBarButtonStyle}"
-                    Command="{Binding Source={StaticResource GlobalResources}, Path=CopyCommand}"/>
             <Button x:Name="SetButton"
                     Style="{StaticResource FavoriteAppBarButtonStyle}"
                     Command="{Binding Source={StaticResource GlobalResources}, Path=FavoriteCommand}"/>

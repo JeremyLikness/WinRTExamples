@@ -12,15 +12,12 @@ namespace Skrape.Data
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Net;
     using System.Net.Http;
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
     using Skrape.Contracts;
-
-    using Windows.ApplicationModel.DataTransfer;
 
     /// <summary>
     /// The web scraper.
@@ -85,13 +82,15 @@ namespace Skrape.Data
 
                 var images = (await ExtractImagesFromPage(page.Html)).ToArray();
 
-                if (images.Length > 0)
+                if (images.Length <= 0)
                 {
-                    page.Images.Clear();
-                    foreach (var image in images)
-                    {
-                        page.Images.Add(image);
-                    }
+                    return;
+                }
+
+                page.Images.Clear();
+                foreach (var image in images)
+                {
+                    page.Images.Add(image);
                 }
             }
             catch (Exception ex)
