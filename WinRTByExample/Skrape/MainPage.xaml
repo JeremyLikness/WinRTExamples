@@ -118,6 +118,29 @@
                      IsIndeterminate="True"
                      IsEnabled="True"
                      Visibility="Collapsed"/>
+        <Popup x:Name="AddPopup"
+               Grid.RowSpan="2"
+               Grid.ColumnSpan="2"
+               IsLightDismissEnabled="True"
+               HorizontalAlignment="Stretch"
+               VerticalAlignment="Stretch"
+               VerticalOffset="140">
+                <StackPanel Orientation="Horizontal" 
+                            Background="Black" 
+                            Width="9999">
+                    <TextBlock Text="Enter the URL to Add:"
+                           Style="{StaticResource SubtitleTextStyle}"
+                           Margin="60 6 6 6"/>
+                    <TextBox x:Name="NewUrl" 
+                         Width="500" 
+                         Grid.Column="1" 
+                         Margin="12 6 6 6"/>
+                    <Button x:Name="AddButton"
+                        Margin="12 6 6 6"
+                        Content="Add URL"
+                        Click="AddButton_OnClick"/>
+                </StackPanel>
+            </Popup>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="LoadingStates">
                 <VisualState x:Name="Loaded"/>

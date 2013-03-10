@@ -49,11 +49,11 @@ namespace Skrape.Data
 
             this.DeleteCommand = new ActionCommand(
                 async () => await this.Delete(),
-                () => this.DeleteButtonEnabled);
+                () => this.DetailPageEnabled);
 
             this.RefreshCommand = new ActionCommand(
                 async () => await this.RefreshCallback(), 
-                () => this.DeleteButtonEnabled);
+                () => this.DetailPageEnabled);
 
             this.FavoriteCommand = new ActionCommand(
                 async () => await this.MakeFavorite(),
@@ -61,11 +61,16 @@ namespace Skrape.Data
 
             this.CopyCommand = new ActionCommand(
                 async () => await this.Copy(),
-                () => this.DeleteButtonEnabled);
+                () => this.DetailPageEnabled);
 
             this.PasteCommand = new ActionCommand(
                 async () => await this.Paste(), 
                 () => true);
+
+            this.AddCommand = new ActionCommand(
+                () =>
+                    { this.AddCallback(); },
+                () => !this.DetailPageEnabled);
         }
 
         /// <summary>
@@ -82,6 +87,11 @@ namespace Skrape.Data
         /// Gets or sets the delegate to refresh the page
         /// </summary>
         public Func<Task> RefreshCallback { get; set; }
+
+        /// <summary>
+        /// Gets or sets the add callback.
+        /// </summary>
+        public Action AddCallback { get; set; }
 
         /// <summary>
         /// Gets the command to go home
@@ -139,7 +149,8 @@ namespace Skrape.Data
                         ((ActionCommand)this.DeleteCommand).RaiseExecuteChanged();
                         ((ActionCommand)this.FavoriteCommand).RaiseExecuteChanged();
                         ((ActionCommand)this.RefreshCommand).RaiseExecuteChanged();
-                        ((ActionCommand)this.CopyCommand).RaiseExecuteChanged();                        
+                        ((ActionCommand)this.CopyCommand).RaiseExecuteChanged();   
+                        ((ActionCommand)this.AddCommand).RaiseExecuteChanged();
                     };
 
 // ReSharper restore ExplicitCallerInfoArgument
@@ -161,7 +172,7 @@ namespace Skrape.Data
         /// <summary>
         /// Gets a value indicating whether the delete button should be enabled
         /// </summary>
-        private bool DeleteButtonEnabled
+        private bool DetailPageEnabled
         {
             get
             {
@@ -261,7 +272,7 @@ namespace Skrape.Data
         /// <returns>The asynchronous task</returns>
         private async Task Delete()
         {
-            if (!this.DeleteButtonEnabled)
+            if (!this.DetailPageEnabled)
             {
                 return;
             }
