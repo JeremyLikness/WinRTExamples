@@ -9,8 +9,11 @@
 
 namespace Skrape
 {
+    using System;
+
     using Skrape.Data;
 
+    using Windows.UI.Popups;
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
     using Windows.UI.Xaml.Navigation;
@@ -51,6 +54,8 @@ namespace Skrape
             if (!Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
                 await CurrentViewModel.DataManager.Initialize();
+                CurrentViewModel.AddCallback = () =>
+                    { AddPopup.IsOpen = true; };                    
             }
 
             CurrentViewModel.DataManager.CurrentPage = new SkrapedPage();
@@ -85,6 +90,32 @@ namespace Skrape
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
             Frame.GoBack();
+        }
+
+        /// <summary>
+        /// The add button_ on click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private async void AddButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            Uri uri;
+            if (Uri.TryCreate(NewUrl.Text, UriKind.Absolute, out uri))
+            {
+                await CurrentViewModel.DataManager.AddUrl(uri);
+                NewUrl.Text = string.Empty;
+            }
+            else
+            {
+                var dialog = new MessageDialog("The URL was invalid. Try using the format http(s)://something...");
+                await dialog.ShowAsync();
+            }
+            
+            AddPopup.IsOpen = false;
         }
     }
 }

@@ -31,7 +31,8 @@
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
             <Button x:Name="AddButton"
-                    Style="{StaticResource AddAppBarButtonStyle}"/>
+                    Style="{StaticResource AddAppBarButtonStyle}"
+                    Command="{Binding Source={StaticResource GlobalResources}, Path=AddCommand}"/>
             <Button x:Name="RefreshButton"
                     Style="{StaticResource RefreshAppBarButtonStyle}"
                     Command="{Binding Source={StaticResource GlobalResources}, Path=RefreshCommand}"/>
