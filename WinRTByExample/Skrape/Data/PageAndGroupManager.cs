@@ -177,7 +177,8 @@ namespace Skrape.Data
         /// </param>
         public void AddUri(Uri uri)
         {
-            Roaming.Values[HighPriority] = uri == null ? string.Empty : uri.ToString();
+            Roaming.Values[HighPriority] = uri == null ? 
+                string.Empty : uri.ToString();
         }
 
         /// <summary>
@@ -195,13 +196,13 @@ namespace Skrape.Data
             LocalSettings.Values["Page" + page.Id] = page.Loaded;
 
             var compositeValue = new ApplicationDataCompositeValue
-                                     {
-                                         { IdProperty, page.Id },
-                                         { TitleProperty, page.Title },
-                                         { ThumbnailProperty, page.ThumbnailPath.ToString() },
-                                         { UrlProperty, page.Url.ToString() },
-                                         { ImageCountProperty, page.Images.Count() }                                         
-                                     };
+                                        {
+                                            { IdProperty, page.Id },
+                                            { TitleProperty, page.Title },
+                                            { ThumbnailProperty, page.ThumbnailPath.ToString() },
+                                            { UrlProperty, page.Url.ToString() },
+                                            { ImageCountProperty, page.Images.Count() }                                         
+                                        };
 
             for (var idx = 0; idx < page.Images.Count(); idx++)
             {
