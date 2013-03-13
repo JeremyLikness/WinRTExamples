@@ -368,7 +368,7 @@ namespace Skrape.Data
         /// <param name="newUri">
         /// The new uri
         /// </param>
-        private void PageAndGroupManagerOnNewUriAdded(object sender, Uri newUri)
+        private async void PageAndGroupManagerOnNewUriAdded(object sender, Uri newUri)
         {
             var page = (from g in this.groups from p in g.Pages where p.Url == newUri select p).FirstOrDefault();
 
@@ -377,7 +377,7 @@ namespace Skrape.Data
                 return;
             }
 
-            this.Dispatcher.RunAsync(
+            await this.Dispatcher.RunAsync(
                 CoreDispatcherPriority.Normal,
                 async () =>
                     {
