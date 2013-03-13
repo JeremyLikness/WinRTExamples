@@ -30,16 +30,24 @@
         <StackPanel Grid.Column="1"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
+            <Button x:Name="SetButton"
+                    ToolTipService.ToolTip="Make Favorite Image Thumbnail"
+                    Style="{StaticResource FavoriteAppBarButtonStyle}"
+                    Command="{Binding Source={StaticResource GlobalResources}, Path=FavoriteCommand}"/>
+            <Button x:Name="SaveButton"
+                    ToolTipService.ToolTip="Save Current Image"
+                    Style="{StaticResource SaveAppBarButtonStyle}"/>
             <Button x:Name="AddButton"
+                    ToolTipService.ToolTip="Add New URL"
+                    Margin="20 0 0 0"
                     Style="{StaticResource AddAppBarButtonStyle}"
                     Command="{Binding Source={StaticResource GlobalResources}, Path=AddCommand}"/>
             <Button x:Name="RefreshButton"
+                    ToolTipService.ToolTip="Refresh Current Page"
                     Style="{StaticResource RefreshAppBarButtonStyle}"
                     Command="{Binding Source={StaticResource GlobalResources}, Path=RefreshCommand}"/>
-            <Button x:Name="SetButton"
-                    Style="{StaticResource FavoriteAppBarButtonStyle}"
-                    Command="{Binding Source={StaticResource GlobalResources}, Path=FavoriteCommand}"/>
             <Button x:Name="DeleteButton"
+                    ToolTipService.ToolTip="Delete CurrentPage"
                     Style="{StaticResource DeleteAppBarButtonStyle}"
                     Command="{Binding Source={StaticResource GlobalResources}, Path=DeleteCommand}"/>
         </StackPanel>

@@ -68,8 +68,7 @@ namespace Skrape.Data
                 () => true);
 
             this.AddCommand = new ActionCommand(
-                () =>
-                    { this.AddCallback(); },
+                () => this.AddCallback(),
                 () => !this.DetailPageEnabled);
         }
 

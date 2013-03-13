@@ -29,6 +29,7 @@ namespace Skrape
         public MainPage()
         {
             this.InitializeComponent();
+            CurrentViewModel.DataManager.Dispatcher = this.Dispatcher;
         }
 
         /// <summary>
@@ -49,19 +50,18 @@ namespace Skrape
         /// property is typically used to configure the page.</param>
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
-            VisualStateManager.GoToState(this, "Loading", false);
+            VisualStateManager.GoToState(this, "LoadingState", false);
 
             if (!Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
                 await CurrentViewModel.DataManager.Initialize();
-                CurrentViewModel.AddCallback = () =>
-                    { AddPopup.IsOpen = true; };                    
+                CurrentViewModel.AddCallback = () => { AddPopup.IsOpen = true; };
             }
 
             CurrentViewModel.DataManager.CurrentPage = new SkrapedPage();
             CurrentViewModel.DataManager.CurrentGroup = new SkrapeGroup();
 
-            VisualStateManager.GoToState(this, "Loaded", false);
+            VisualStateManager.GoToState(this, "LoadedState", false);
         }
 
         /// <summary>
