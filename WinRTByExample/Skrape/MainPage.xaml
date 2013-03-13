@@ -143,8 +143,8 @@
             </Popup>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="LoadingStates">
-                <VisualState x:Name="Loaded"/>
-                <VisualState x:Name="Loading">
+                <VisualState x:Name="LoadedState"/>
+                <VisualState x:Name="LoadingState">
                     <Storyboard>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Overlay"
                                                        Storyboard.TargetProperty="Visibility">

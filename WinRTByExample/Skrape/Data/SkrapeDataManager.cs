@@ -19,6 +19,8 @@ namespace Skrape.Data
     using Skrape.Contracts;
 
     using Windows.Storage;
+    using Windows.UI.Core;
+    using Windows.UI.Popups;
 
     /// <summary>
     /// The data manager for scrapes.
@@ -70,6 +72,11 @@ namespace Skrape.Data
         private Uri currentImage;
 
         /// <summary>
+        /// The current page and group manager
+        /// </summary>
+        private IPageAndGroupManager pageAndGroupManager;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SkrapeDataManager"/> class.
         /// </summary>
         public SkrapeDataManager()
@@ -84,11 +91,31 @@ namespace Skrape.Data
         /// Gets or sets the implementation of the web scraper
         /// </summary>
         public IWebScraper Scraper { get; set; }
-
+        
         /// <summary>
         /// Gets or sets the implementation of the page and group manager
         /// </summary>
-        public IPageAndGroupManager Manager { get; set; }
+        public IPageAndGroupManager Manager
+        {
+            get
+            {
+                return this.pageAndGroupManager;
+            }
+
+            set
+            {
+                this.pageAndGroupManager = value;
+                if (this.pageAndGroupManager != null)
+                {
+                    this.pageAndGroupManager.NewUriAdded += this.PageAndGroupManagerOnNewUriAdded;
+                }   
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the dispatcher.
+        /// </summary>
+        public CoreDispatcher Dispatcher { get; set; }
 
         /// <summary>
         /// Gets the groups.
@@ -100,7 +127,7 @@ namespace Skrape.Data
                 return this.groups;
             }
         }
-
+        
         /// <summary>
         /// Gets or sets the current group.
         /// </summary>
@@ -216,6 +243,15 @@ namespace Skrape.Data
         /// </returns>
         public async Task AddUrl(Uri url)
         {
+            var existingPage = this.groups.SelectMany(g => g.Pages, (g, p) => new { g, p })
+                                    .Where(@t => !@t.p.Deleted && @t.p.Url == url)
+                                    .Select(@t => @t.p).Any();
+
+            if (existingPage)
+            {
+                return;
+            }
+
             var page = new SkrapedPage
                            {
                                Id = this.pageIdProvider.GetId(),
@@ -247,6 +283,8 @@ namespace Skrape.Data
             }
 
             await this.Manager.SavePage(page);
+
+            this.Manager.AddUri(page.Url);
         }
 
         /// <summary>
@@ -319,6 +357,34 @@ namespace Skrape.Data
             {
                 return null;
             }
+        }
+
+        /// <summary>
+        /// The page and group manager on current page changed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="newUri">
+        /// The new uri
+        /// </param>
+        private void PageAndGroupManagerOnNewUriAdded(object sender, Uri newUri)
+        {
+            var page = (from g in this.groups from p in g.Pages where p.Url == newUri select p).FirstOrDefault();
+
+            if (page != null)
+            {
+                return;
+            }
+
+            this.Dispatcher.RunAsync(
+                CoreDispatcherPriority.Normal,
+                async () =>
+                    {
+                        var dialog = new MessageDialog(
+                            "A new URL has been entered on another device. Exit the program and re-launch to synchronize.", newUri.ToString());
+                        await dialog.ShowAsync();
+                    });
         }
 
         /// <summary>

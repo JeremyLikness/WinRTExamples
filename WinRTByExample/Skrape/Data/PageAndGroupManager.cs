@@ -91,7 +91,51 @@ namespace Skrape.Data
         /// The image index.
         /// </summary>
         private const string ImageIndex = "Image";
-                                            
+
+        /// <summary>
+        /// High priority roaming setting
+        /// </summary>
+        private const string HighPriority = "HighPriority";
+
+        /// <summary>
+        /// the current URI
+        /// </summary>
+        private Uri currentUri;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PageAndGroupManager"/> class.
+        /// </summary>
+        public PageAndGroupManager()
+        {
+            ApplicationData.Current.DataChanged += this.CurrentDataChanged;
+            this.currentUri = null;
+        }
+
+        /// <summary>
+        /// The current page changed.
+        /// </summary>
+        public event EventHandler<Uri> NewUriAdded = delegate { };
+                
+        /// <summary>
+        /// Gets the current synchronized page
+        /// </summary>
+        private static Uri CurrentUri
+        {
+            get
+            {
+                if (Roaming.Values.ContainsKey(HighPriority))
+                {
+                    Uri uri;
+                    if (Uri.TryCreate(Roaming.Values[HighPriority].ToString(), UriKind.Absolute, out uri))
+                    {
+                        return uri;
+                    }
+                }
+
+                return null;
+            }
+        }
+           
         /// <summary>
         /// Gets the roaming.
         /// </summary>
@@ -115,6 +159,28 @@ namespace Skrape.Data
         }
 
         /// <summary>
+        /// Gets the local settings
+        /// </summary>
+        private static ApplicationDataContainer LocalSettings
+        {
+            get
+            {
+                return ApplicationData.Current.LocalSettings;
+            }
+        }
+
+        /// <summary>
+        /// The set current page.
+        /// </summary>
+        /// <param name="uri">
+        /// The uri.
+        /// </param>
+        public void AddUri(Uri uri)
+        {
+            Roaming.Values[HighPriority] = uri == null ? string.Empty : uri.ToString();
+        }
+
+        /// <summary>
         /// The save page.
         /// </summary>
         /// <param name="page">
@@ -125,15 +191,18 @@ namespace Skrape.Data
         /// </returns>
         public async Task SavePage(SkrapedPage page)
         {
+            // save loaded status locally, so remote machines will load on first use
+            LocalSettings.Values["Page" + page.Id] = page.Loaded;
+
             var compositeValue = new ApplicationDataCompositeValue
                                      {
                                          { IdProperty, page.Id },
                                          { TitleProperty, page.Title },
                                          { ThumbnailProperty, page.ThumbnailPath.ToString() },
                                          { UrlProperty, page.Url.ToString() },
-                                         { ImageCountProperty, page.Images.Count() },
-                                         { LoadedProperty, page.Loaded }
+                                         { ImageCountProperty, page.Images.Count() }                                         
                                      };
+
             for (var idx = 0; idx < page.Images.Count(); idx++)
             {
                 compositeValue.Add(ImageIndex + idx, page.Images[idx].ToString());
@@ -258,6 +327,43 @@ namespace Skrape.Data
         }
 
         /// <summary>
+        /// Restore a page
+        /// </summary>
+        /// <param name="pageId">The page identifier</param>
+        /// <returns>The restored page</returns>
+        private static async Task<SkrapedPage> RestorePage(int pageId)
+        {
+            var restoredPage = new SkrapedPage { Id = pageId };
+            var loaded = LocalSettings.Values.ContainsKey(LoadedProperty) 
+                && (bool)LocalSettings.Values[LoadedProperty];
+            var container = Roaming.CreateContainer(
+                PageKey,
+                ApplicationDataCreateDisposition.Always);
+            var compositeValue = container.Values[pageId.ToString()] as ApplicationDataCompositeValue;
+            if (compositeValue != null)
+            {
+                restoredPage.Url = new Uri(compositeValue[UrlProperty].ToString());
+                restoredPage.Title = compositeValue[TitleProperty].ToString();
+                restoredPage.ThumbnailPath = loaded
+                                                 ? new Uri(compositeValue[ThumbnailProperty].ToString())
+                                                 : new Uri("ms-appx:///Assets/ie.png");
+                restoredPage.Loaded = loaded;
+                var imageCount = (int)compositeValue[ImageCountProperty];
+                for (var idx = 0; idx < imageCount; idx++)
+                {
+                    restoredPage.Images.Add(new Uri(compositeValue[ImageIndex + idx].ToString()));
+                }
+            }
+            else
+            {
+                throw new Exception("Error restoring page.");
+            }
+
+            await RestorePageData(restoredPage);
+            return restoredPage;
+        }
+
+        /// <summary>
         /// The restore page data.
         /// </summary>
         /// <param name="page">
@@ -339,36 +445,26 @@ namespace Skrape.Data
         }        
 
         /// <summary>
-        /// Restore a page
+        /// The current_ data changed.
         /// </summary>
-        /// <param name="pageId">The page identifier</param>
-        /// <returns>The restored page</returns>
-        private static async Task<SkrapedPage> RestorePage(int pageId)
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="args">
+        /// The args.
+        /// </param>
+        private void CurrentDataChanged(ApplicationData sender, object args)
         {
-            var restoredPage = new SkrapedPage { Id = pageId };
-            var container = Roaming.CreateContainer(
-                PageKey,
-                ApplicationDataCreateDisposition.Always);
-            var compositeValue = container.Values[pageId.ToString()] as ApplicationDataCompositeValue;
-            if (compositeValue != null)
+            var uri = CurrentUri;
+            
+            if (uri == this.currentUri)
             {
-                restoredPage.Url = new Uri(compositeValue[UrlProperty].ToString());
-                restoredPage.Title = compositeValue[TitleProperty].ToString();
-                restoredPage.ThumbnailPath = new Uri(compositeValue[ThumbnailProperty].ToString());
-                restoredPage.Loaded = (bool)compositeValue[LoadedProperty];
-                var imageCount = (int)compositeValue[ImageCountProperty];
-                for (var idx = 0; idx < imageCount; idx++)
-                {                    
-                    restoredPage.Images.Add(new Uri(compositeValue[ImageIndex + idx].ToString()));
-                }
-            }
-            else
-            {
-                throw new Exception("Error restoring page.");
+                return;
             }
 
-            await RestorePageData(restoredPage);
-            return restoredPage;
+            this.currentUri = uri;
+            
+            this.NewUriAdded(this, this.currentUri);
         }
     }
 }

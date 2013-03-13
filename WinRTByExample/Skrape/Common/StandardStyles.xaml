@@ -432,12 +432,12 @@
         <Setter Property="AutomationProperties.AutomationId" Value="EditAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="Edit"/>
         <Setter Property="Content" Value="&#xE104;"/>
-    </Style>
+    </Style>-->
     <Style x:Key="SaveAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="SaveAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="Save"/>
         <Setter Property="Content" Value="&#xE105;"/>
-    </Style>-->
+    </Style>
     <Style x:Key="DeleteAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="DeleteAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="Delete"/>

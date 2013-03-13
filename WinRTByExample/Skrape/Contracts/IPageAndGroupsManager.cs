@@ -9,6 +9,7 @@
 
 namespace Skrape.Contracts
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -19,6 +20,17 @@ namespace Skrape.Contracts
     /// </summary>
     public interface IPageAndGroupManager
     {
+        /// <summary>
+        /// Event triggered when a uri is added
+        /// </summary>
+        event EventHandler<Uri> NewUriAdded;
+
+        /// <summary>
+        /// Add the new URI
+        /// </summary>
+        /// <param name="uri">The new uri to add</param>
+        void AddUri(Uri uri);
+
         /// <summary>
         /// The save page.
         /// </summary>
