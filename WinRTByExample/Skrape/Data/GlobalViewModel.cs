@@ -12,12 +12,15 @@ namespace Skrape.Data
     using System;
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices.WindowsRuntime;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Windows.Input;
 
     using Skrape.Common;
 
     using Windows.ApplicationModel.DataTransfer;
+    using Windows.Storage;
     using Windows.UI.Popups;
 
     /// <summary>
@@ -67,6 +70,10 @@ namespace Skrape.Data
                 async () => await this.Paste(), 
                 () => true);
 
+            this.DownloadCommand = new ActionCommand(
+                async () => await this.Download(),
+                () => this.DetailPageEnabled);
+
             this.AddCommand = new ActionCommand(
                 () => this.AddCallback(),
                 () => !this.DetailPageEnabled);
@@ -106,6 +113,11 @@ namespace Skrape.Data
         /// Gets the command to copy to the clipboard
         /// </summary>
         public ICommand CopyCommand { get; private set; }
+
+        /// <summary>
+        /// Gets the command to download the text
+        /// </summary>
+        public ICommand DownloadCommand { get; private set; }
 
         /// <summary>
         /// Gets the command to set an image as the favorite
@@ -150,6 +162,7 @@ namespace Skrape.Data
                         ((ActionCommand)this.RefreshCommand).RaiseExecuteChanged();
                         ((ActionCommand)this.CopyCommand).RaiseExecuteChanged();   
                         ((ActionCommand)this.AddCommand).RaiseExecuteChanged();
+                        ((ActionCommand)this.DownloadCommand).RaiseExecuteChanged();
                     };
 
 // ReSharper restore ExplicitCallerInfoArgument
@@ -214,6 +227,39 @@ namespace Skrape.Data
             package.SetHtmlFormat(HtmlFormatHelper.CreateHtmlFormat(this.DataManager.CurrentPage.Html));
             Clipboard.SetContent(package);
             var dialog = new MessageDialog("The web page was successfully copied to the clipboard.");
+            await dialog.ShowAsync();
+        }
+
+        /// <summary>
+        /// The download.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="Task"/> to run asynchronously.
+        /// </returns>
+        private async Task Download()
+        {
+            var page = this.DataManager.CurrentPage;
+            var url = page.Url.ToString();
+            var nameOnDisk =
+                url.Substring(url.LastIndexOf("//", StringComparison.CurrentCultureIgnoreCase) + 2)
+                    .Replace(".", "_")
+                    .Replace("/", "-");
+            if (nameOnDisk.EndsWith("-"))
+            {
+                nameOnDisk = nameOnDisk.Substring(0, nameOnDisk.Length - 1);
+            }
+
+            var filename = string.Format("{0}.txt", nameOnDisk);
+            var download = await DownloadsFolder.CreateFileAsync(filename, CreationCollisionOption.GenerateUniqueName);
+            using (var stream = await download.OpenAsync(FileAccessMode.ReadWrite))
+            {
+                await stream.WriteAsync(Encoding.UTF8.GetBytes(page.Text).AsBuffer());
+                await stream.FlushAsync();
+            }
+
+            var dialog = new MessageDialog(
+                "Successfully downloaded the page as text to your Downloads folder.", 
+                download.Name);
             await dialog.ShowAsync();
         }
 
