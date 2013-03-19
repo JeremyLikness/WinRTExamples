@@ -26,6 +26,9 @@
             <Button x:Name="PasteButton"
                     Style="{StaticResource PasteAppBarButtonStyle}"
                     Command="{Binding Source={StaticResource GlobalResources}, Path=PasteCommand}"/>
+            <Button x:Name="DownloadButton"
+                    Style="{StaticResource DownloadAppBarButtonStyle}"
+                    Command="{Binding Source={StaticResource GlobalResources}, Path=DownloadCommand}"/>
         </StackPanel>
         <StackPanel Grid.Column="1"
                     HorizontalAlignment="Right"
