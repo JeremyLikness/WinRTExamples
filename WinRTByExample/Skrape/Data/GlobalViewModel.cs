@@ -251,6 +251,8 @@ namespace Skrape.Data
 
             var filename = string.Format("{0}.txt", nameOnDisk);
             var download = await DownloadsFolder.CreateFileAsync(filename, CreationCollisionOption.GenerateUniqueName);
+
+            // await FileIO.WriteTextAsync(download, page.Text, Windows.Storage.Streams.UnicodeEncoding.Utf8);
             using (var stream = await download.OpenAsync(FileAccessMode.ReadWrite))
             {
                 await stream.WriteAsync(Encoding.UTF8.GetBytes(page.Text).AsBuffer());
