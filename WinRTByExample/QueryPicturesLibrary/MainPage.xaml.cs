@@ -46,17 +46,21 @@ namespace QueryPicturesLibrary
                 CommonFileQuery.OrderByTitle,
                 new List<string> { ".jpg", ".gif", ".tif", ".png" })
             {
-                FolderDepth =
-                    FolderDepth.Deep,
-                IndexerOption =
-                    IndexerOption
-                    .UseIndexerWhenAvailable
+                FolderDepth = FolderDepth.Deep,
+                IndexerOption = IndexerOption.UseIndexerWhenAvailable
             };
             queryOptions.SetThumbnailPrefetch(ThumbnailMode.PicturesView, 150, ThumbnailOptions.ResizeThumbnail);
-            var query = KnownFolders.PicturesLibrary.CreateFileQueryWithOptions(queryOptions);
+            var folder = KnownFolders.PicturesLibrary;
+            if (!folder.AreQueryOptionsSupported(queryOptions)
+                || !folder.IsCommonFileQuerySupported(CommonFileQuery.OrderByTitle)) 
+            {
+                return;
+            }
+
+            var query = folder.CreateFileQueryWithOptions(queryOptions);
             var access = new FileInformationFactory(query, ThumbnailMode.PicturesView);
             var fileList = access.GetVirtualizedFilesVector();
-            MainList.ItemsSource = fileList;
+            this.MainList.ItemsSource = fileList;
         }
 
         /// <summary>
