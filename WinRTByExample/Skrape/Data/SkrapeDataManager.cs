@@ -10,6 +10,7 @@
 namespace Skrape.Data
 {
     using System;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Net.Http;
@@ -19,6 +20,7 @@ namespace Skrape.Data
     using Skrape.Contracts;
 
     using Windows.Storage;
+    using Windows.Storage.Pickers;
     using Windows.UI.Core;
     using Windows.UI.Popups;
 
@@ -309,7 +311,7 @@ namespace Skrape.Data
             this.groups.Remove(parent);
             this.Manager.DeleteGroup(parent);
         }
-
+        
         /// <summary>
         /// The process image routine
         /// </summary>
@@ -326,6 +328,7 @@ namespace Skrape.Data
         {
             try
             {
+                // this can be refactored to use the DownloadImage method
                 var client = new HttpClient();
                 var response = await client.SendAsync(new HttpRequestMessage(HttpMethod.Get, imageUri));
                 response.EnsureSuccessStatusCode();
@@ -357,6 +360,73 @@ namespace Skrape.Data
             {
                 return null;
             }
+        }
+
+        /// <summary>
+        /// The save image routine
+        /// </summary>
+        /// <param name="imageUri">
+        /// The image uri.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        public async Task SaveImage(Uri imageUri)
+        {
+            var result = await this.DownloadImage(imageUri);
+
+            if (string.IsNullOrEmpty(result.Extension))
+            {
+                return;
+            }
+
+            var extension = string.Format(".{0}", result.Extension);
+
+            var saveFilePicker = new FileSavePicker
+                                        {
+                                            SuggestedFileName = "WebImage",
+                                            SuggestedStartLocation = PickerLocationId.PicturesLibrary,
+                                            DefaultFileExtension = extension
+                                        };
+            saveFilePicker.FileTypeChoices.Add(
+                "Image File", new List<string>(new[] { extension }));
+
+            var storageFile = await saveFilePicker.PickSaveFileAsync();
+
+            if (storageFile == null)
+            {
+                return;
+            }
+
+            CachedFileManager.DeferUpdates(storageFile);
+            await FileIO.WriteBytesAsync(storageFile, result.Buffer);
+            await CachedFileManager.CompleteUpdatesAsync(storageFile);
+        }
+
+        /// <summary>
+        /// The download image method.
+        /// </summary>
+        /// <param name="imageUri">
+        /// The image uri.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/> to return asynchronously.
+        /// </returns>
+        private async Task<ImageDownloadResult> DownloadImage(Uri imageUri)
+        {
+            var result = new ImageDownloadResult();
+            var client = new HttpClient();
+            var response = await client.SendAsync(new HttpRequestMessage(HttpMethod.Get, imageUri));
+            response.EnsureSuccessStatusCode();
+            result.Buffer = await response.Content.ReadAsByteArrayAsync();
+            var type = response.Content.Headers.ContentType;
+            var idx = Array.IndexOf(this.imageTypes, type.MediaType);
+            if (idx >= 0)
+            {
+                result.Extension = this.imageExtensions[idx];
+            }
+
+            return result;
         }
 
         /// <summary>

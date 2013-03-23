@@ -39,7 +39,8 @@
                     Command="{Binding Source={StaticResource GlobalResources}, Path=FavoriteCommand}"/>
             <Button x:Name="SaveButton"
                     ToolTipService.ToolTip="Save Current Image"
-                    Style="{StaticResource SaveAppBarButtonStyle}"/>
+                    Style="{StaticResource SaveAppBarButtonStyle}"
+                    Command="{Binding Source={StaticResource GlobalResources}, Path=SaveCommand}"/>
             <Button x:Name="AddButton"
                     ToolTipService.ToolTip="Add New URL"
                     Margin="20 0 0 0"

@@ -66,6 +66,10 @@ namespace Skrape.Data
                 async () => await this.Copy(),
                 () => this.DetailPageEnabled);
 
+            this.SaveCommand = new ActionCommand(
+                async () => await this.Save(), 
+                () => this.FavoriteButtonEnabled);
+
             this.PasteCommand = new ActionCommand(
                 async () => await this.Paste(), 
                 () => true);
@@ -77,8 +81,8 @@ namespace Skrape.Data
             this.AddCommand = new ActionCommand(
                 () => this.AddCallback(),
                 () => !this.DetailPageEnabled);
-        }
-
+        }        
+        
         /// <summary>
         /// The property changed event.
         /// </summary>
@@ -125,6 +129,11 @@ namespace Skrape.Data
         public ICommand FavoriteCommand { get; private set; }
 
         /// <summary>
+        /// Gets the command to save an image to the file system
+        /// </summary>
+        public ICommand SaveCommand { get; private set; }
+
+        /// <summary>
         /// Gets the command to paste a URL 
         /// </summary>
         public ICommand PasteCommand { get; private set; }
@@ -159,6 +168,7 @@ namespace Skrape.Data
                         ((ActionCommand)this.GoHomeCommand).RaiseExecuteChanged();
                         ((ActionCommand)this.DeleteCommand).RaiseExecuteChanged();
                         ((ActionCommand)this.FavoriteCommand).RaiseExecuteChanged();
+                        ((ActionCommand)this.SaveCommand).RaiseExecuteChanged();
                         ((ActionCommand)this.RefreshCommand).RaiseExecuteChanged();
                         ((ActionCommand)this.CopyCommand).RaiseExecuteChanged();   
                         ((ActionCommand)this.AddCommand).RaiseExecuteChanged();
@@ -301,7 +311,7 @@ namespace Skrape.Data
         /// The make favorite.
         /// </summary>
         /// <returns>
-        /// The <see cref="Task"/>.
+        /// The <see cref="Task"/> to complete asynchronously.
         /// </returns>
         private async Task MakeFavorite()
         {
@@ -311,6 +321,17 @@ namespace Skrape.Data
                 this.dataManager.CurrentPage.Id);
             this.dataManager.CurrentPage.ThumbnailPath = uri;
             await this.DataManager.Manager.SavePage(this.dataManager.CurrentPage);
+        }
+
+        /// <summary>
+        /// The save method.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="Task"/> to complete asynchronous.
+        /// </returns>
+        private async Task Save()
+        {
+            await this.dataManager.SaveImage(this.dataManager.CurrentImage);
         }
 
         /// <summary>

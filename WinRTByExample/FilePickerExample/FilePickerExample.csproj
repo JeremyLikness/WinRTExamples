@@ -4,15 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{432AC0D3-F2E7-4A43-8771-59C028583F14}</ProjectGuid>
+    <ProjectGuid>{4335723A-BF47-4309-883F-D32ECB551481}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Skrape</RootNamespace>
-    <AssemblyName>Skrape</AssemblyName>
+    <RootNamespace>FilePickerExample</RootNamespace>
+    <AssemblyName>FilePickerExample</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>Skrape_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>FilePickerExample_TemporaryKey.pfx</PackageCertificateKeyFile>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
@@ -105,44 +105,6 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\Common\CommonAssemblyInfo.cs">
-      <Link>CommonAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="AppBarControl.xaml.cs">
-      <DependentUpon>AppBarControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Common\ActionCommand.cs" />
-    <Compile Include="Common\BasePropertyChange.cs" />
-    <Compile Include="Contracts\IPageAndGroupsManager.cs" />
-    <Compile Include="Contracts\IWebScraper.cs" />
-    <Compile Include="Data\GlobalViewModel.cs" />
-    <Compile Include="Data\IdProvider.cs" />
-    <Compile Include="Data\ImageDownloadResult.cs" />
-    <Compile Include="Data\PageAndGroupManager.cs" />
-    <Compile Include="Data\SkrapeDataManager.cs" />
-    <Compile Include="Data\SkrapedPage.cs" />
-    <Compile Include="Data\SkrapeGroup.cs" />
-    <Compile Include="Data\WebScraper.cs" />
-    <Compile Include="MainPage.xaml.cs">
-      <DependentUpon>MainPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="PageView.xaml.cs">
-      <DependentUpon>PageView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <AppxManifest Include="Package.appxmanifest">
-      <SubType>Designer</SubType>
-    </AppxManifest>
-    <None Include="Skrape_TemporaryKey.pfx" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="..\Common\Logo.png">
       <Link>Assets\Logo.png</Link>
     </Content>
@@ -155,17 +117,31 @@
     <Content Include="..\Common\StoreLogo.png">
       <Link>Assets\StoreLogo.png</Link>
     </Content>
-    <Content Include="Assets\ie.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Common\CommonAssemblyInfo.cs">
+      <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RecentItem.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </AppxManifest>
+    <None Include="FilePickerExample_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="AppBarControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Common\StandardStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -173,10 +149,6 @@
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="PageView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
