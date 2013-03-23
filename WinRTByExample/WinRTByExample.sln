@@ -68,9 +68,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter4", "Chapter4", "{90
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skrape", "Skrape\Skrape.csproj", "{432AC0D3-F2E7-4A43-8771-59C028583F14}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QueryPicturesLibrary", "QueryPicturesLibrary\QueryPicturesLibrary.csproj", "{7F938933-0367-49FB-BE29-63C518C8369E}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 26
+		SccNumberOfProjects = 27
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs04
 		SccLocalPath0 = .
@@ -174,6 +176,10 @@ Global
 		SccProjectTopLevelParentUniqueName25 = WinRTByExample.sln
 		SccProjectName25 = Skrape
 		SccLocalPath25 = Skrape
+		SccProjectUniqueName26 = QueryPicturesLibrary\\QueryPicturesLibrary.csproj
+		SccProjectTopLevelParentUniqueName26 = WinRTByExample.sln
+		SccProjectName26 = QueryPicturesLibrary
+		SccLocalPath26 = QueryPicturesLibrary
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -690,6 +696,30 @@ Global
 		{432AC0D3-F2E7-4A43-8771-59C028583F14}.Release|x86.ActiveCfg = Release|x86
 		{432AC0D3-F2E7-4A43-8771-59C028583F14}.Release|x86.Build.0 = Release|x86
 		{432AC0D3-F2E7-4A43-8771-59C028583F14}.Release|x86.Deploy.0 = Release|x86
+		{7F938933-0367-49FB-BE29-63C518C8369E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F938933-0367-49FB-BE29-63C518C8369E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F938933-0367-49FB-BE29-63C518C8369E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{7F938933-0367-49FB-BE29-63C518C8369E}.Debug|ARM.ActiveCfg = Debug|ARM
+		{7F938933-0367-49FB-BE29-63C518C8369E}.Debug|ARM.Build.0 = Debug|ARM
+		{7F938933-0367-49FB-BE29-63C518C8369E}.Debug|ARM.Deploy.0 = Debug|ARM
+		{7F938933-0367-49FB-BE29-63C518C8369E}.Debug|x64.ActiveCfg = Debug|x64
+		{7F938933-0367-49FB-BE29-63C518C8369E}.Debug|x64.Build.0 = Debug|x64
+		{7F938933-0367-49FB-BE29-63C518C8369E}.Debug|x64.Deploy.0 = Debug|x64
+		{7F938933-0367-49FB-BE29-63C518C8369E}.Debug|x86.ActiveCfg = Debug|x86
+		{7F938933-0367-49FB-BE29-63C518C8369E}.Debug|x86.Build.0 = Debug|x86
+		{7F938933-0367-49FB-BE29-63C518C8369E}.Debug|x86.Deploy.0 = Debug|x86
+		{7F938933-0367-49FB-BE29-63C518C8369E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F938933-0367-49FB-BE29-63C518C8369E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F938933-0367-49FB-BE29-63C518C8369E}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{7F938933-0367-49FB-BE29-63C518C8369E}.Release|ARM.ActiveCfg = Release|ARM
+		{7F938933-0367-49FB-BE29-63C518C8369E}.Release|ARM.Build.0 = Release|ARM
+		{7F938933-0367-49FB-BE29-63C518C8369E}.Release|ARM.Deploy.0 = Release|ARM
+		{7F938933-0367-49FB-BE29-63C518C8369E}.Release|x64.ActiveCfg = Release|x64
+		{7F938933-0367-49FB-BE29-63C518C8369E}.Release|x64.Build.0 = Release|x64
+		{7F938933-0367-49FB-BE29-63C518C8369E}.Release|x64.Deploy.0 = Release|x64
+		{7F938933-0367-49FB-BE29-63C518C8369E}.Release|x86.ActiveCfg = Release|x86
+		{7F938933-0367-49FB-BE29-63C518C8369E}.Release|x86.Build.0 = Release|x86
+		{7F938933-0367-49FB-BE29-63C518C8369E}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -720,5 +750,6 @@ Global
 		{42B6D9C6-7F5C-464F-B881-6EF5B68F851A} = {6F23A0BB-209C-49C7-9345-2D7782016FD5}
 		{2BBBFAD9-B603-4374-B4A1-FD77EDCFFE7C} = {6F23A0BB-209C-49C7-9345-2D7782016FD5}
 		{432AC0D3-F2E7-4A43-8771-59C028583F14} = {90F4A987-D691-4A39-AE96-76D59DF1C136}
+		{7F938933-0367-49FB-BE29-63C518C8369E} = {90F4A987-D691-4A39-AE96-76D59DF1C136}
 	EndGlobalSection
 EndGlobal
