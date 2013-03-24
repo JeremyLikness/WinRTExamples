@@ -382,12 +382,14 @@ namespace Skrape.Data
 
             var extension = string.Format(".{0}", result.Extension);
 
-            var saveFilePicker = new FileSavePicker
-                                        {
-                                            SuggestedFileName = "WebImage",
-                                            SuggestedStartLocation = PickerLocationId.PicturesLibrary,
-                                            DefaultFileExtension = extension
-                                        };
+            var saveFilePicker = 
+                new FileSavePicker
+                    {
+                        SuggestedFileName = "WebImage",
+                        SuggestedStartLocation = PickerLocationId.PicturesLibrary,
+                        DefaultFileExtension = extension
+                    };
+            
             saveFilePicker.FileTypeChoices.Add(
                 "Image File", new List<string>(new[] { extension }));
 

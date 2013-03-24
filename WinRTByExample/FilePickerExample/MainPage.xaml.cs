@@ -49,6 +49,17 @@ namespace FilePickerExample
         }
 
         /// <summary>
+        /// The set most recently used file.
+        /// </summary>
+        /// <param name="file">
+        /// The file.
+        /// </param>
+        private static void SetMostRecentlyUsedFile(IStorageItem file)
+        {
+            StorageApplicationPermissions.FutureAccessList.AddOrReplace(LastUsedFile, file);
+        }
+
+        /// <summary>
         /// The rebuild entries.
         /// </summary>
         private void RebuildEntries()
@@ -62,18 +73,7 @@ namespace FilePickerExample
                 }).ToList();
             RecentFiles.ItemsSource = recentList;
         }
-
-        /// <summary>
-        /// The set most recently used file.
-        /// </summary>
-        /// <param name="file">
-        /// The file.
-        /// </param>
-        private void SetMostRecentlyUsedFile(IStorageFile file)
-        {
-            StorageApplicationPermissions.FutureAccessList.AddOrReplace(LastUsedFile, file);
-        }
-
+        
         /// <summary>
         /// The pick button_ on click.
         /// </summary>
@@ -86,10 +86,10 @@ namespace FilePickerExample
         private async void PickButton_OnClick(object sender, RoutedEventArgs e)
         {
             var picker = new FileOpenPicker
-                             {
-                                 ViewMode = PickerViewMode.Thumbnail,
-                                 SuggestedStartLocation = PickerLocationId.ComputerFolder
-                             };
+                                {
+                                    ViewMode = PickerViewMode.List,
+                                    SuggestedStartLocation = PickerLocationId.ComputerFolder
+                                };
             picker.FileTypeFilter.Add(".txt");
             var file = await picker.PickSingleFileAsync();
             if (file == null)
@@ -101,7 +101,7 @@ namespace FilePickerExample
             TextDisplay.Text = text;
 
             StorageApplicationPermissions.MostRecentlyUsedList.Add(file, file.Name);
-            this.SetMostRecentlyUsedFile(file);
+            SetMostRecentlyUsedFile(file);
             this.RebuildEntries();
         }
 
@@ -125,7 +125,7 @@ namespace FilePickerExample
             try
             {
                 var file = await StorageApplicationPermissions.MostRecentlyUsedList.GetFileAsync(recentItem.Token);
-                this.SetMostRecentlyUsedFile(file);
+                SetMostRecentlyUsedFile(file);
                 var text = await FileIO.ReadTextAsync(file);
                 this.TextDisplay.Text = text;
             }
@@ -146,22 +146,27 @@ namespace FilePickerExample
         /// <param name="e">
         /// The e.
         /// </param>
-        private async void LastButton_OnClick(object sender, RoutedEventArgs e)
+        private async void LastButton_OnClick(
+            object sender, 
+            RoutedEventArgs e)
         {
-            if (!StorageApplicationPermissions.FutureAccessList.ContainsItem(LastUsedFile))
+            if (!StorageApplicationPermissions.FutureAccessList
+                .ContainsItem(LastUsedFile))
             {
                 return;
             }
 
             try
             {
-                var file = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(LastUsedFile);
+                var file = await StorageApplicationPermissions.FutureAccessList
+                    .GetFileAsync(LastUsedFile);
                 var text = await FileIO.ReadTextAsync(file);
                 this.TextDisplay.Text = text;
             }
             catch (FileNotFoundException)
             {
-                StorageApplicationPermissions.FutureAccessList.Remove(LastUsedFile);
+                StorageApplicationPermissions.FutureAccessList
+                    .Remove(LastUsedFile);
             }
         }
     }
