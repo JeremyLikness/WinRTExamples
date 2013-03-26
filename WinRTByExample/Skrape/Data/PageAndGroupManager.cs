@@ -12,21 +12,34 @@ namespace Skrape.Data
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.IO.Compression;
     using System.Linq;
-    using System.Runtime.InteropServices.WindowsRuntime;
-    using System.Text;
     using System.Threading.Tasks;
 
     using Skrape.Contracts;
 
     using Windows.Storage;
-    using Windows.Storage.Compression;
 
     /// <summary>
     /// The page and group manager.
     /// </summary>
     public class PageAndGroupManager : IPageAndGroupManager
     {
+        /// <summary>
+        /// The html entry.
+        /// </summary>
+        private const string HtmlEntry = "Html.htm";
+
+        /// <summary>
+        /// The text entry.
+        /// </summary>
+        private const string TextEntry = "Text.txt";
+
+        /// <summary>
+        /// The zip template.
+        /// </summary>
+        private const string ZipTemplate = "{0}.zip";
+
         /// <summary>
         /// The page key.
         /// </summary>
@@ -378,30 +391,35 @@ namespace Skrape.Data
             var folder = await Local.CreateFolderAsync(PageFolder, CreationCollisionOption.OpenIfExists);
             try
             {
-                byte[] byteBuffer;
-                using (var fileStream = await folder.OpenStreamForReadAsync(page.Id.ToString()))
+                using (var fileStream = await folder.OpenStreamForReadAsync(string.Format(ZipTemplate, page.Id)))
                 {
-                    using (var decompressor = new Decompressor(fileStream.AsInputStream()))
+                    using (var zipArchive = new ZipArchive(fileStream, ZipArchiveMode.Read))
                     {
-                        var decompressionStream = decompressor.AsStreamForRead();
+                        var htmlEntry = zipArchive.GetEntry(HtmlEntry);
+                        using (var htmlStream = new StreamReader(htmlEntry.Open()))
+                        {
+                            page.Html = await htmlStream.ReadToEndAsync();
+                        }
 
-                        // read the first 4 bytes to get the size of the entire buffer 
-                        var sizeBytes = new byte[sizeof(int)];
-                        await decompressionStream.ReadAsync(sizeBytes, 0, sizeof(int));                            
-                        var totalSize = BitConverter.ToInt32(sizeBytes, 0);
-                        byteBuffer = new byte[totalSize];
-                        await decompressionStream.ReadAsync(byteBuffer, 0, totalSize);
+                        var textEntry = zipArchive.GetEntry(TextEntry);
+                        using (var textStream = new StreamReader(textEntry.Open()))
+                        {
+                            page.Text = await textStream.ReadToEndAsync();
+                        }
                     }
-                }
 
-                var htmlLength = BitConverter.ToInt32(byteBuffer, 0);
-                var html = new byte[htmlLength];
-                Array.Copy(byteBuffer, sizeof(int), html, 0, htmlLength);
-                var textLength = BitConverter.ToInt32(byteBuffer, sizeof(int) + htmlLength);
-                var text = new byte[textLength];
-                Array.Copy(byteBuffer, (2 * sizeof(int)) + htmlLength, text, 0, textLength);
-                page.Html = Encoding.UTF8.GetString(html, 0, html.Length);
-                page.Text = Encoding.UTF8.GetString(text, 0, text.Length);
+                    // using (var decompressor = new Decompressor(fileStream.AsInputStream()))
+                    // {
+                    //     var decompressionStream = decompressor.AsStreamForRead();
+                    //     // read the first 4 bytes to get the size of the entire buffer 
+                    //     var sizeBytes = new byte[sizeof(int)];
+                    //     await decompressionStream.ReadAsync(sizeBytes, 0, sizeof(int));                            
+                    //     var totalSize = BitConverter.ToInt32(sizeBytes, 0);
+                    //     byteBuffer = new byte[totalSize];
+                    //     await decompressionStream.ReadAsync(byteBuffer, 0, totalSize);
+                    //     page.Html = Encoding.UTF8.GetString(byteBuffer, 0, byteBuffer.Length);
+                    // }
+                }
             }
             catch (FileNotFoundException)
             {
@@ -424,25 +442,34 @@ namespace Skrape.Data
             {
                 return;
             }
-
-            var htmlBytes = Encoding.UTF8.GetBytes(page.Html);
-            var textBytes = Encoding.UTF8.GetBytes(page.Text);
-            var htmlLength = BitConverter.GetBytes(htmlBytes.Length);
-            var textLength = BitConverter.GetBytes(textBytes.Length);
-            var totalLength = BitConverter.GetBytes(htmlBytes.Length + textBytes.Length + (2 * sizeof(int)));
+            
             var folder = await Local.CreateFolderAsync(
                 PageFolder,
                 CreationCollisionOption.OpenIfExists);
-            var file = await folder.CreateFileAsync(page.Id.ToString(), CreationCollisionOption.ReplaceExisting);
-            using (var compressor = new Compressor(await file.OpenAsync(FileAccessMode.ReadWrite)))
+            var file = await folder.CreateFileAsync(string.Format(ZipTemplate, page.Id), CreationCollisionOption.ReplaceExisting);
+
+            using (var zip = new ZipArchive(await file.OpenStreamForWriteAsync(), ZipArchiveMode.Create))
             {
-                await compressor.WriteAsync(totalLength.AsBuffer());
-                await compressor.WriteAsync(htmlLength.AsBuffer());
-                await compressor.WriteAsync(htmlBytes.AsBuffer());
-                await compressor.WriteAsync(textLength.AsBuffer());
-                await compressor.WriteAsync(textBytes.AsBuffer());
-                await compressor.FinishAsync();
+                var htmlEntry = zip.CreateEntry(HtmlEntry);
+                using (var htmlStream = new StreamWriter(htmlEntry.Open()))
+                {
+                    await htmlStream.WriteAsync(page.Html);
+                }
+
+                var textEntry = zip.CreateEntry(TextEntry);
+                using (var textStream = new StreamWriter(textEntry.Open()))
+                {
+                    await textStream.WriteAsync(page.Text);
+                }
             }
+
+            // using (var compressor = new Compressor(await file.OpenAsync(FileAccessMode.ReadWrite)))
+            // {
+            //    var htmlBytes = Encoding.UTF8.GetBytes(page.Html);           
+            //    await compressor.WriteAsync(BitConverter.GetBytes(htmlBytes.Length).AsBuffer());
+            //    await compressor.WriteAsync(htmlBytes.AsBuffer());
+            //    await compressor.FinishAsync();
+            // }
         }        
 
         /// <summary>
