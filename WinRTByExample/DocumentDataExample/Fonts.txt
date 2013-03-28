@@ -1,0 +1,16 @@
+﻿Aharoni Bold
+Andalus
+Arial
+Batang
+Candara
+Comic Sans MS
+Consolas
+Courier New
+Georgia Bold
+Impact
+Microsoft Sans Serif
+Nyala
+Segoe UI Light
+Tahoma
+Verdana
+Wingdings
