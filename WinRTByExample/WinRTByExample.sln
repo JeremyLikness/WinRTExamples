@@ -76,9 +76,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataFormatsExample", "DataF
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentDataExample", "DocumentDataExample\DocumentDataExample.csproj", "{4E45B981-E165-4B3B-BD75-8906335F07B9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter5", "Chapter5", "{FE8FB150-BFFE-434E-86F6-48F34FFC51AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoapServiceExample", "SoapServiceExample\SoapServiceExample.csproj", "{89E0866D-7D44-4863-B095-D66032DFD1A5}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 30
+		SccNumberOfProjects = 31
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs04
 		SccLocalPath0 = .
@@ -198,6 +202,10 @@ Global
 		SccProjectTopLevelParentUniqueName29 = WinRTByExample.sln
 		SccProjectName29 = DocumentDataExample
 		SccLocalPath29 = DocumentDataExample
+		SccProjectUniqueName30 = SoapServiceExample\\SoapServiceExample.csproj
+		SccProjectTopLevelParentUniqueName30 = WinRTByExample.sln
+		SccProjectName30 = SoapServiceExample
+		SccLocalPath30 = SoapServiceExample
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -810,6 +818,30 @@ Global
 		{4E45B981-E165-4B3B-BD75-8906335F07B9}.Release|x86.ActiveCfg = Release|x86
 		{4E45B981-E165-4B3B-BD75-8906335F07B9}.Release|x86.Build.0 = Release|x86
 		{4E45B981-E165-4B3B-BD75-8906335F07B9}.Release|x86.Deploy.0 = Release|x86
+		{89E0866D-7D44-4863-B095-D66032DFD1A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89E0866D-7D44-4863-B095-D66032DFD1A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89E0866D-7D44-4863-B095-D66032DFD1A5}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{89E0866D-7D44-4863-B095-D66032DFD1A5}.Debug|ARM.ActiveCfg = Debug|ARM
+		{89E0866D-7D44-4863-B095-D66032DFD1A5}.Debug|ARM.Build.0 = Debug|ARM
+		{89E0866D-7D44-4863-B095-D66032DFD1A5}.Debug|ARM.Deploy.0 = Debug|ARM
+		{89E0866D-7D44-4863-B095-D66032DFD1A5}.Debug|x64.ActiveCfg = Debug|x64
+		{89E0866D-7D44-4863-B095-D66032DFD1A5}.Debug|x64.Build.0 = Debug|x64
+		{89E0866D-7D44-4863-B095-D66032DFD1A5}.Debug|x64.Deploy.0 = Debug|x64
+		{89E0866D-7D44-4863-B095-D66032DFD1A5}.Debug|x86.ActiveCfg = Debug|x86
+		{89E0866D-7D44-4863-B095-D66032DFD1A5}.Debug|x86.Build.0 = Debug|x86
+		{89E0866D-7D44-4863-B095-D66032DFD1A5}.Debug|x86.Deploy.0 = Debug|x86
+		{89E0866D-7D44-4863-B095-D66032DFD1A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89E0866D-7D44-4863-B095-D66032DFD1A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89E0866D-7D44-4863-B095-D66032DFD1A5}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{89E0866D-7D44-4863-B095-D66032DFD1A5}.Release|ARM.ActiveCfg = Release|ARM
+		{89E0866D-7D44-4863-B095-D66032DFD1A5}.Release|ARM.Build.0 = Release|ARM
+		{89E0866D-7D44-4863-B095-D66032DFD1A5}.Release|ARM.Deploy.0 = Release|ARM
+		{89E0866D-7D44-4863-B095-D66032DFD1A5}.Release|x64.ActiveCfg = Release|x64
+		{89E0866D-7D44-4863-B095-D66032DFD1A5}.Release|x64.Build.0 = Release|x64
+		{89E0866D-7D44-4863-B095-D66032DFD1A5}.Release|x64.Deploy.0 = Release|x64
+		{89E0866D-7D44-4863-B095-D66032DFD1A5}.Release|x86.ActiveCfg = Release|x86
+		{89E0866D-7D44-4863-B095-D66032DFD1A5}.Release|x86.Build.0 = Release|x86
+		{89E0866D-7D44-4863-B095-D66032DFD1A5}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -844,5 +876,6 @@ Global
 		{4335723A-BF47-4309-883F-D32ECB551481} = {90F4A987-D691-4A39-AE96-76D59DF1C136}
 		{BFA48D90-0D18-4325-A2B4-8EE117AEAFC8} = {90F4A987-D691-4A39-AE96-76D59DF1C136}
 		{4E45B981-E165-4B3B-BD75-8906335F07B9} = {90F4A987-D691-4A39-AE96-76D59DF1C136}
+		{89E0866D-7D44-4863-B095-D66032DFD1A5} = {FE8FB150-BFFE-434E-86F6-48F34FFC51AD}
 	EndGlobalSection
 EndGlobal
