@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="824d641e-3ea4-41c2-984a-d80a221568c8" xmlns="urn:schemas-microsoft-com:xml-dataservicemap">
+  <MetadataSources>
+    <MetadataSource Address="http://services.odata.org/OData/OData.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="service.edmx" MetadataType="Edmx" ID="8f0967cd-b171-44b2-8d18-f8390d4388c3" SourceId="1" SourceUrl="http://services.odata.org/OData/OData.svc" />
+  </Metadata>
+  <Extensions />
+  <Parameters>
+    <Parameter Name="NuGetPackageSource" Value="C:\Program Files (x86)\Microsoft WCF Data Services\5.0\bin\NuGet\" />
+    <Parameter Name="NuGetPackageId" Value="Microsoft.Data.Services.Client.WindowsStore" />
+    <Parameter Name="UseDataServiceCollection" Value="true" />
+    <Parameter Name="Version" Value="3.0" />
+  </Parameters>
+</ReferenceGroup>
