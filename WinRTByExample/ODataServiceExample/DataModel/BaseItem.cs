@@ -7,11 +7,11 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace RestServiceExample.DataModel
+namespace ODataServiceExample.DataModel
 {
     using System;
 
-    using RestServiceExample.Common;
+    using ODataServiceExample.Common;
 
     using Windows.UI.Xaml.Media.Imaging;
 

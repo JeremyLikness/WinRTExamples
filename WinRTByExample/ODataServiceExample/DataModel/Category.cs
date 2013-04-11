@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace RestServiceExample.DataModel
+namespace ODataServiceExample.DataModel
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
