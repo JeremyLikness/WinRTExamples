@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
+  <Identity Name="22144JeremyLiknessCreatio.PushNotificationExamples" Publisher="CN=CBE4FC36-ABA9-41F9-BE22-BACE471603F0" Version="1.0.0.0" />
+  <Properties>
+    <DisplayName>Push Notification Examples</DisplayName>
+    <PublisherDisplayName>Jeremy Likness Creations</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+  <Prerequisites>
+    <OSMinVersion>6.2.1</OSMinVersion>
+    <OSMaxVersionTested>6.2.1</OSMaxVersionTested>
+  </Prerequisites>
+  <Resources>
+    <Resource Language="x-generate" />
+  </Resources>
+  <Applications>
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="PushNotificationExamples.App">
+      <VisualElements DisplayName="Push Notification Examples" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="Demonstrates the use of the WNS service to send push notifications" ForegroundText="light" BackgroundColor="#464646" ToastCapable="true">
+        <DefaultTile ShowName="allLogos" />
+        <SplashScreen Image="Assets\SplashScreen.png" />
+      </VisualElements>
+    </Application>
+  </Applications>
+  <Capabilities>
+    <Capability Name="internetClient" />
+  </Capabilities>
+</Package>
