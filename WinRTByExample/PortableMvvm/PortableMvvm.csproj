@@ -44,7 +44,6 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="PortableViewModel.cs" />
-    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="RunOnceCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

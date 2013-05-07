@@ -12,8 +12,6 @@ namespace PortableMvvm
     using System.ComponentModel;
     using System.Windows.Input;
 
-    using PortableMvvm.Annotations;
-
     /// <summary>
     /// The portable view model.
     /// </summary>
@@ -71,7 +69,6 @@ namespace PortableMvvm
         /// <param name="propertyName">
         /// The property name.
         /// </param>
-        [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged(string propertyName)
         {
             var handler = this.PropertyChanged;

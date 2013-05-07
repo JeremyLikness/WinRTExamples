@@ -67,6 +67,11 @@ namespace PortableMvvm
         /// </param>
         public void Execute(object parameter)
         {
+            if (this.alreadyRan)
+            {
+                return;
+            }
+
             this.thingToDo();
             this.alreadyRan = true;
 
