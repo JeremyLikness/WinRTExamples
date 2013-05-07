@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace TileExplorer.Tiles
+namespace WinRTByExample.NotificationHelper.Tiles
 {
     using System;
     using System.Linq;
@@ -64,15 +64,15 @@ namespace TileExplorer.Tiles
             {
                 if (tile.TextLines > 0)
                 {
-                    sb.Append(" and ");
+                    sb.Append(" and");
                 }
                 
                 if (tile.TemplateType.Contains("Peek"))
                 {
-                    sb.Append(" peek image with ");
+                    sb.Append(" peek image with");
                 }
-
-                sb.Append(tile.Images == 0 ? "one image" : string.Format("{0} images", tile.Images));
+                 
+                sb.Append(tile.Images == 1 ? " one image" : string.Format(" {0} images", tile.Images));
             }
 
             sb.Append(".");

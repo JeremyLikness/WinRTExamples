@@ -9,7 +9,7 @@
 
 namespace TileExplorer.DataModel
 {
-    using TileExplorer.Tiles;
+    using WinRTByExample.NotificationHelper.Tiles;
 
     /// <summary>
     /// The tile item.
@@ -25,9 +25,15 @@ namespace TileExplorer.DataModel
         public TileItem(BaseTile tile)
         {
             this.Id = tile.TemplateType;
+            this.Tile = tile;
             this.Xml = tile.ToString();
             this.Description = tile.GetDescription();
         }
+
+        /// <summary>
+        /// Gets the base tile
+        /// </summary>
+        public BaseTile Tile { get; private set; }
 
         /// <summary>
         /// Gets the id.

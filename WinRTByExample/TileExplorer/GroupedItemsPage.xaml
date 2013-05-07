@@ -8,7 +8,7 @@
     xmlns:data="using:TileExplorer.Data"
     xmlns:common="using:TileExplorer.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:dataModel="using:TileExplorer.DataModel"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -21,8 +21,8 @@
             x:Name="groupedItemsViewSource"
             Source="{Binding Groups}"
             IsSourceGrouped="true"
-            ItemsPath="TopItems"
-            d:Source="{Binding AllGroups, Source={d:DesignInstance Type=data:SampleDataSource, IsDesignTimeCreatable=True}}"/>
+            ItemsPath="Items"
+            d:Source="{Binding AllGroups, Source={d:DesignInstance Type=dataModel:DataSource, IsDesignTimeCreatable=True}}"/>
     </Page.Resources>
 
     <!--
@@ -44,11 +44,11 @@
             Grid.RowSpan="2"
             Padding="116,137,40,46"
             ItemsSource="{Binding Source={StaticResource groupedItemsViewSource}}"
-            ItemTemplate="{StaticResource Standard250x250ItemTemplate}"
+            ItemTemplate="{StaticResource App250x250ItemTemplate}"
             SelectionMode="None"
             IsSwipeEnabled="false"
             IsItemClickEnabled="True"
-            ItemClick="ItemView_ItemClick">
+            ItemClick="ItemViewItemClick">
 
             <GridView.ItemsPanel>
                 <ItemsPanelTemplate>                        
@@ -62,10 +62,10 @@
                             <Grid Margin="1,0,0,6">
                                 <Button
                                     AutomationProperties.Name="Group Title"
-                                    Click="Header_Click"
+                                    Click="HeaderClick"
                                     Style="{StaticResource TextPrimaryButtonStyle}" >
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding Title}" Margin="3,-7,10,10" Style="{StaticResource GroupHeaderTextStyle}" />
+                                        <TextBlock Text="{Binding Name}" Margin="3,-7,10,10" Style="{StaticResource GroupHeaderTextStyle}" />
                                         <TextBlock Text="{StaticResource ChevronGlyph}" FontFamily="Segoe UI Symbol" Margin="0,-7,0,10" Style="{StaticResource GroupHeaderTextStyle}"/>
                                     </StackPanel>
                                 </Button>
@@ -91,11 +91,11 @@
             Margin="0,-10,0,0"
             Padding="10,0,0,60"
             ItemsSource="{Binding Source={StaticResource groupedItemsViewSource}}"
-            ItemTemplate="{StaticResource Standard80ItemTemplate}"
+            ItemTemplate="{StaticResource App80ItemTemplate}"
             SelectionMode="None"
             IsSwipeEnabled="false"
             IsItemClickEnabled="True"
-            ItemClick="ItemView_ItemClick">
+            ItemClick="ItemViewItemClick">
 
             <ListView.GroupStyle>
                 <GroupStyle>
@@ -104,10 +104,10 @@
                             <Grid Margin="7,7,0,0">
                                 <Button
                                     AutomationProperties.Name="Group Title"
-                                    Click="Header_Click"
+                                    Click="HeaderClick"
                                     Style="{StaticResource TextPrimaryButtonStyle}">
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding Title}" Margin="3,-7,10,10" Style="{StaticResource GroupHeaderTextStyle}" />
+                                        <TextBlock Text="{Binding Name}" Margin="3,-7,10,10" Style="{StaticResource GroupHeaderTextStyle}" />
                                         <TextBlock Text="{StaticResource ChevronGlyph}" FontFamily="Segoe UI Symbol" Margin="0,-7,0,10" Style="{StaticResource GroupHeaderTextStyle}"/>
                                     </StackPanel>
                                 </Button>

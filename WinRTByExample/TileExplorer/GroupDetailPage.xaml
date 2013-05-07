@@ -8,7 +8,7 @@
     xmlns:data="using:TileExplorer.Data"
     xmlns:common="using:TileExplorer.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:dataModel="using:TileExplorer.DataModel"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -17,7 +17,7 @@
         <CollectionViewSource
             x:Name="itemsViewSource"
             Source="{Binding Items}"
-            d:Source="{Binding AllGroups[0].Items, Source={d:DesignInstance Type=data:SampleDataSource, IsDesignTimeCreatable=True}}"/>
+            d:Source="{Binding AllGroups[0].Items, Source={d:DesignInstance Type=dataModel:DataSource, IsDesignTimeCreatable=True}}"/>
     </Page.Resources>
 
     <!--
@@ -28,7 +28,7 @@
     <Grid
         Style="{StaticResource LayoutRootStyle}"
         DataContext="{Binding Group}"
-        d:DataContext="{Binding AllGroups[0], Source={d:DesignInstance Type=data:SampleDataSource, IsDesignTimeCreatable=True}}">
+        d:DataContext="{Binding AllGroups[0], Source={d:DesignInstance Type=dataModel:DataSource, IsDesignTimeCreatable=True}}">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="140"/>
@@ -44,17 +44,16 @@
             Grid.RowSpan="2"
             Padding="120,126,120,50"
             ItemsSource="{Binding Source={StaticResource itemsViewSource}}"
-            ItemTemplate="{StaticResource Standard500x130ItemTemplate}"
+            ItemTemplate="{StaticResource App500x130ItemTemplate}"
             SelectionMode="None"
             IsSwipeEnabled="false"
             IsItemClickEnabled="True"
-            ItemClick="ItemView_ItemClick">
+            ItemClick="ItemViewItemClick">
 
             <GridView.Header>
                 <StackPanel Width="480" Margin="0,4,14,0">
-                    <TextBlock Text="{Binding Subtitle}" Margin="0,0,18,20" Style="{StaticResource SubheaderTextStyle}" MaxHeight="60"/>
-                    <Image Source="{Binding Image}" Height="400" Margin="0,0,18,20" Stretch="UniformToFill" AutomationProperties.Name="{Binding Title}"/>
-                    <TextBlock Text="{Binding Description}" Margin="0,0,18,0" Style="{StaticResource BodyTextStyle}"/>
+                    <TextBlock Text="Total Tiles:" Margin="0,0,18,20" Style="{StaticResource SubheaderTextStyle}" MaxHeight="60"/>
+                    <TextBlock Text="{Binding Items.Count}" Margin="0,0,18,0" Style="{StaticResource SubheaderTextStyle}"/>                    
                 </StackPanel>
             </GridView.Header>
             <GridView.ItemContainerStyle>
@@ -74,17 +73,15 @@
             Visibility="Collapsed"
             Padding="10,0,0,60"
             ItemsSource="{Binding Source={StaticResource itemsViewSource}}"
-            ItemTemplate="{StaticResource Standard80ItemTemplate}"
+            ItemTemplate="{StaticResource App80ItemTemplate}"
             SelectionMode="None"
             IsSwipeEnabled="false"
             IsItemClickEnabled="True"
-            ItemClick="ItemView_ItemClick">
+            ItemClick="ItemViewItemClick">
 
             <ListView.Header>
                 <StackPanel>
-                    <TextBlock Text="{Binding Subtitle}" Margin="10,0,18,20" Style="{StaticResource TitleTextStyle}" MaxHeight="60"/>
-                    <Image Source="{Binding Image}" Margin="10,0,18,0" MaxHeight="160" Stretch="UniformToFill" AutomationProperties.Name="{Binding Title}"/>
-                    <TextBlock Margin="10,20,18,30" Text="{Binding Description}" Style="{StaticResource BodyTextStyle}"/>
+                    <TextBlock Text="{Binding Name}" Margin="10,0,18,20" Style="{StaticResource TitleTextStyle}" MaxHeight="60"/>                    
                 </StackPanel>
             </ListView.Header>
         </ListView>
@@ -96,7 +93,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
-            <TextBlock x:Name="pageTitle" Text="{Binding Title}" Style="{StaticResource PageHeaderTextStyle}" Grid.Column="1" IsHitTestVisible="false"/>
+            <TextBlock x:Name="pageTitle" Text="{Binding Name}" Style="{StaticResource PageHeaderTextStyle}" Grid.Column="1" IsHitTestVisible="false"/>
         </Grid>
 
         <VisualStateManager.VisualStateGroups>

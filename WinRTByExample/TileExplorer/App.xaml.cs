@@ -1,14 +1,26 @@
-﻿namespace TileExplorer
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="App.xaml.cs" company="Jeremy Likness">
+//   Copyright (c) Jeremy Likness
+// </copyright>
+// <summary>
+//   Provides application-specific behavior to supplement the default Application class.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace TileExplorer
 {
     using System;
 
     using TileExplorer.Common;
-    using TileExplorer.Tiles;
+    using TileExplorer.DataModel;
 
     using Windows.ApplicationModel;
     using Windows.ApplicationModel.Activation;
+    using Windows.UI.Notifications;
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
+
+    using WinRTByExample.NotificationHelper.Tiles;
 
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
@@ -27,6 +39,22 @@
         }
 
         /// <summary>
+        /// Gets the current data source.
+        /// </summary>
+        public static DataSource CurrentDataSource
+        {
+            get
+            {
+                return ((App)Current).DataSource;
+            }
+        }
+
+        /// <summary>
+        /// Gets the main data source
+        /// </summary>
+        public DataSource DataSource { get; private set; }
+
+        /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
         /// will be used when the application is launched to open a specific file, to display
         /// search results, and so forth.
@@ -35,6 +63,8 @@
         protected override async void OnLaunched(LaunchActivatedEventArgs args)
         {
             var rootFrame = Window.Current.Content as Frame;
+
+            DataSource = new DataSource();            
 
             if (rootFrame == null)
             {
@@ -71,7 +101,16 @@
             }
 
             // Ensure the current window is active
-            Window.Current.Activate();            
+            Window.Current.Activate();  
+          
+            // set some default tiles 
+            TileTemplateType.TileWideText03.GetTile()
+                                .AddText("Tile Explorer")
+                                .WithTile(TileTemplateType.TileSquareText03.GetTile()
+                                    .AddText("Tile Explorer")
+                                    .AddText("A WinRT Example")
+                                    .AddText("by Jeremy Likness"))
+                                .Set();
         }
 
         /// <summary>

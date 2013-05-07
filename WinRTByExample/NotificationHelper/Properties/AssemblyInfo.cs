@@ -5,10 +5,10 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("TileExplorer")]
-[assembly: AssemblyDescription("Explore the various tiles options")]
+[assembly: AssemblyTitle("Notification Helper")]
+[assembly: AssemblyDescription("Assists with creation of tiles, badgets, and toasts in Windows Store apps.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyProduct("TileExplorer")]
+[assembly: AssemblyProduct("NotificationHelper")]
 [assembly: AssemblyCulture("")]
 
 // Version information for an assembly consists of the following four values:

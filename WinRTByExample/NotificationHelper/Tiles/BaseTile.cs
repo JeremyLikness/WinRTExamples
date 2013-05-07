@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace TileExplorer.Tiles
+namespace WinRTByExample.NotificationHelper.Tiles
 {
     using System;
 
@@ -42,6 +42,7 @@ namespace TileExplorer.Tiles
         /// </param>
         public BaseTile(TileTemplateType templateType)
         {
+            this.Type = templateType;
             this.TemplateType = templateType.ToString();
             this.TileType = this.TemplateType.StartsWith("TileSquare") ? TileTypes.Square : TileTypes.Wide;
             this.xml = TileUpdateManager.GetTemplateContent(templateType);
@@ -58,6 +59,11 @@ namespace TileExplorer.Tiles
         /// Gets the tile type.
         /// </summary>
         public TileTypes TileType { get; private set; }
+
+        /// <summary>
+        /// Gets the tile template type
+        /// </summary>
+        public TileTemplateType Type { get; private set; }
 
         /// <summary>
         /// Gets lines of text the tile supports
@@ -93,7 +99,19 @@ namespace TileExplorer.Tiles
         public override string ToString()
         {
             return this.xml.GetXml();
-        } 
+        }
+ 
+        /// <summary>
+        /// Merges two tiles - i.e. when you want a square tile and a wide tile 
+        /// </summary>
+        /// <param name="otherTile">The other tile to include</param>
+        /// <returns>This tile with the other tile merged</returns>
+        public BaseTile WithTile(BaseTile otherTile)
+        {
+            var otherBinding = this.xml.ImportNode(otherTile.xml.GetElementsByTagName("visual")[0].LastChild, true);
+            this.xml.GetElementsByTagName("visual")[0].AppendChild(otherBinding);
+            return this;
+        }
 
         /// <summary>
         /// Add a text element 
