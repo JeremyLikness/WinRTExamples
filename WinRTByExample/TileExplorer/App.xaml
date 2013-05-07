@@ -14,11 +14,12 @@
                     Required by Visual Studio project and item templates
                  -->
                 <ResourceDictionary Source="Common/StandardStyles.xaml"/>
+                <ResourceDictionary Source="Common/AppStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <!-- Application-specific resources -->
 
-            <x:String x:Key="AppName">TileExplorer</x:String>
+            <x:String x:Key="AppName">Tile Explorer</x:String>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

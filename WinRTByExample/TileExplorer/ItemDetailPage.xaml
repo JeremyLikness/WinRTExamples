@@ -8,7 +8,7 @@
     xmlns:data="using:TileExplorer.Data"
     xmlns:common="using:TileExplorer.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:dataModel="using:TileExplorer.DataModel"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -17,7 +17,7 @@
         <CollectionViewSource
             x:Name="itemsViewSource"
             Source="{Binding Items}"
-            d:Source="{Binding AllGroups[0].Items, Source={d:DesignInstance Type=data:SampleDataSource, IsDesignTimeCreatable=True}}"/>
+            d:Source="{Binding AllGroups[0].Items, Source={d:DesignInstance Type=dataModel:DataSource, IsDesignTimeCreatable=True}}"/>
     </Page.Resources>
 
     <!--
@@ -25,10 +25,18 @@
         * Row 0 contains the back button and page title
         * Row 1 contains the rest of the page layout
     -->
+    <Page.BottomAppBar>
+        <AppBar>
+            <StackPanel Orientation="Horizontal">
+                <Button Style="{StaticResource CopyAppBarButtonStyle}" Click="CopyCommand_OnClick"></Button>
+                <Button Style="{StaticResource PinAppBarButtonStyle}" Click="PinCommand_OnClick"></Button>
+            </StackPanel>
+        </AppBar>
+    </Page.BottomAppBar>
     <Grid
         Style="{StaticResource LayoutRootStyle}"
         DataContext="{Binding Group}"
-        d:DataContext="{Binding AllGroups[0], Source={d:DesignInstance Type=data:SampleDataSource, IsDesignTimeCreatable=True}}">
+        d:DataContext="{Binding AllGroups[0], Source={d:DesignInstance Type=dataModel:DataSource, IsDesignTimeCreatable=True}}">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="140"/>
@@ -65,34 +73,20 @@
                         <ScrollViewer x:Name="scrollViewer" Style="{StaticResource HorizontalScrollViewerStyle}" Grid.Row="1">
 
                             <!-- Content is allowed to flow across as many columns as needed -->
-                            <common:RichTextColumns x:Name="richTextColumns" Margin="117,0,117,47">
-                                <RichTextBlock x:Name="richTextBlock" Width="560" Style="{StaticResource ItemRichTextStyle}" IsTextSelectionEnabled="False">
+                            <common:RichTextColumns x:Name="richTextColumns" Width="600" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <RichTextBlock x:Name="richTextBlock" Style="{StaticResource ItemRichTextStyle}" IsTextSelectionEnabled="False">
                                     <Paragraph>
-                                        <Run FontSize="26.667" FontWeight="Light" Text="{Binding Title}"/>
+                                        <Run FontSize="26.667" FontWeight="Light" Text="{Binding Id}"/>
                                         <LineBreak/>
                                         <LineBreak/>
-                                        <Run FontWeight="Normal" Text="{Binding Subtitle}"/>
-                                    </Paragraph>
-                                    <Paragraph LineStackingStrategy="MaxHeight">
-                                        <InlineUIContainer>
-                                            <Image x:Name="image" MaxHeight="480" Margin="0,20,0,10" Stretch="Uniform" Source="{Binding Image}" AutomationProperties.Name="{Binding Title}"/>
-                                        </InlineUIContainer>
+                                        <Run FontWeight="Normal" Text="{Binding Description}"/>
                                     </Paragraph>
                                     <Paragraph>
-                                        <Run FontWeight="SemiLight" Text="{Binding Content}"/>
+                                        <LineBreak/>
+                                        <Run FontWeight="ExtraBold" Text="{Binding Xml}"/>
                                     </Paragraph>
                                 </RichTextBlock>
 
-                                <!-- Additional columns are created from this template -->
-                                <common:RichTextColumns.ColumnTemplate>
-                                    <DataTemplate>
-                                        <RichTextBlockOverflow Width="560" Margin="80,0,0,0">
-                                            <RichTextBlockOverflow.RenderTransform>
-                                                <TranslateTransform X="-1" Y="4"/>
-                                            </RichTextBlockOverflow.RenderTransform>
-                                        </RichTextBlockOverflow>
-                                    </DataTemplate>
-                                </common:RichTextColumns.ColumnTemplate>
                             </common:RichTextColumns>
 
                             <VisualStateManager.VisualStateGroups>
@@ -107,10 +101,7 @@
                                         <Storyboard>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="richTextColumns" Storyboard.TargetProperty="Margin">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="97,0,87,57"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="image" Storyboard.TargetProperty="MaxHeight">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="400"/>
-                                            </ObjectAnimationUsingKeyFrames>
+                                            </ObjectAnimationUsingKeyFrames>                                            
                                         </Storyboard>
                                     </VisualState>
 
@@ -120,15 +111,15 @@
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="richTextColumns" Storyboard.TargetProperty="Margin">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="17,0,17,57"/>
                                             </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="richTextColumns" Storyboard.TargetProperty="HorizontalAlignment">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Left"/>
+                                            </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="scrollViewer" Storyboard.TargetProperty="Style">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource VerticalScrollViewerStyle}"/>
                                             </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="richTextBlock" Storyboard.TargetProperty="Width">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="280"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="image" Storyboard.TargetProperty="MaxHeight">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="160"/>
-                                            </ObjectAnimationUsingKeyFrames>
+                                            </ObjectAnimationUsingKeyFrames>                                            
                                         </Storyboard>
                                     </VisualState>
                                 </VisualStateGroup>
@@ -146,7 +137,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
-            <TextBlock x:Name="pageTitle" Text="{Binding Title}" Style="{StaticResource PageHeaderTextStyle}" Grid.Column="1" IsHitTestVisible="false"/>
+            <TextBlock x:Name="pageTitle" Text="{Binding Name}" Style="{StaticResource PageHeaderTextStyle}" Grid.Column="1" IsHitTestVisible="false"/>
         </Grid>
 
         <VisualStateManager.VisualStateGroups>
@@ -173,7 +164,7 @@
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedPageHeaderTextStyle}"/>
-                        </ObjectAnimationUsingKeyFrames>
+                        </ObjectAnimationUsingKeyFrames>                        
                     </Storyboard>
                 </VisualState>
             </VisualStateGroup>

@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace TileExplorer.Tiles
+namespace WinRTByExample.NotificationHelper.Tiles
 {
     /// <summary>
     /// Type of the tile 
