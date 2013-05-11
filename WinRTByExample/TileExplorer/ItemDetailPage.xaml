@@ -27,10 +27,18 @@
     -->
     <Page.BottomAppBar>
         <AppBar>
-            <StackPanel Orientation="Horizontal">
-                <Button Style="{StaticResource CopyAppBarButtonStyle}" Click="CopyCommand_OnClick"></Button>
-                <Button Style="{StaticResource PinAppBarButtonStyle}" Click="PinCommand_OnClick"></Button>
-            </StackPanel>
+            <Grid HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Button Style="{StaticResource HomeAppBarButtonStyle}" Click="HomeCommand_OnClick"/>
+                <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal">
+                    <Button Style="{StaticResource CopyAppBarButtonStyle}" Click="CopyCommand_OnClick"/>
+                    <Button Style="{StaticResource YesAppBarButtonStyle}" Click="SetCommand_OnClick"/>
+                    <Button Style="{StaticResource PinAppBarButtonStyle}" Click="PinCommand_OnClick"/>
+                </StackPanel>
+            </Grid>            
         </AppBar>
     </Page.BottomAppBar>
     <Grid
@@ -73,53 +81,76 @@
                         <ScrollViewer x:Name="scrollViewer" Style="{StaticResource HorizontalScrollViewerStyle}" Grid.Row="1">
 
                             <!-- Content is allowed to flow across as many columns as needed -->
-                            <common:RichTextColumns x:Name="richTextColumns" Width="600" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <RichTextBlock x:Name="richTextBlock" Style="{StaticResource ItemRichTextStyle}" IsTextSelectionEnabled="False">
-                                    <Paragraph>
-                                        <Run FontSize="26.667" FontWeight="Light" Text="{Binding Id}"/>
-                                        <LineBreak/>
-                                        <LineBreak/>
-                                        <Run FontWeight="Normal" Text="{Binding Description}"/>
-                                    </Paragraph>
-                                    <Paragraph>
-                                        <LineBreak/>
-                                        <Run FontWeight="ExtraBold" Text="{Binding Xml}"/>
-                                    </Paragraph>
-                                </RichTextBlock>
-
-                            </common:RichTextColumns>
-
+                            <Grid x:Name="FullItem" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="600"/>                                    
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="350"/>
+                                    <ColumnDefinition Width="400"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0"
+                                            Width="340"
+                                            Margin="5"
+                                            HorizontalAlignment="Left" 
+                                            Orientation="Vertical" 
+                                            x:Name="SnappedView"
+                                            Visibility="Collapsed">
+                                    <Image 
+                                        VerticalAlignment="Top"
+                                        HorizontalAlignment="Center"
+                                        MaxWidth="280"
+                                        MaxHeight="300"
+                                        Stretch="Uniform"
+                                        Source="{Binding Converter={StaticResource TileConverter}}"/>
+                                    <TextBlock Text="{Binding Id}" TextTrimming="WordEllipsis" Style="{StaticResource PageSubheaderTextStyle}"/>
+                                    <TextBlock Text="{Binding Description}" TextWrapping="Wrap" Style="{StaticResource CaptionTextStyle}" Margin="0 -30 0 0"/>
+                                    <TextBlock Text="{Binding Xml}" TextWrapping="Wrap" Style="{StaticResource ItemTextStyle}"/>
+                                </StackPanel>
+                                <Image x:Name="FilledIcon"
+                                    VerticalAlignment="Top"
+                                    Width="{Binding Converter={StaticResource TileSizer}, ConverterParameter='w'}" 
+                                                   Height="{Binding Converter={StaticResource TileSizer}, ConverterParameter='h'}"
+                                                   Source="{Binding Converter={StaticResource TileConverter}}"/>                                       
+                                <StackPanel x:Name="FilledInfo" Orientation="Vertical" Grid.Column="1">
+                                    <TextBlock Text="{Binding Id}" Style="{StaticResource PageSubheaderTextStyle}"/>
+                                    <TextBlock Text="{Binding Description}" Style="{StaticResource CaptionTextStyle}" Margin="0 -30 0 0"/>
+                                    <TextBlock Text="{Binding Xml}" TextWrapping="Wrap" Style="{StaticResource ItemTextStyle}"/>
+                                </StackPanel>
+                                
+                            </Grid>
                             <VisualStateManager.VisualStateGroups>
 
                                 <!-- Visual states reflect the application's view state inside the FlipView -->
                                 <VisualStateGroup x:Name="ApplicationViewStates">
                                     <VisualState x:Name="FullScreenLandscape"/>
                                     <VisualState x:Name="Filled"/>
-
-                                    <!-- Respect the narrower 100-pixel margin convention for portrait -->
-                                    <VisualState x:Name="FullScreenPortrait">
-                                        <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="richTextColumns" Storyboard.TargetProperty="Margin">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="97,0,87,57"/>
-                                            </ObjectAnimationUsingKeyFrames>                                            
-                                        </Storyboard>
-                                    </VisualState>
-
+                                    
                                     <!-- When snapped, the content is reformatted and scrolls vertically -->
                                     <VisualState x:Name="Snapped">
                                         <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="richTextColumns" Storyboard.TargetProperty="Margin">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="17,0,17,57"/>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="SnappedView" Storyboard.TargetProperty="Visibility">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <Visibility>Visible</Visibility>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                    </DiscreteObjectKeyFrame>
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="richTextColumns" Storyboard.TargetProperty="HorizontalAlignment">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Left"/>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="FilledIcon" Storyboard.TargetProperty="Visibility">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <Visibility>Collapsed</Visibility>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="scrollViewer" Storyboard.TargetProperty="Style">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource VerticalScrollViewerStyle}"/>
+
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="FilledInfo" Storyboard.TargetProperty="Visibility">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <Visibility>Collapsed</Visibility>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="richTextBlock" Storyboard.TargetProperty="Width">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="280"/>
-                                            </ObjectAnimationUsingKeyFrames>                                            
                                         </Storyboard>
                                     </VisualState>
                                 </VisualStateGroup>

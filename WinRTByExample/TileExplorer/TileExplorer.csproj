@@ -117,6 +117,8 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Common\TileToExampleConverter.cs" />
+    <Compile Include="Common\TileToSizeConverter.cs" />
     <Compile Include="DataModel\DataSource.cs" />
     <Compile Include="DataModel\TileGroup.cs" />
     <Compile Include="DataModel\TileItem.cs" />
@@ -160,9 +162,59 @@
     <Content Include="..\Common\WideLogo.png">
       <Link>Assets\WideLogo.png</Link>
     </Content>
+    <Content Include="Assets\avatar.png" />
+    <Content Include="Assets\buildingwind8cover.jpg" />
     <Content Include="Assets\LightGray.png" />
     <Content Include="Assets\MediumGray.png" />
     <Content Include="Assets\DarkGray.png" />
+    <Content Include="Assets\slbookcover.png" />
+    <Content Include="Assets\paris.jpg" />
+    <Content Include="Examples\TileSquareBlock.png" />
+    <Content Include="Examples\TileSquareImage.png" />
+    <Content Include="Examples\TileSquarePeekImageAndText01.png" />
+    <Content Include="Examples\TileSquarePeekImageAndText02.png" />
+    <Content Include="Examples\TileSquarePeekImageAndText03.png" />
+    <Content Include="Examples\TileSquarePeekImageAndText04.png" />
+    <Content Include="Examples\TileSquareText01.png" />
+    <Content Include="Examples\TileSquareText02.png" />
+    <Content Include="Examples\TileSquareText03.png" />
+    <Content Include="Examples\TileSquareText04.png" />
+    <Content Include="Examples\TileWideBlockAndText01.png" />
+    <Content Include="Examples\TileWideBlockAndText02.png" />
+    <Content Include="Examples\TileWideImage.png" />
+    <Content Include="Examples\TileWideImageAndText01.png" />
+    <Content Include="Examples\TileWideImageAndText02.png" />
+    <Content Include="Examples\TileWideImageCollection.png" />
+    <Content Include="Examples\TileWidePeekImage01.png" />
+    <Content Include="Examples\TileWidePeekImage02.png" />
+    <Content Include="Examples\TileWidePeekImage03.png" />
+    <Content Include="Examples\TileWidePeekImage04.png" />
+    <Content Include="Examples\TileWidePeekImage05.png" />
+    <Content Include="Examples\TileWidePeekImage06.png" />
+    <Content Include="Examples\TileWidePeekImageAndText01.png" />
+    <Content Include="Examples\TileWidePeekImageAndText02.png" />
+    <Content Include="Examples\TileWidePeekImageCollection01.png" />
+    <Content Include="Examples\TileWidePeekImageCollection02.png" />
+    <Content Include="Examples\TileWidePeekImageCollection03.png" />
+    <Content Include="Examples\TileWidePeekImageCollection04.png" />
+    <Content Include="Examples\TileWidePeekImageCollection05.png" />
+    <Content Include="Examples\TileWidePeekImageCollection06.png" />
+    <Content Include="Examples\TileWideSmallImageAndText01.png" />
+    <Content Include="Examples\TileWideSmallImageAndText02.png" />
+    <Content Include="Examples\TileWideSmallImageAndText03.png" />
+    <Content Include="Examples\TileWideSmallImageAndText04.png" />
+    <Content Include="Examples\TileWideSmallImageAndText05.png" />
+    <Content Include="Examples\TileWideText01.png" />
+    <Content Include="Examples\TileWideText02.png" />
+    <Content Include="Examples\TileWideText03.png" />
+    <Content Include="Examples\TileWideText04.png" />
+    <Content Include="Examples\TileWideText05.png" />
+    <Content Include="Examples\TileWideText06.png" />
+    <Content Include="Examples\TileWideText07.png" />
+    <Content Include="Examples\TileWideText08.png" />
+    <Content Include="Examples\TileWideText09.png" />
+    <Content Include="Examples\TileWideText10.png" />
+    <Content Include="Examples\TileWideText11.png" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
