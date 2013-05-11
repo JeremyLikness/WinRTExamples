@@ -212,7 +212,7 @@ namespace TileExplorer
                     TileOptions.ShowNameOnLogo | TileOptions.ShowNameOnWideLogo, 
                     logo)
                                {
-                                   ForegroundText = ForegroundText.Dark, 
+                                   ForegroundText = ForegroundText.Light, 
                                    SmallLogo = smallLogo, 
                                    WideLogo = wideLogo
                                };
