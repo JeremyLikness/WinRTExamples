@@ -5,8 +5,7 @@
     <DataTemplate x:Key="App250x250ItemTemplate">
         <Grid HorizontalAlignment="Left" Width="250" Height="250">
             <Border Background="{StaticResource ListViewItemPlaceholderBackgroundThemeBrush}">
-                <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{StaticResource CaptionTextStyle}"
-                           Text="{Binding Xml}"/>
+                <Image Source="{Binding Converter={StaticResource TileConverter}}" Stretch="Uniform"></Image>
             </Border>
             <StackPanel VerticalAlignment="Bottom" Background="{StaticResource ListViewItemOverlayBackgroundThemeBrush}">
                 <TextBlock Text="{Binding Id}" Foreground="{StaticResource ListViewItemOverlayForegroundThemeBrush}" Style="{StaticResource TitleTextStyle}" Height="60" Margin="15,0,15,0"/>
@@ -34,8 +33,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Border Background="{StaticResource ListViewItemPlaceholderBackgroundThemeBrush}" Width="110" Height="110">
-                <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{StaticResource CaptionTextStyle}"
-                           Text="{Binding Xml}"></TextBlock>
+                <Image Source="{Binding Converter={StaticResource TileConverter}}" Stretch="Uniform"></Image>
             </Border>
             <StackPanel Grid.Column="1" VerticalAlignment="Top" Margin="10,0,0,0">
                 <TextBlock Text="{Binding Id}" Style="{StaticResource TitleTextStyle}" TextWrapping="NoWrap"/>

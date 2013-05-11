@@ -462,12 +462,12 @@
         <Setter Property="AutomationProperties.AutomationId" Value="NoAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="No"/>
         <Setter Property="Content" Value="&#xE10A;"/>
-    </Style>
+    </Style>-->
     <Style x:Key="YesAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="YesAppBarButton"/>
-        <Setter Property="AutomationProperties.Name" Value="Yes"/>
+        <Setter Property="AutomationProperties.Name" Value="Set"/>
         <Setter Property="Content" Value="&#xE10B;"/>
-    </Style>
+    </Style><!--
     <Style x:Key="MoreAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="MoreAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="More"/>
@@ -482,12 +482,12 @@
         <Setter Property="AutomationProperties.AutomationId" Value="UndoAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="Undo"/>
         <Setter Property="Content" Value="&#xE10E;"/>
-    </Style>
+    </Style>-->
     <Style x:Key="HomeAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="HomeAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="Home"/>
         <Setter Property="Content" Value="&#xE10F;"/>
-    </Style>
+    </Style><!--
     <Style x:Key="OutAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="OutAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="Out"/>

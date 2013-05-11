@@ -16,6 +16,7 @@ namespace TileExplorer
 
     using Windows.ApplicationModel;
     using Windows.ApplicationModel.Activation;
+    using Windows.Storage;
     using Windows.UI.Notifications;
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
@@ -91,18 +92,32 @@ namespace TileExplorer
 
             if (rootFrame.Content == null)
             {
+                var navigationType = typeof(GroupedItemsPage);
+                var navigationArgs = "AllGroups";
+
+                if (args.Arguments.StartsWith("Id="))
+                {
+                    navigationType = typeof(ItemDetailPage);
+                    navigationArgs = args.Arguments.Split('=')[1];
+                }
+
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
-                if (!rootFrame.Navigate(typeof(GroupedItemsPage), "AllGroups"))
+                if (!rootFrame.Navigate(navigationType, navigationArgs))
                 {
                     throw new Exception("Failed to create initial page");
                 }
             }
 
             // Ensure the current window is active
-            Window.Current.Activate();  
-          
+            Window.Current.Activate();
+
+            if (ApplicationData.Current.LocalSettings.Values.ContainsKey("firstRun"))
+            {
+                return;
+            }
+
             // set some default tiles 
             TileTemplateType.TileWideText03.GetTile()
                                 .AddText("Tile Explorer")
@@ -111,6 +126,8 @@ namespace TileExplorer
                                     .AddText("A WinRT Example")
                                     .AddText("by Jeremy Likness"))
                                 .Set();
+
+            ApplicationData.Current.LocalSettings.Values["firstRun"] = true;
         }
 
         /// <summary>
