@@ -74,13 +74,69 @@ namespace WinRTByExample.NotificationHelper.Tiles
         /// Gets total images the tile supports
         /// </summary>
         public int Images { get; private set; }
+        
+        /// <summary>
+        /// Tags the tile
+        /// </summary>
+        public string Tag { get; set; }
 
         /// <summary>
         /// The send method
         /// </summary>
         public void Set()
         {
-            TileUpdateManager.CreateTileUpdaterForApplication().Update(new TileNotification(this.xml));
+            var tile = new TileNotification(this.xml) { Tag = this.Tag };
+            TileUpdateManager.CreateTileUpdaterForApplication().Update(tile);
+        }
+
+        /// <summary>
+        /// With notifications - iterate multiple tiles
+        /// </summary>
+        /// <returns>The base tile</returns>
+        public BaseTile WithNotifications()
+        {
+            TileUpdateManager.CreateTileUpdaterForApplication().EnableNotificationQueue(true);
+            return this;
+        }
+
+        /// <summary>
+        /// Without notifications - turn off notifications
+        /// </summary>
+        /// <returns>The base tile</returns>
+        public BaseTile WithoutNotifications()
+        {
+            TileUpdateManager.CreateTileUpdaterForApplication().EnableNotificationQueue(false);
+            return this;
+        }
+
+        /// <summary>
+        /// With notifications - iterate multiple tiles
+        /// </summary>
+        /// <param name="secondaryId">
+        /// The secondary Id.
+        /// </param>
+        /// <returns>
+        /// The base tile
+        /// </returns>
+        public BaseTile WithSecondaryNotifications(string secondaryId)
+        {
+            TileUpdateManager.CreateTileUpdaterForSecondaryTile(secondaryId).EnableNotificationQueue(true);
+            return this;
+        }
+
+        /// <summary>
+        /// Without notifications - turn off notifications
+        /// </summary>
+        /// <param name="secondaryId">
+        /// The secondary Id.
+        /// </param>
+        /// <returns>
+        /// The base tile
+        /// </returns>
+        public BaseTile WithoutSecondaryNotifications(string secondaryId)
+        {
+            TileUpdateManager.CreateTileUpdaterForSecondaryTile(secondaryId).EnableNotificationQueue(false);
+            return this;
         }
 
         /// <summary>
@@ -100,7 +156,63 @@ namespace WinRTByExample.NotificationHelper.Tiles
         {
             return this.xml.GetXml();
         }
- 
+
+        /// <summary>
+        /// The with no branding.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="BaseTile"/>.
+        /// </returns>
+        public BaseTile WithNoBranding()
+        {
+            var visual = this.xml.GetElementsByTagName("visual")[0];
+            var branding = this.xml.CreateAttribute("branding");
+            branding.NodeValue = "none";
+            visual.Attributes.SetNamedItem(branding);
+            return this;
+        }
+
+        /// <summary>
+        /// The with logo branding.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="BaseTile"/>.
+        /// </returns>
+        public BaseTile WithLogoBranding()
+        {
+            var visual = this.xml.GetElementsByTagName("visual")[0];
+            var branding = this.xml.CreateAttribute("branding");
+            branding.NodeValue = "logo";
+            visual.Attributes.SetNamedItem(branding);
+            return this;
+        }
+
+        /// <summary>
+        /// The with name branding.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="BaseTile"/>.
+        /// </returns>
+        public BaseTile WithNameBranding()
+        {
+            var visual = this.xml.GetElementsByTagName("visual")[0];
+            var branding = this.xml.CreateAttribute("branding");
+            branding.NodeValue = "logo";
+            visual.Attributes.SetNamedItem(branding);
+            return this;
+        }
+
+        /// <summary>
+        /// Set a tag for the tile
+        /// </summary>
+        /// <param name="tag">The tag</param>
+        /// <returns>The tile</returns>
+        public BaseTile WithTag(string tag)
+        {
+            this.Tag = tag;
+            return this;
+        }
+
         /// <summary>
         /// Merges two tiles - i.e. when you want a square tile and a wide tile 
         /// </summary>

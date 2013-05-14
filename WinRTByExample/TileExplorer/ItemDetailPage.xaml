@@ -32,7 +32,10 @@
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
-                <Button Style="{StaticResource HomeAppBarButtonStyle}" Click="HomeCommand_OnClick"/>
+                <StackPanel Grid.Column="0" HorizontalAlignment="Left" Orientation="Horizontal">
+                    <Button Style="{StaticResource HomeAppBarButtonStyle}" Click="HomeCommand_OnClick"/>
+                    <Button Style="{StaticResource PlayAppBarButtonStyle}" Loaded="NotificationButton_OnLoaded" Click="NotificationCommand_OnClick" Margin="20 0 0 0"></Button>
+                </StackPanel>
                 <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal">
                     <Button Style="{StaticResource CopyAppBarButtonStyle}" Click="CopyCommand_OnClick"/>
                     <Button Style="{StaticResource YesAppBarButtonStyle}" Click="SetCommand_OnClick"/>
