@@ -18,6 +18,7 @@ namespace TileExplorer
 
     using Windows.ApplicationModel.DataTransfer;
     using Windows.Foundation;
+    using Windows.UI.Notifications;
     using Windows.UI.Popups;
     using Windows.UI.StartScreen;
     using Windows.UI.Xaml;
@@ -29,6 +30,16 @@ namespace TileExplorer
     /// </summary>
     public sealed partial class ItemDetailPage
     {
+        /// <summary>
+        /// Show play when notifications off
+        /// </summary>
+        private const string NotificationsOff = "PlayAppBarButtonStyle";
+
+        /// <summary>
+        /// Show stop when notifications on
+        /// </summary>
+        private const string NotificationsOn = "StopAppBarButtonStyle";
+
         /// <summary>
         /// The text.
         /// </summary>
@@ -100,6 +111,17 @@ namespace TileExplorer
         }
 
         /// <summary>
+        /// Set the notification button icon
+        /// </summary>
+        /// <param name="sender">The button to set</param>
+        private static void SetNotificationButtonIcon(object sender)
+        {
+            ((Button)sender).Style = App.NotificationsOn
+                                         ? (Style)Application.Current.Resources[NotificationsOn]
+                                         : (Style)Application.Current.Resources[NotificationsOff];
+        }
+
+        /// <summary>
         /// The copy on click.
         /// </summary>
         /// <returns>
@@ -166,7 +188,7 @@ namespace TileExplorer
                     baseTile.AddImage(this.images[imageIndex], "Sample Image");
                 }
 
-                baseTile.Set();
+                baseTile.WithNoBranding().Set();
             }
             catch (Exception ex)
             {
@@ -211,11 +233,11 @@ namespace TileExplorer
                     string.Format("Id={0}", selectedItem.Id), 
                     TileOptions.ShowNameOnLogo | TileOptions.ShowNameOnWideLogo, 
                     logo)
-                               {
-                                   ForegroundText = ForegroundText.Light, 
-                                   SmallLogo = smallLogo, 
-                                   WideLogo = wideLogo
-                               };
+                                {
+                                    ForegroundText = ForegroundText.Light, 
+                                    SmallLogo = smallLogo, 
+                                    WideLogo = wideLogo
+                                };
 
                 var appBarButton = sender as FrameworkElement;
                 if (appBarButton != null)
@@ -223,7 +245,12 @@ namespace TileExplorer
                     var transformation = appBarButton.TransformToVisual(null);
                     var point = transformation.TransformPoint(new Point());
                     var rect = new Rect(point, new Size(appBarButton.ActualWidth, appBarButton.ActualHeight));
-                    await tile.RequestCreateForSelectionAsync(rect, Placement.Above);
+                    var success = await tile.RequestCreateForSelectionAsync(rect, Placement.Above);
+                    if (!success)
+                    {
+                        title = "Canceled";
+                        content = "The pin request was canceled.";
+                    }
                 }
                 else
                 {
@@ -294,6 +321,34 @@ namespace TileExplorer
         private async void PinCommand_OnClick(object sender, RoutedEventArgs e)
         {
             await this.PinOnClick(sender);
+        }
+
+        /// <summary>
+        /// Toggle the notification queue
+        /// </summary>
+        /// <param name="sender">The button to toggle</param>
+        /// <param name="e">The parameters</param>
+        private async void NotificationCommand_OnClick(object sender, RoutedEventArgs e)
+        {
+            var current = App.NotificationsOn;
+
+            TileUpdateManager.CreateTileUpdaterForApplication().EnableNotificationQueue(!current);
+            App.NotificationsOn = !current;
+            var message = current ? "Notifications have been turned off." : "Notifications have been turned on. Tiles should cycle.";
+            SetNotificationButtonIcon(sender);
+
+            var dialog = new MessageDialog(message);
+            await dialog.ShowAsync();
+        }
+                
+        /// <summary>
+        /// Set up the button icon when loaded to reflect the latest state
+        /// </summary>
+        /// <param name="sender">The button</param>
+        /// <param name="e">The parameters</param>
+        private void NotificationButton_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            SetNotificationButtonIcon(sender);
         }
     }
 }

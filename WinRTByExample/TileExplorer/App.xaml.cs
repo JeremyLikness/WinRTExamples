@@ -28,6 +28,8 @@ namespace TileExplorer
     /// </summary>
     public sealed partial class App
     {
+        private const string Notifications = "Notifications";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="App"/> class. 
         /// Initializes the singleton Application object.  This is the first line of authored code
@@ -47,6 +49,23 @@ namespace TileExplorer
             get
             {
                 return ((App)Current).DataSource;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether notifications on.
+        /// </summary>
+        public static bool NotificationsOn
+        {
+            get
+            {
+                return ApplicationData.Current.LocalSettings.Values.ContainsKey(Notifications) 
+                    && (bool)ApplicationData.Current.LocalSettings.Values[Notifications];
+            }
+
+            set
+            {
+                ApplicationData.Current.LocalSettings.Values[Notifications] = value;
             }
         }
 
@@ -121,6 +140,7 @@ namespace TileExplorer
             // set some default tiles 
             TileTemplateType.TileWideText03.GetTile()
                                 .AddText("Tile Explorer")
+                                .WithNoBranding()
                                 .WithTile(TileTemplateType.TileSquareText03.GetTile()
                                     .AddText("Tile Explorer")
                                     .AddText("A WinRT Example")

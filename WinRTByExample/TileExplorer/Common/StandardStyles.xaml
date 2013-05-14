@@ -417,12 +417,12 @@
         <Setter Property="AutomationProperties.AutomationId" Value="SkipAheadAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="Skip Ahead"/>
         <Setter Property="Content" Value="&#xE101;"/>
-    </Style>
+    </Style>-->
     <Style x:Key="PlayAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="PlayAppBarButton"/>
-        <Setter Property="AutomationProperties.Name" Value="Play"/>
+        <Setter Property="AutomationProperties.Name" Value="Notifications On"/>
         <Setter Property="Content" Value="&#xE102;"/>
-    </Style>
+    </Style><!--
     <Style x:Key="PauseAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="PauseAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="Pause"/>
@@ -846,12 +846,12 @@
         <Setter Property="AutomationProperties.AutomationId" Value="CaptionAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="Caption"/>
         <Setter Property="Content" Value="&#xE15A;"/>
-    </Style>
+    </Style>-->
     <Style x:Key="StopAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="StopAppBarButton"/>
-        <Setter Property="AutomationProperties.Name" Value="Stop"/>
+        <Setter Property="AutomationProperties.Name" Value="Notifications Off"/>
         <Setter Property="Content" Value="&#xE15B;"/>
-    </Style>
+    </Style><!--
     <Style x:Key="ShowResultsAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="ShowResultsAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="Show Results"/>
