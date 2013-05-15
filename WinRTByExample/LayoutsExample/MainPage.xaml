@@ -87,7 +87,10 @@
                     </ListView.GroupStyle>
                 </ListView>
                 <FlipView x:Name="ViewFlipView"
+                  VerticalAlignment="Center"
                   Visibility="Collapsed"
+                  Margin="10 100 700 300"                          
+                  Background="DarkGray"
                   ItemsSource="{Binding Source={StaticResource ShapesNotGrouped}}"
                   ItemTemplate="{StaticResource ShapeTemplate}">
                 </FlipView>

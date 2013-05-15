@@ -105,6 +105,18 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <Content Include="..\Common\Logo.png">
+      <Link>Assets\Logo.png</Link>
+    </Content>
+    <Content Include="..\Common\SmallLogo.png">
+      <Link>Assets\SmallLogo.png</Link>
+    </Content>
+    <Content Include="..\Common\SplashScreen.png">
+      <Link>Assets\SplashScreen.png</Link>
+    </Content>
+    <Content Include="..\Common\StoreLogo.png">
+      <Link>Assets\StoreLogo.png</Link>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Common\CommonAssemblyInfo.cs">
@@ -128,12 +140,6 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="LayoutsExample_TemporaryKey.pfx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Assets\Logo.png" />
-    <Content Include="Assets\SmallLogo.png" />
-    <Content Include="Assets\SplashScreen.png" />
-    <Content Include="Assets\StoreLogo.png" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
