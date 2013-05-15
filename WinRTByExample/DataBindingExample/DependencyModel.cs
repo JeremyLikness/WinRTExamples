@@ -25,7 +25,7 @@ namespace DataBindingExample
         [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:FieldsMustBePrivate", 
             Justification = "Reviewed. Suppression is OK here for dependency property.")]
         public static DependencyProperty PercentageProperty = DependencyProperty.Register(
-            "Percentage", typeof(double), typeof(DependencyModel), new PropertyMetadata(0.0, OnPropertyChange));
+            "Percentage", typeof(double), typeof(DependencyModel), new PropertyMetadata(0.0, OnPropertyChanged));
 
         /// <summary>
         /// Gets or sets the percentage.
@@ -52,7 +52,7 @@ namespace DataBindingExample
         /// <param name="e">
         /// The e.
         /// </param>
-        private static void OnPropertyChange(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             Debug.WriteLine("Dependency property changed from {0} to {1}", e.OldValue, e.NewValue);
         }
