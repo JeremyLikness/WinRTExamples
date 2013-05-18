@@ -13,6 +13,7 @@ namespace WebViewExamples
     using System.Collections.Generic;
     using System.Net.Http;
 
+    using Windows.ApplicationModel.DataTransfer;
     using Windows.UI.Popups;
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Navigation;
@@ -158,7 +159,8 @@ namespace WebViewExamples
             var response = await client.GetAsync(new Uri(JeremyYogaPost));
             response.EnsureSuccessStatusCode();
             var html = await response.Content.ReadAsStringAsync();
-            this.WebViewControl.NavigateToString(html);            
+            var fragment = HtmlFormatHelper.GetStaticFragment(HtmlFormatHelper.CreateHtmlFormat(html));
+            this.WebViewControl.NavigateToString(fragment);            
         }
 
         /// <summary>

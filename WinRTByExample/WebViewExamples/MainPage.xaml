@@ -7,10 +7,22 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
+    <Page.BottomAppBar>
+        <AppBar>
+            <StackPanel Orientation="Horizontal">
+                <Button Style="{StaticResource PageAppBarButtonStyle}" Click="ButtonBase_OnClick"/>
+                <Button Style="{StaticResource CellphoneAppBarButtonStyle}" Click="ViewMobile_OnClick"/>
+                <Button Style="{StaticResource SearchAppBarButtonStyle}" Click="ViewSvg_OnClick"/>
+                <Button Style="{StaticResource FontAppBarButtonStyle}" Click="ViewString_OnClick"/>
+                <Button Style="{StaticResource PhoneAppBarButtonStyle}" Click="CallJavaScript_OnClick"/>
+            </StackPanel>
+        </AppBar>
+    </Page.BottomAppBar>
     <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="80"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
