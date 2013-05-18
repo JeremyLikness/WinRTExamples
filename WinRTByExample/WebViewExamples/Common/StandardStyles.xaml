@@ -540,12 +540,12 @@
         <Setter Property="AutomationProperties.AutomationId" Value="MailAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="Mail"/>
         <Setter Property="Content" Value="&#xE119;"/>
-    </Style>
+    </Style>-->
     <Style x:Key="SearchAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="SearchAppBarButton"/>
-        <Setter Property="AutomationProperties.Name" Value="Search"/>
+        <Setter Property="AutomationProperties.Name" Value="View SVG"/>
         <Setter Property="Content" Value="&#xE11A;"/>
-    </Style>
+    </Style><!--
     <Style x:Key="HelpAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="HelpAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="Help"/>
@@ -663,12 +663,12 @@
         <Setter Property="AutomationProperties.AutomationId" Value="ProtectedDocumentAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="Protected Document"/>
         <Setter Property="Content" Value="&#xE131;"/>
-    </Style>
+    </Style>-->
     <Style x:Key="PageAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="PageAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="Page"/>
         <Setter Property="Content" Value="&#xE132;"/>
-    </Style>
+    </Style><!--
     <Style x:Key="BulletsAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="BulletsAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="Bullets"/>
@@ -703,12 +703,12 @@
         <Setter Property="AutomationProperties.AutomationId" Value="MapPinAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="Map Pin"/>
         <Setter Property="Content" Value="&#xE139;"/>
-    </Style>
+    </Style>-->
     <Style x:Key="PhoneAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="PhoneAppBarButton"/>
-        <Setter Property="AutomationProperties.Name" Value="Phone"/>
+        <Setter Property="AutomationProperties.Name" Value="Call JavaScript"/>
         <Setter Property="Content" Value="&#xE13A;"/>
-    </Style>
+    </Style><!--
     <Style x:Key="VideoChatAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="VideoChatAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="Video Chat"/>
@@ -1029,12 +1029,12 @@
         <Setter Property="AutomationProperties.AutomationId" Value="GoToTodayAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="Today"/>
         <Setter Property="Content" Value="&#xE184;"/>
-    </Style>
+    </Style>-->
     <Style x:Key="FontAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="FontAppBarButton"/>
-        <Setter Property="AutomationProperties.Name" Value="Font"/>
+        <Setter Property="AutomationProperties.Name" Value="Load String"/>
         <Setter Property="Content" Value="&#xE185;"/>
-    </Style>
+    </Style><!--
 
     -->
 
@@ -1235,12 +1235,12 @@
     </Style>
     -->
 
-    <!--
+    
     <Style x:Key="CellphoneAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="CellphoneAppBarButton"/>
-        <Setter Property="AutomationProperties.Name" Value="Cellphone"/>
+        <Setter Property="AutomationProperties.Name" Value="Mobile"/>
         <Setter Property="Content" Value="&#xE1C9;"/>
-    </Style>
+    </Style><!--
     <Style x:Key="ReshareAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="ReshareAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="Reshare"/>
