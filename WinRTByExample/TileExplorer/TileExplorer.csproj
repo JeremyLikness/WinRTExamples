@@ -117,8 +117,12 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Badges.xaml.cs">
+      <DependentUpon>Badges.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Common\TileToExampleConverter.cs" />
     <Compile Include="Common\TileToSizeConverter.cs" />
+    <Compile Include="DataModel\BadgeItem.cs" />
     <Compile Include="DataModel\DataSource.cs" />
     <Compile Include="DataModel\TileGroup.cs" />
     <Compile Include="DataModel\TileItem.cs" />
@@ -169,6 +173,16 @@
     <Content Include="Assets\DarkGray.png" />
     <Content Include="Assets\slbookcover.png" />
     <Content Include="Assets\paris.jpg" />
+    <Content Include="Examples\Activity.png" />
+    <Content Include="Examples\Alert.png" />
+    <Content Include="Examples\Attention.png" />
+    <Content Include="Examples\Available.png" />
+    <Content Include="Examples\Away.png" />
+    <Content Include="Examples\Busy.png" />
+    <Content Include="Examples\Error.png" />
+    <Content Include="Examples\NewMessage.png" />
+    <Content Include="Examples\Paused.png" />
+    <Content Include="Examples\Playing.png" />
     <Content Include="Examples\TileSquareBlock.png" />
     <Content Include="Examples\TileSquareImage.png" />
     <Content Include="Examples\TileSquarePeekImageAndText01.png" />
@@ -215,12 +229,17 @@
     <Content Include="Examples\TileWideText09.png" />
     <Content Include="Examples\TileWideText10.png" />
     <Content Include="Examples\TileWideText11.png" />
+    <Content Include="Examples\Unavailable.png" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Badges.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Common\AppStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

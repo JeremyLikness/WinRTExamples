@@ -1265,12 +1265,12 @@
         <Setter Property="AutomationProperties.AutomationId" Value="OutlineStarAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="Outline Star"/>
         <Setter Property="Content" Value="&#xE1CE;"/>
-    </Style>
+    </Style>-->
     <Style x:Key="SolidStarAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="SolidStarAppBarButton"/>
-        <Setter Property="AutomationProperties.Name" Value="Solid Star"/>
+        <Setter Property="AutomationProperties.Name" Value="Update Badge"/>
         <Setter Property="Content" Value="&#xE1CF;"/>
-    </Style>
+    </Style><!--
     <Style x:Key="CalculatorAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="CalculatorAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="Calculator"/>

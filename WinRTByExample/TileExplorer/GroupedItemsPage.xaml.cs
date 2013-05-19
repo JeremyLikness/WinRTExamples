@@ -80,5 +80,15 @@ namespace TileExplorer
             var dataGroups = App.CurrentDataSource.GetGroups();
             this.DefaultViewModel["Groups"] = dataGroups;
         }
+
+        /// <summary>
+        /// Navigate to set the badge
+        /// </summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">The parameter</param>
+        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(Badges), string.Empty);
+        }
     }
 }
