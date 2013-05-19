@@ -12,6 +12,7 @@ namespace TileExplorer.DataModel
     using System.Collections.Generic;
     using System.Linq;
 
+    using WinRTByExample.NotificationHelper.Badges;
     using WinRTByExample.NotificationHelper.Tiles;
 
     /// <summary>
@@ -23,6 +24,11 @@ namespace TileExplorer.DataModel
         /// The groups.
         /// </summary>
         private readonly List<TileGroup> groups = new List<TileGroup>();
+
+        /// <summary>
+        /// The badges
+        /// </summary>
+        private readonly List<BadgeItem> badges = new List<BadgeItem>(); 
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataSource"/> class.
@@ -44,6 +50,25 @@ namespace TileExplorer.DataModel
 
             this.groups.Add(squares);
             this.groups.Add(wides);
+
+            var badgeList = BadgeHelper.GetBadges();
+            foreach (var badge in badgeList
+                .Where(badge => !badge.GlyphType.Equals(BadgeGlyphTypes.None) 
+                && !badge.GlyphType.Equals(BadgeGlyphTypes.Numeric)))
+            {
+                this.badges.Add(new BadgeItem(badge));
+            }
+        }
+
+        /// <summary>
+        /// Gets the badges
+        /// </summary>
+        public IEnumerable<BadgeItem> Badges
+        {
+            get
+            {
+                return this.badges;
+            }
         }
 
         /// <summary>

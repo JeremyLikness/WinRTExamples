@@ -47,6 +47,14 @@ namespace TileExplorer.Common
             {
                 uri = new Uri(string.Format("ms-appx:///Examples/{0}.png", tile.Tile.TemplateType));
             }
+            else
+            {
+                var badge = value as BadgeItem;
+                if (badge != null)
+                {
+                    uri = new Uri(string.Format("ms-appx:///Examples/{0}.png", badge.Badge.TemplateType));
+                }
+            }
 
             return new BitmapImage(uri);
         }
