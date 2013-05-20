@@ -15,7 +15,7 @@ namespace WinRTByExample.NotificationHelper.Badges
     public enum BadgeGlyphTypes
     {
         /// <summary>
-        /// None
+        /// No badge
         /// </summary>
         None,
 
@@ -65,7 +65,7 @@ namespace WinRTByExample.NotificationHelper.Badges
         Playing,
 
         /// <summary>
-        /// Unavalable badge
+        /// Unavailable badge
         /// </summary>
         Unavailable,
 
