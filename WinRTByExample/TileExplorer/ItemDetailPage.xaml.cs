@@ -16,6 +16,8 @@ namespace TileExplorer
     using TileExplorer.Common;
     using TileExplorer.DataModel;
 
+    using WinRTByExample.NotificationHelper.Tiles;
+
     using Windows.ApplicationModel.DataTransfer;
     using Windows.Foundation;
     using Windows.UI.Notifications;
@@ -176,7 +178,7 @@ namespace TileExplorer
 
             try
             {
-                var baseTile = selectedItem.Tile;
+                var baseTile = new BaseTile(selectedItem.Tile.Type);
 
                 for (var textLines = 0; textLines < baseTile.TextLines; textLines++)
                 {
