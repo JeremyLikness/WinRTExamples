@@ -11,49 +11,26 @@ namespace WinRTByExample.NotificationHelper.Tiles
 {
     using System;
 
-    using Windows.Data.Xml.Dom;
     using Windows.UI.Notifications;
+
+    using WinRTByExample.NotificationHelper.Common;
 
     /// <summary>
     /// The base tile.
     /// </summary>
-    public class BaseTile 
+    public class BaseTile : BaseNotification<BaseTile>
     {
-        /// <summary>
-        /// The xml.
-        /// </summary>
-        private readonly XmlDocument xml;
-
-        /// <summary>
-        /// Index of text 
-        /// </summary>
-        private uint textIndex;
-
-        /// <summary>
-        /// Index of image
-        /// </summary>
-        private uint imageIndex; 
-
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseTile"/> class.
         /// </summary>
         /// <param name="templateType">
         /// The template Type.
         /// </param>
-        public BaseTile(TileTemplateType templateType)
+        public BaseTile(TileTemplateType templateType) : base(TileUpdateManager.GetTemplateContent(templateType), templateType.ToString())
         {
             this.Type = templateType;
-            this.TemplateType = templateType.ToString();
-            this.TileType = this.TemplateType.StartsWith("TileSquare") ? TileTypes.Square : TileTypes.Wide;
-            this.xml = TileUpdateManager.GetTemplateContent(templateType);
-            this.TextLines = this.xml.GetElementsByTagName("text").Count;
-            this.Images = this.xml.GetElementsByTagName("image").Count;
+            this.TileType = this.TemplateType.StartsWith("TileSquare") ? TileTypes.Square : TileTypes.Wide;            
         }
-
-        /// <summary>
-        /// Gets or sets the template type.
-        /// </summary>
-        public string TemplateType { get; set; }
 
         /// <summary>
         /// Gets the tile type.
@@ -66,26 +43,34 @@ namespace WinRTByExample.NotificationHelper.Tiles
         public TileTemplateType Type { get; private set; }
 
         /// <summary>
-        /// Gets lines of text the tile supports
-        /// </summary>
-        public int TextLines { get; private set; }
-
-        /// <summary>
-        /// Gets total images the tile supports
-        /// </summary>
-        public int Images { get; private set; }
-        
-        /// <summary>
-        /// Tags the tile
+        /// Gets or sets the tag for the tile
         /// </summary>
         public string Tag { get; set; }
+
+        /// <summary>
+        /// Gets the expiration setter.
+        /// </summary>
+        protected override Action<object, DateTime> ExpirationSetter
+        {
+            get
+            {
+                return (obj, expires) => ((TileNotification)obj).ExpirationTime = expires;
+            }
+        }
 
         /// <summary>
         /// The send method
         /// </summary>
         public void Set()
         {
-            var tile = new TileNotification(this.xml) { Tag = this.Tag };
+            var tile = new TileNotification(this.Xml);            
+            this.SetExpiration(tile);
+
+            if (!string.IsNullOrWhiteSpace(this.Tag))
+            {
+                tile.Tag = this.Tag;
+            }
+
             TileUpdateManager.CreateTileUpdaterForApplication().Update(tile);
         }
 
@@ -145,16 +130,15 @@ namespace WinRTByExample.NotificationHelper.Tiles
         /// <param name="secondaryId">Identifier of the secondary tile</param>
         public void SetSecondary(string secondaryId)
         {
-            TileUpdateManager.CreateTileUpdaterForSecondaryTile(secondaryId).Update(new TileNotification(this.xml));
-        }
+            var tile = new TileNotification(this.Xml);
+            this.SetExpiration(tile);
 
-        /// <summary>
-        /// To string method
-        /// </summary>
-        /// <returns>The xml for the tile</returns>
-        public override string ToString()
-        {
-            return this.xml.GetXml();
+            if (!string.IsNullOrWhiteSpace(this.Tag))
+            {
+                tile.Tag = this.Tag;
+            }
+
+            TileUpdateManager.CreateTileUpdaterForSecondaryTile(secondaryId).Update(tile);
         }
 
         /// <summary>
@@ -165,8 +149,8 @@ namespace WinRTByExample.NotificationHelper.Tiles
         /// </returns>
         public BaseTile WithNoBranding()
         {
-            var visual = this.xml.GetElementsByTagName("visual")[0];
-            var branding = this.xml.CreateAttribute("branding");
+            var visual = this.Xml.GetElementsByTagName("visual")[0];
+            var branding = this.Xml.CreateAttribute("branding");
             branding.NodeValue = "none";
             visual.Attributes.SetNamedItem(branding);
             return this;
@@ -180,8 +164,8 @@ namespace WinRTByExample.NotificationHelper.Tiles
         /// </returns>
         public BaseTile WithLogoBranding()
         {
-            var visual = this.xml.GetElementsByTagName("visual")[0];
-            var branding = this.xml.CreateAttribute("branding");
+            var visual = this.Xml.GetElementsByTagName("visual")[0];
+            var branding = this.Xml.CreateAttribute("branding");
             branding.NodeValue = "logo";
             visual.Attributes.SetNamedItem(branding);
             return this;
@@ -195,8 +179,8 @@ namespace WinRTByExample.NotificationHelper.Tiles
         /// </returns>
         public BaseTile WithNameBranding()
         {
-            var visual = this.xml.GetElementsByTagName("visual")[0];
-            var branding = this.xml.CreateAttribute("branding");
+            var visual = this.Xml.GetElementsByTagName("visual")[0];
+            var branding = this.Xml.CreateAttribute("branding");
             branding.NodeValue = "logo";
             visual.Attributes.SetNamedItem(branding);
             return this;
@@ -220,101 +204,9 @@ namespace WinRTByExample.NotificationHelper.Tiles
         /// <returns>This tile with the other tile merged</returns>
         public BaseTile WithTile(BaseTile otherTile)
         {
-            var otherBinding = this.xml.ImportNode(otherTile.xml.GetElementsByTagName("visual")[0].LastChild, true);
-            this.xml.GetElementsByTagName("visual")[0].AppendChild(otherBinding);
+            var otherBinding = this.Xml.ImportNode(otherTile.Xml.GetElementsByTagName("visual")[0].LastChild, true);
+            this.Xml.GetElementsByTagName("visual")[0].AppendChild(otherBinding);
             return this;
         }
-
-        /// <summary>
-        /// Add a text element 
-        /// </summary>
-        /// <param name="text">
-        /// The text to add
-        /// </param>
-        /// <param name="id">
-        /// The id.
-        /// </param>
-        /// <returns>
-        /// The <see cref="BaseTile"/>.
-        /// </returns>
-        public BaseTile AddText(string text, uint id = 0)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                throw new ArgumentException("text");
-            }
-
-            if (id == 0)
-            {
-                id = this.textIndex++;
-            }
-
-            if (id >= this.TextLines)
-            {
-                throw new ArgumentOutOfRangeException("id");
-            }
-
-            var elements = this.xml.GetElementsByTagName("text");
-
-            var node = elements.Item(id); 
-
-            if (node != null)
-            {
-                node.AppendChild(this.xml.CreateTextNode(text));
-            }
-
-            return this;
-        }
-
-        /// <summary>
-        /// The add image.
-        /// </summary>
-        /// <param name="imageUri">
-        /// The image uri.
-        /// </param>
-        /// <param name="alt">
-        /// The alt.
-        /// </param>
-        /// <param name="id">
-        /// The id.
-        /// </param>
-        /// <returns>
-        /// The <see cref="BaseTile"/>.
-        /// </returns>
-        public BaseTile AddImage(string imageUri, string alt, uint id = 0)
-        {
-            if (string.IsNullOrWhiteSpace(imageUri))
-            {
-                throw new ArgumentException("imageUri");
-            }
-
-            if (id == 0)
-            {
-                id = this.imageIndex++;
-            }
-
-            if (id >= this.Images)
-            {
-                throw new ArgumentOutOfRangeException("id");
-            }
-
-            var elements = this.xml.GetElementsByTagName("image");
-
-            var node = (XmlElement)elements.Item(id);
-
-            if (node == null)
-            {
-                return this;
-            }
-
-            node.SetAttribute("src", imageUri);
-
-            if (!string.IsNullOrWhiteSpace(alt))
-            {
-                node.SetAttribute("alt", alt);
-            }
-
-            return this;
-        }        
     }
 }
