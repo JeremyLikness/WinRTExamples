@@ -71,6 +71,7 @@ namespace Toaster.Data
         /// </summary>
         public ViewModel()
         {
+            this.Executed = (result, message) => { }; // default handler
             var toastList = ToastHelper.GetToasts();
             this.toasts = toastList.Select(item => new ToastItem(item)).ToList();
             this.selectedItem = this.toasts.First();
@@ -83,6 +84,8 @@ namespace Toaster.Data
         /// The can execute changed.
         /// </summary>
         public event EventHandler CanExecuteChanged = delegate { };
+
+        public Action<bool, string> Executed { get; set; }
 
         /// <summary>
         /// Gets the images
@@ -278,44 +281,55 @@ namespace Toaster.Data
         /// <param name="parameter">The parameter</param>
         public void Execute(object parameter)
         {
-            var toast = this.SelectedItem.GetToast();
-            if (this.ShowLine1)
+            try
             {
-                toast.AddText(this.TextLine1);
-            }
+                var toast = this.SelectedItem.GetToast()
+                    .WithArguments(this.SelectedItem.Toast.TemplateType);
 
-            if (this.ShowLine2)
-            {
-                toast.AddText(this.TextLine2);
-            }
+                if (this.ShowLine1)
+                {
+                    toast.AddText(this.TextLine1);
+                }
 
-            if (this.ShowLine3)
-            {
-                toast.AddText(this.TextLine3);
-            }
+                if (this.ShowLine2)
+                {
+                    toast.AddText(this.TextLine2);
+                }
 
-            BaseTile tile;
+                if (this.ShowLine3)
+                {
+                    toast.AddText(this.TextLine3);
+                }
 
-            if (this.ShowImage)
-            {
-                var image = string.Format("ms-appx:///Assets/{0}", this.SelectedImage);
-                toast.AddImage(image, this.SelectedImage);
-                tile = TileTemplateType.TileSquarePeekImageAndText02.GetTile()
-                    .AddImage(image, this.SelectedImage);                                                               
-            }
-            else
-            {
-                tile = TileTemplateType.TileSquareText02.GetTile();                    
-            }
+                BaseTile tile;
 
-            tile.WithNoBranding()
+                if (this.ShowImage)
+                {
+                    var image = string.Format("ms-appx:///Assets/{0}", this.SelectedImage);
+                    toast.AddImage(image, this.SelectedImage);
+                    tile = TileTemplateType.TileSquarePeekImageAndText02.GetTile().AddImage(image, this.SelectedImage);
+                }
+                else
+                {
+                    tile = TileTemplateType.TileSquareText02.GetTile();
+                }
+
+                tile.WithNoBranding()
                     .WithNotifications()
                     .WithExpiration(TimeSpan.FromSeconds(this.DelaySeconds))
                     .AddText("Toast")
-                    .AddText(string.Format("{0} at {1}", toast.TemplateType, DateTime.Now.Add(TimeSpan.FromSeconds(this.delaySeconds))))
+                    .AddText(
+                        string.Format(
+                            "{0} at {1}", toast.TemplateType, DateTime.Now.Add(TimeSpan.FromSeconds(this.delaySeconds))))
                     .Set();
 
-            toast.ScheduleIn(TimeSpan.FromSeconds(this.DelaySeconds));
+                toast.ScheduleIn(TimeSpan.FromSeconds(this.DelaySeconds));
+                this.Executed(true, string.Empty);
+            }
+            catch (Exception ex)
+            {
+                this.Executed(false, ex.Message);
+            }
         }        
     }
 }

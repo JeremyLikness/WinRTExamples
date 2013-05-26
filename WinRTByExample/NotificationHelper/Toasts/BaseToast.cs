@@ -59,7 +59,7 @@ namespace WinRTByExample.NotificationHelper.Toasts
         /// </returns>
         public BaseToast WithArguments(string args)
         {
-            var visual = this.Xml.GetElementsByTagName("visual")[0];
+            var visual = this.Xml.GetElementsByTagName("toast")[0];
             var launch = this.Xml.CreateAttribute("launch");
             launch.NodeValue = args;
             visual.Attributes.SetNamedItem(launch);

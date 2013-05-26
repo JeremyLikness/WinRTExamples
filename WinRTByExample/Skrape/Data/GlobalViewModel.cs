@@ -21,6 +21,7 @@ namespace Skrape.Data
 
     using Windows.ApplicationModel.DataTransfer;
     using Windows.Storage;
+    using Windows.Storage.Streams;
     using Windows.UI.Popups;
 
     /// <summary>
@@ -263,7 +264,7 @@ namespace Skrape.Data
             var download = await DownloadsFolder.CreateFileAsync(filename, CreationCollisionOption.GenerateUniqueName);
 
             // await FileIO.WriteTextAsync(download, page.Text, Windows.Storage.Streams.UnicodeEncoding.Utf8);
-            using (var stream = await download.OpenAsync(FileAccessMode.ReadWrite))
+            using (IRandomAccessStream stream = await download.OpenAsync(FileAccessMode.ReadWrite))
             {
                 await stream.WriteAsync(Encoding.UTF8.GetBytes(page.Text).AsBuffer());
                 await stream.FlushAsync();
@@ -288,16 +289,32 @@ namespace Skrape.Data
             {
                 var clipboardData = Clipboard.GetContent();
 
-                if (!clipboardData.Contains(StandardDataFormats.Uri))
+                var urlAdded = false;
+                var uri = new Uri("http://csharperimage.jeremylikness.com/", UriKind.Absolute); // default initial value
+
+                if (clipboardData.Contains(StandardDataFormats.Uri))
                 {
-                    dialog = new MessageDialog("There is no URL in the clipboard.");
+                    uri = await clipboardData.GetUriAsync();
+                    urlAdded = true;
                 }
-                else
+                else if (clipboardData.Contains(StandardDataFormats.Text))
                 {
-                    var uri = await clipboardData.GetUriAsync();
+                    var text = await clipboardData.GetTextAsync();
+                    if (Uri.TryCreate(text, UriKind.Absolute, out uri))
+                    {
+                        urlAdded = true;
+                    }
+                }
+
+                if (urlAdded)
+                {
                     await this.DataManager.AddUrl(uri);
                     dialog = new MessageDialog("The URL was added.");
                 }
+                else
+                {
+                    dialog = new MessageDialog("There is no URL in the clipboard.");
+                }                                
             }
             catch (Exception ex)
             {
