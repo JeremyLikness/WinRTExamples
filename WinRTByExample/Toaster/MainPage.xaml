@@ -7,7 +7,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:common="using:Toaster.Common" xmlns:data="using:Toaster.Data"
     mc:Ignorable="d">
-
+    <Page.Resources>
+        <data:ViewModel x:Key="ViewModel"/>
+    </Page.Resources>
     <Grid
         Style="{StaticResource LayoutRootStyle}">
 
@@ -17,10 +19,7 @@
         </Grid.RowDefinitions>
 
         <ScrollViewer Grid.Row="1">
-            <Grid>
-                <Grid.DataContext>
-                    <data:ViewModel/>
-                </Grid.DataContext>
+            <Grid DataContext="{StaticResource ViewModel}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>

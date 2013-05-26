@@ -16,7 +16,6 @@ namespace DataFormatsExample
     using Windows.Data.Xml.Xsl;
     using Windows.Storage;
     using Windows.UI.Xaml;
-    using Windows.UI.Xaml.Documents;
 
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -80,7 +79,7 @@ namespace DataFormatsExample
             var xml = await XmlDocument.LoadFromFileAsync(file);
 
             var json = new JsonObject();
-            var catalog = xml.DocumentElement;
+            XmlElement catalog = xml.DocumentElement;
             if (catalog != null)
             {
                 var books = new JsonArray();

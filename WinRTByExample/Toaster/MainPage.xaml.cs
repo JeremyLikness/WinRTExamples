@@ -9,6 +9,12 @@
 
 namespace Toaster
 {
+    using System;
+    using System.Linq;
+
+    using Toaster.Data;
+
+    using Windows.UI.Popups;
     using Windows.UI.Xaml.Navigation;
 
     /// <summary>
@@ -22,6 +28,18 @@ namespace Toaster
         public MainPage()
         {
             this.InitializeComponent();
+            this.Loaded += this.MainPageLoaded;
+        }
+
+        /// <summary>
+        /// Gets the view model.
+        /// </summary>
+        private ViewModel ViewModel
+        {
+            get
+            {
+                return (ViewModel)Resources["ViewModel"];
+            }
         }
 
         /// <summary>
@@ -31,6 +49,45 @@ namespace Toaster
         /// property is typically used to configure the page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            if (e.Parameter == null)
+            {
+                return;
+            }
+
+            var toastType = e.Parameter.ToString();
+
+            var toast = this.ViewModel.Toasts.FirstOrDefault(t => t.Toast.TemplateType == toastType);
+
+            if (toast != null)
+            {
+                this.ViewModel.SelectedItem = toast;
+            }
+        }
+
+        /// <summary>
+        /// The main page loaded.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void MainPageLoaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            this.ViewModel.Executed = async (result, message) =>
+            {
+                if (result)
+                {
+                    var successdialog = new MessageDialog("The toast was scheduled.");
+                    await successdialog.ShowAsync();
+                }
+                else
+                {
+                    var errorDialog = new MessageDialog(message, "An Error Occurred.");
+                    await errorDialog.ShowAsync();
+                }
+            };
         }
     }
 }

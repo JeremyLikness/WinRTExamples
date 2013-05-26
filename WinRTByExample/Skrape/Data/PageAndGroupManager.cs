@@ -329,11 +329,7 @@ namespace Skrape.Data
                         restoredGroup.Pages.Add(await RestorePage(pageId));
                     }
                 }
-                else
-                {
-                    throw new Exception("Error restoring groups.");
-                }
-
+                
                 groups.Add(restoredGroup);
             }
 
@@ -368,11 +364,7 @@ namespace Skrape.Data
                     restoredPage.Images.Add(new Uri(compositeValue[ImageIndex + idx].ToString()));
                 }
             }
-            else
-            {
-                throw new Exception("Error restoring page.");
-            }
-
+            
             await RestorePageData(restoredPage);
             return restoredPage;
         }
@@ -415,7 +407,7 @@ namespace Skrape.Data
                     //     var sizeBytes = new byte[sizeof(int)];
                     //     await decompressionStream.ReadAsync(sizeBytes, 0, sizeof(int));                            
                     //     var totalSize = BitConverter.ToInt32(sizeBytes, 0);
-                    //     byteBuffer = new byte[totalSize];
+                    //     var byteBuffer = new byte[totalSize];
                     //     await decompressionStream.ReadAsync(byteBuffer, 0, totalSize);
                     //     page.Html = Encoding.UTF8.GetString(byteBuffer, 0, byteBuffer.Length);
                     // }
@@ -450,13 +442,13 @@ namespace Skrape.Data
 
             using (var zip = new ZipArchive(await file.OpenStreamForWriteAsync(), ZipArchiveMode.Create))
             {
-                var htmlEntry = zip.CreateEntry(HtmlEntry);
+                ZipArchiveEntry htmlEntry = zip.CreateEntry(HtmlEntry);
                 using (var htmlStream = new StreamWriter(htmlEntry.Open()))
                 {
                     await htmlStream.WriteAsync(page.Html);
                 }
 
-                var textEntry = zip.CreateEntry(TextEntry);
+                ZipArchiveEntry textEntry = zip.CreateEntry(TextEntry);
                 using (var textStream = new StreamWriter(textEntry.Open()))
                 {
                     await textStream.WriteAsync(page.Text);
