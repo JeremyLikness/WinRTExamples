@@ -79,10 +79,12 @@ namespace RestServiceExample.DataModel
         /// </returns>
         private static async Task LoadProductsForCategory(Uri productsUri, Category category)
         {
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Accept.Add(Json);
-
-            var jsonResponse = await client.GetStringAsync(productsUri);
+            string jsonResponse;
+            using (var client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Accept.Add(Json);
+                jsonResponse = await client.GetStringAsync(productsUri);
+            }
 
             var json = JsonObject.Parse(jsonResponse);
             var productsList = json["d"].GetArray();

@@ -43,19 +43,34 @@ namespace SoapServiceExample.Data
                 return new DesignForecast();
             }
 
-            var factory = new ChannelFactory<WeatherSoapChannel>(
-                new BasicHttpBinding(), 
-                new EndpointAddress("http://wsf.cdyne.com/WeatherWS/Weather.asmx"));
-            var channel = factory.CreateChannel();
-            var forecast = await channel.GetCityForecastByZIPAsync(zipCode);
-            var result = forecast.AsWeatherForecast();
-
-            foreach (var day in result.Forecast)
+            try
             {
-                day.ForecastUri = await this.GetImageUriForType(day.TypeId);
+                // you can cache this factory to reuse if you are making multiple calls in a high volume 
+                // application
+                using (
+                    var factory = new ChannelFactory<WeatherSoapChannel>(
+                        new BasicHttpBinding(), new EndpointAddress("http://wsf.cdyne.com/WeatherWS/Weather.asmx")))
+                {
+                    var channel = factory.CreateChannel();
+                    var forecast = await channel.GetCityForecastByZIPAsync(zipCode);
+                    var result = forecast.AsWeatherForecast();
+
+                    foreach (var day in result.Forecast)
+                    {
+                        day.ForecastUri = await this.GetImageUriForType(day.TypeId);
+                    }
+
+                    return result;
+                }
             }
-            
-            return result; 
+            catch (EndpointNotFoundException)
+            {
+                var result = new WeatherForecast
+                                 {
+                                     Result = "Unable to connect to the service."
+                                 };
+                return result;
+            }
         }
 
         /// <summary>
