@@ -28,8 +28,9 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <TextBlock Text="Select a Toast Template:" Style="{StaticResource GroupHeaderTextStyle}"/>
+                <TextBlock Margin="5" Text="Select a Toast Template:" Style="{StaticResource GroupHeaderTextStyle}"/>
                 <ListView Margin="0 10 0 0 " Grid.Row="1" ItemsSource="{Binding Toasts}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
@@ -61,7 +62,7 @@
                 </StackPanel>
                 <StackPanel Grid.Row="4" Orientation="Horizontal" Visibility="{Binding ShowImage, Converter={StaticResource ShowThisConverter}}">
                     <TextBlock Text="Select Your Image:" Style="{StaticResource ItemTextStyle}" Margin="5"/>
-                    <ListView ItemsSource="{Binding Images}" SelectedItem="{Binding SelectedImage, Mode=TwoWay}">
+                    <ListView Background="LightGray" ItemsSource="{Binding Images}" SelectedItem="{Binding SelectedImage, Mode=TwoWay}">
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <StackPanel Orientation="Horizontal"/>
@@ -75,11 +76,19 @@
                     </ListView>
                 </StackPanel>
                 <StackPanel Grid.Row="5" Orientation="Horizontal" Height="40">
-                    <TextBlock Text="Enter Delay (Seconds):" Style="{StaticResource ItemTextStyle}" VerticalAlignment="Center"/>
+                    <TextBlock Text="Enter Delay (Seconds):" Margin="5" Style="{StaticResource ItemTextStyle}" VerticalAlignment="Center"/>
                     <Slider Minimum="1" Maximum="300" Width="300" Value="{Binding DelaySeconds, Mode=TwoWay}" Margin="10 0 0 0" VerticalAlignment="Center"/>
-                    <TextBlock Text="{Binding DelaySeconds}" Style="{StaticResource ItemTextStyle}" Margin="5 0 0 0" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding DelaySeconds}" Style="{StaticResource ItemTextStyle}" Margin="5 0 0 0" VerticalAlignment="Center"/>                    
                 </StackPanel>
-                <Button Grid.Row="6" Content="Send" Command="{Binding}"/>
+                <StackPanel Grid.Row="6" Orientation="Horizontal" Height="40">
+                    <TextBlock Text="Silent?" Style="{StaticResource ItemTextStyle}" Margin="10 0 0 0" VerticalAlignment="Center"/>
+                    <CheckBox IsChecked="{Binding Silent, Mode=TwoWay}"/>
+                    <TextBlock Visibility="{Binding Silent, Converter={StaticResource ShowThisConverter}, ConverterParameter='reverse'}" Text="Audio Type: " Margin="10 0 0 0" Style="{StaticResource ItemTextStyle}" VerticalAlignment="Center"/>
+                    <ComboBox Visibility="{Binding Silent, Converter={StaticResource ShowThisConverter}, ConverterParameter='reverse'}" ItemsSource="{Binding AudioTypes}" DisplayMemberPath="DisplayType" SelectedItem="{Binding SelectedAudio, Mode=TwoWay}" VerticalAlignment="Center" Margin="5 0 0 0"/>
+                    <TextBlock Visibility="{Binding IsLoopCapable, Converter={StaticResource ShowThisConverter}}" Text="Loop?" Margin="10 0 0 0" Style="{StaticResource ItemTextStyle}" VerticalAlignment="Center"/>
+                    <CheckBox Visibility="{Binding IsLoopCapable, Converter={StaticResource ShowThisConverter}}" IsChecked="{Binding Loop, Mode=TwoWay}" VerticalAlignment="Center"></CheckBox>
+                </StackPanel>
+                <Button Grid.Row="7" Content="Send" Margin="5" Command="{Binding}"/>
             </Grid>
         </ScrollViewer>
         

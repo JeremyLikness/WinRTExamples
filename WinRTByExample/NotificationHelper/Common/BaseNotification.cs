@@ -12,6 +12,7 @@ namespace WinRTByExample.NotificationHelper.Common
     using System;
 
     using Windows.Data.Xml.Dom;
+    using Windows.UI.Notifications;
 
     /// <summary>
     /// The base notification.
@@ -211,6 +212,11 @@ namespace WinRTByExample.NotificationHelper.Common
         /// <summary>
         /// Set the expiration if set
         /// </summary>
+        /// <typeparam name="TNotification">Type of notification
+        /// </typeparam>
+        /// <param name="notification">
+        /// The notification.
+        /// </param>
         protected void SetExpiration<TNotification>(TNotification notification)
         {
             if (this.Expiration != null)

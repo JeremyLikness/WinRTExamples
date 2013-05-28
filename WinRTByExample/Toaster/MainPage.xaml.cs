@@ -79,7 +79,8 @@ namespace Toaster
             {
                 if (result)
                 {
-                    var successdialog = new MessageDialog("The toast was scheduled.");
+                    var msg = string.IsNullOrWhiteSpace(message) ? "The toast was scheduled." : message;
+                    var successdialog = new MessageDialog(msg);
                     await successdialog.ShowAsync();
                 }
                 else

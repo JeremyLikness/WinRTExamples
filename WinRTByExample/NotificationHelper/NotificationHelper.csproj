@@ -117,7 +117,10 @@
     <Compile Include="Tiles\BaseTile.cs" />
     <Compile Include="Tiles\TileHelper.cs" />
     <Compile Include="Tiles\TileTypes.cs" />
+    <Compile Include="Toasts\AudioLoopType.cs" />
+    <Compile Include="Toasts\AudioType.cs" />
     <Compile Include="Toasts\BaseToast.cs" />
+    <Compile Include="Toasts\ICanLoop.cs" />
     <Compile Include="Toasts\ToastHelper.cs" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">

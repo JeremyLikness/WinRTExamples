@@ -28,6 +28,9 @@ namespace TileExplorer
     /// </summary>
     public sealed partial class App
     {
+        /// <summary>
+        /// The notifications.
+        /// </summary>
         private const string Notifications = "Notifications";
 
         /// <summary>
