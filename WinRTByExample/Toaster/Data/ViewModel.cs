@@ -32,6 +32,11 @@ namespace Toaster.Data
         private readonly List<ToastItem> toasts;
 
         /// <summary>
+        /// The audio types
+        /// </summary>
+        private readonly List<AudioType> audioTypes; 
+
+        /// <summary>
         /// The images
         /// </summary>
         private readonly string[] images; 
@@ -40,6 +45,11 @@ namespace Toaster.Data
         /// The selected item
         /// </summary>
         private ToastItem selectedItem;
+
+        /// <summary>
+        /// The selected audio 
+        /// </summary>
+        private AudioType selectedAudio; 
 
         /// <summary>
         /// The selected image
@@ -67,11 +77,23 @@ namespace Toaster.Data
         private int delaySeconds;
 
         /// <summary>
+        /// Make the toast silent
+        /// </summary>
+        private bool silent;
+
+        /// <summary>
+        /// Loop the audio
+        /// </summary>
+        private bool loop;
+        
+        /// <summary>
         /// Initializes a new instance of the <see cref="ViewModel"/> class.
         /// </summary>
         public ViewModel()
         {
             this.Executed = (result, message) => { }; // default handler
+            this.audioTypes = ToastHelper.GetAudioTypes().ToList();
+            this.selectedAudio = this.audioTypes.FirstOrDefault(a => a.DisplayType.Equals("Default"));
             var toastList = ToastHelper.GetToasts();
             this.toasts = toastList.Select(item => new ToastItem(item)).ToList();
             this.selectedItem = this.toasts.First();
@@ -85,6 +107,9 @@ namespace Toaster.Data
         /// </summary>
         public event EventHandler CanExecuteChanged = delegate { };
 
+        /// <summary>
+        /// Gets or sets the executed delegate to call
+        /// </summary>
         public Action<bool, string> Executed { get; set; }
 
         /// <summary>
@@ -110,6 +135,17 @@ namespace Toaster.Data
         }
 
         /// <summary>
+        /// Gets the audio types
+        /// </summary>
+        public IEnumerable<AudioType> AudioTypes
+        {
+            get
+            {
+                return this.audioTypes;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the selected item.
         /// </summary>
         public ToastItem SelectedItem
@@ -129,6 +165,54 @@ namespace Toaster.Data
                 this.OnPropertyChanged("ShowLine3");
                 this.OnPropertyChanged("ShowImage");
                 // ReSharper restore ExplicitCallerInfoArgument
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the selected audio.
+        /// </summary>
+        public AudioType SelectedAudio 
+        {
+            get
+            {
+                return this.selectedAudio;
+            }
+
+            set
+            {
+                this.selectedAudio = value;
+                this.OnPropertyChanged();
+                // ReSharper disable ExplicitCallerInfoArgument                
+                this.OnPropertyChanged("IsLoopCapable");
+                // ReSharper restore ExplicitCallerInfoArgument
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether is loop capable.
+        /// </summary>
+        public bool IsLoopCapable
+        {
+            get
+            {
+                return this.selectedAudio is ICanLoop; 
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether loop.
+        /// </summary>
+        public bool Loop
+        {
+            get
+            {
+                return this.loop;
+            }
+
+            set
+            {
+                this.loop = value;
+                this.OnPropertyChanged();
             }
         }
 
@@ -262,6 +346,23 @@ namespace Toaster.Data
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether silent.
+        /// </summary>
+        public bool Silent
+        {
+            get
+            {
+                return this.silent;
+            }
+
+            set
+            {
+                this.silent = value;
+                this.OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
         /// The can execute.
         /// </summary>
         /// <param name="parameter">
@@ -286,6 +387,22 @@ namespace Toaster.Data
                 var toast = this.SelectedItem.GetToast()
                     .WithArguments(this.SelectedItem.Toast.TemplateType);
 
+                if (this.Silent)
+                {
+                    toast.WithNoAudio();
+                }
+                else
+                {
+                    if (this.IsLoopCapable && this.Loop)
+                    {
+                        toast.WithLoopingAudio((AudioLoopType)this.SelectedAudio);
+                    }
+                    else
+                    {
+                        toast.WithAudio(this.SelectedAudio);
+                    }
+                }
+
                 if (this.ShowLine1)
                 {
                     toast.AddText(this.TextLine1);
@@ -299,6 +416,11 @@ namespace Toaster.Data
                 if (this.ShowLine3)
                 {
                     toast.AddText(this.TextLine3);
+                }
+
+                if (this.Silent)
+                {
+                    toast.WithNoAudio();
                 }
 
                 BaseTile tile;

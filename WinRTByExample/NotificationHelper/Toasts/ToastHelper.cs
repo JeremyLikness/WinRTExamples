@@ -21,12 +21,50 @@ namespace WinRTByExample.NotificationHelper.Toasts
     public static class ToastHelper
     {
         /// <summary>
+        /// The no loop audio.
+        /// </summary>
+        private static readonly string[] NoLoopAudio = new[] { "Default", "IM", "Mail", "Reminder", "SMS" };
+
+        /// <summary>
+        /// The loop audio.
+        /// </summary>
+        private static readonly string[] LoopAudio = new[] { "Alarm", "Alarm2", "Call", "Call2" };
+
+        /// <summary>
+        /// The audio types.
+        /// </summary>
+        private static AudioType[] audioTypes;
+
+        /// <summary>
         /// The base tiles.
         /// </summary>
         private static BaseToast[] baseToasts;
 
         /// <summary>
-        /// The get tiles.
+        /// The get audio types.
+        /// </summary>
+        /// <returns>
+        /// The list of <see cref="AudioType"/>
+        /// </returns>
+        public static AudioType[] GetAudioTypes()
+        {
+            if (audioTypes == null)
+            {
+                var list = NoLoopAudio.Select(noLoop => 
+                    new AudioType(noLoop, string.Format("Notification.{0}", noLoop), false))
+                    .ToList();
+                
+                list.AddRange(LoopAudio.Select(loop => 
+                    new AudioLoopType(loop, string.Format("Notification.Looping.{0}", loop))));
+
+                audioTypes = list.OrderBy(a => a.DisplayType).ToArray();
+            }
+
+            return audioTypes;
+        }
+        
+        /// <summary>
+        /// The get toasts.
         /// </summary>
         /// <returns>
         /// The <see cref="BaseToast"/> array.
