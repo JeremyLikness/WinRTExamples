@@ -61,7 +61,10 @@
             <TextBlock Text="Choose Authentication Provider:" Style="{StaticResource PageSubheaderTextStyle}" Margin="12 0 0 0" Grid.Row="3"/>
             <ComboBox ItemsSource="{Binding AuthenticationTypes}" DisplayMemberPath="Name" Grid.Row="3" Grid.Column="1" SelectedItem="{Binding SelectedType, Mode=TwoWay}"
                       Margin="12 0 0 0" HorizontalAlignment="Left" Width="200"></ComboBox>
-            <Button Grid.Row="4" Grid.Column="1" Content="Sign On" Margin="12" Command="{Binding}"/>
+            <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" Margin="12">
+                <Button Content="Sign On" Margin="12" Command="{Binding}"/>
+                <Button Content="Sign Out" Margin="12" Command="{Binding}" CommandParameter="signout"/>
+            </StackPanel>
             <ListView Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5"
                       ItemsSource="{Binding Console}" SelectedItem="{Binding ConsoleItem, Mode=TwoWay}"
                       SelectionChanged="Selector_OnSelectionChanged">
