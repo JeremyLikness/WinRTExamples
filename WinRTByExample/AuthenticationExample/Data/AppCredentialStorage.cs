@@ -38,7 +38,36 @@ namespace AuthenticationExample.Data
         public void Save(string key, DateTime expiration, string token)
         {
             var vault = new PasswordVault();
-            vault.Add(new PasswordCredential(key, Username, string.Format("{0}={1}", expiration, token)));
+            var credential = new PasswordCredential(
+                key, 
+                Username, 
+                string.Format("{0}|{1}", expiration, token));
+            vault.Add(credential);
+        }
+
+        /// <summary>
+        /// The sign out method.
+        /// </summary>
+        /// <param name="key">
+        /// The key.
+        /// </param>
+        public void Signout(string key)
+        {
+            var vault = new PasswordVault();
+            PasswordCredential credential;
+            try
+            {
+                credential = vault.Retrieve(key, Username);
+            }
+            catch
+            {
+                return;
+            }
+
+            if (credential != null)
+            {
+                vault.Remove(credential);
+            }
         }
 
         /// <summary>
@@ -71,13 +100,18 @@ namespace AuthenticationExample.Data
 
             if (credential != null)
             {
-                var values = credential.Password.Split('=');
-                var expiration = DateTime.SpecifyKind(DateTime.Parse(values[0]), DateTimeKind.Utc);
-
-                if (expiration > DateTime.UtcNow)
+                credential.RetrievePassword();
+                var tokenExpiration = credential.Password;
+                if (tokenExpiration.Contains("|"))
                 {
-                    value = values[1];
-                    return true;
+                    var expirationDate = tokenExpiration.Substring(0, tokenExpiration.IndexOf('|'));
+                    var expiration = DateTime.SpecifyKind(DateTime.Parse(expirationDate), DateTimeKind.Utc);
+                
+                    if (expiration > DateTime.UtcNow)
+                    {
+                        value = tokenExpiration.Substring(tokenExpiration.IndexOf('|') + 1);
+                        return true;
+                    }
                 }
             }
 

@@ -30,7 +30,12 @@ namespace AuthenticationExample.Data
         /// <summary>
         /// The console.
         /// </summary>
-        private readonly ObservableCollection<string> console = new ObservableCollection<string>();             
+        private readonly ObservableCollection<string> console = new ObservableCollection<string>();
+
+        /// <summary>
+        /// The credential storage
+        /// </summary>
+        private readonly ICredentialStorage credentialStorage;
 
         /// <summary>
         /// Selected authentication type
@@ -57,12 +62,12 @@ namespace AuthenticationExample.Data
         /// </summary>
         public ViewModel()
         {
-            var storage = new AppCredentialStorage();
-            var googleAuth = new GoogleAuthenticator(storage)
+            this.credentialStorage = new AppCredentialStorage();
+            var googleAuth = new GoogleAuthenticator(this.credentialStorage)
                                  {
                                      LogToConsole = this.Log
                                  };
-            var facebookAuth = new FacebookAuthenticator(storage)
+            var facebookAuth = new FacebookAuthenticator(this.credentialStorage)
                                    {
                                        LogToConsole = this.Log
                                    };
@@ -223,6 +228,13 @@ namespace AuthenticationExample.Data
         /// </param>
         public void Execute(object parameter)
         {
+            if (parameter != null && parameter.ToString().Equals("signout"))
+            {
+                this.credentialStorage.Signout(this.selectedType.Name);
+                this.Log(string.Format("Signed out of {0}", this.selectedType.Name));
+                return;
+            }
+
             Action asyncExecute = async () =>
                 {
                     if (this.selectedType.Auth == null)

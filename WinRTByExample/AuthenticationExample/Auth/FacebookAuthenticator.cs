@@ -25,7 +25,7 @@ namespace AuthenticationExample.Auth
         /// <summary>
         /// The face book id.
         /// </summary>
-        private const string FacebookAppId = "{InsertYourAppId}"; // App ID from https://developers.facebook.com/apps 
+        private const string FacebookAppId = "{YourAppIdHere}"; // App ID from https://developers.facebook.com/apps 
 
         /// <summary>
         /// The facebook redirect uri.

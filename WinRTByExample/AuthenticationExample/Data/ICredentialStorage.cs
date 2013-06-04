@@ -31,6 +31,12 @@ namespace AuthenticationExample.Data
         void Save(string key, DateTime expiration, string token);
 
         /// <summary>
+        /// Sign out (destroy the credential)
+        /// </summary>
+        /// <param name="key">The key</param>
+        void Signout(string key);
+
+        /// <summary>
         /// The try restore.
         /// </summary>
         /// <param name="key">
