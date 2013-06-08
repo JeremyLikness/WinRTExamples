@@ -74,12 +74,12 @@ namespace SafeNotes.Data
             var fileName = note.Id;
             var file = await this.notesFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
             var data = new[]
-                           {
-                               await ProtectDataAsync(note.Title), 
-                               await ProtectDataAsync(note.Description),
-                               await ProtectDataAsync(note.DateCreated.ToString()),
-                               await ProtectDataAsync(note.DateModified.ToString())
-                           };
+                            {
+                                await ProtectDataAsync(note.Title), 
+                                await ProtectDataAsync(note.Description),
+                                await ProtectDataAsync(note.DateCreated.ToString()),
+                                await ProtectDataAsync(note.DateModified.ToString())
+                            };
 
             await FileIO.WriteLinesAsync(file, data);
         }
@@ -119,7 +119,7 @@ namespace SafeNotes.Data
         /// </returns>
         private static async Task<string> ProtectDataAsync(string data)
         {
-            var dataProtection = new DataProtectionProvider(Scope);
+            var dataProtection = new DataProtectionProvider(Scope);          
             IBuffer dataBuffer = CryptographicBuffer.ConvertStringToBinary(data, Encoding);
             IBuffer encryptedBuffer = await dataProtection.ProtectAsync(dataBuffer);
             return CryptographicBuffer.EncodeToBase64String(encryptedBuffer);
@@ -160,14 +160,21 @@ namespace SafeNotes.Data
                 return null;
             }
 
-            return new SimpleNote
+            try
             {
-                Id = id,
-                Title = await UnprotectDataAsync(data[0]),
-                Description = await UnprotectDataAsync(data[1]),
-                DateCreated = DateTime.Parse(await UnprotectDataAsync(data[2])),
-                DateModified = DateTime.Parse(await UnprotectDataAsync(data[3]))
-            };
+                return new SimpleNote
+                           {
+                               Id = id,
+                               Title = await UnprotectDataAsync(data[0]),
+                               Description = await UnprotectDataAsync(data[1]),
+                               DateCreated = DateTime.Parse(await UnprotectDataAsync(data[2])),
+                               DateModified = DateTime.Parse(await UnprotectDataAsync(data[3]))
+                           };
+            }
+            catch (Exception)
+            {
+                return new SimpleNote { Id = id, Title = "Error in Stored Note", Description = "The note was corrupted on disk." };
+            }
         }
     }
 }

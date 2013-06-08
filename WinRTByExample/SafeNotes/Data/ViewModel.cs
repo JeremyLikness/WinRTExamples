@@ -17,10 +17,10 @@ namespace SafeNotes.Data
 
     using SafeNotes.Common;
 
-    using WinRTByExample.NotificationHelper.Tiles;
-
     using Windows.UI.Notifications;
     using Windows.UI.Popups;
+
+    using WinRTByExample.NotificationHelper.Tiles;
 
     /// <summary>
     /// The view model.
@@ -242,12 +242,13 @@ namespace SafeNotes.Data
                 {
                     this.groupHelper.InsertNoteIntoGroups(note, this.NoteGroups);
                 }
+
                 this.CurrentNote = notes.FirstOrDefault();
+                this.GetNotableGroups();
+                this.SetTile();
             }
 
-            this.GetNotableGroups();
             this.IsInitialized = true;
-            this.SetTile();
         }
 
         /// <summary>
