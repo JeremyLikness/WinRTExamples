@@ -1,0 +1,26 @@
+﻿<Application
+    x:Class="SafeNotes.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SafeNotes" xmlns:data="using:SafeNotes.Data"
+    RequestedTheme="Light">
+
+    <Application.Resources>
+        <ResourceDictionary>
+
+            <x:String x:Key="AppName">Safe Notes</x:String>
+            <data:ViewModel x:Key="GlobalViewModel"/>
+
+            <ResourceDictionary.MergedDictionaries>
+
+                <!-- 
+                    Styles that define common aspects of the platform look and feel
+                    Required by Visual Studio project and item templates
+                 -->
+                <ResourceDictionary Source="Common/StandardStyles.xaml"/>
+                <ResourceDictionary Source="Common/AppStyles.xaml"></ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+            
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
