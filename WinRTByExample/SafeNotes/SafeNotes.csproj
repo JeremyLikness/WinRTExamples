@@ -123,11 +123,12 @@
     <Compile Include="Common\LayoutAwarePage.cs" />
     <Compile Include="Common\RichTextColumns.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
+    <Compile Include="Common\ValidationBase.cs" />
     <Compile Include="Data\DataSource.cs" />
     <Compile Include="Data\GroupHelper.cs" />
     <Compile Include="Data\NoteGroup.cs" />
     <Compile Include="Data\SimpleNote.cs" />
-    <Compile Include="Data\ValidationError.cs" />
+    <Compile Include="Common\ValidationErrors.cs" />
     <Compile Include="Data\ViewModel.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>

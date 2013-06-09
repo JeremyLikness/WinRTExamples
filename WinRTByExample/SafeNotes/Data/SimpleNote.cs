@@ -16,7 +16,7 @@ namespace SafeNotes.Data
     /// <summary>
     /// The simple note.
     /// </summary>
-    public class SimpleNote : BindableBase
+    public class SimpleNote : ValidationBase 
     {
         /// <summary>
         /// The title.
@@ -41,22 +41,11 @@ namespace SafeNotes.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="SimpleNote"/> class.
         /// </summary>
-        public SimpleNote()
+        public SimpleNote() 
         {
             this.DateCreated = DateTime.Now;
-            this.ValidationErrors = new ValidationError();
             this.Id = Guid.NewGuid().ToString();
         }
-
-        /// <summary>
-        /// Gets or sets the validation errors.
-        /// </summary>
-        public ValidationError ValidationErrors { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether is valid.
-        /// </summary>
-        public bool IsValid { get; set; }
 
         /// <summary>
         /// Gets or sets the unique identifier 
@@ -134,29 +123,6 @@ namespace SafeNotes.Data
         }
 
         /// <summary>
-        /// The validate.
-        /// </summary>
-        public void Validate()
-        {
-            this.ValidationErrors.Clear();
-
-            if (string.IsNullOrWhiteSpace(this.title))
-            {
-                this.ValidationErrors["Title"] = "Title is required.";
-            }
-
-            if (string.IsNullOrWhiteSpace(this.description))
-            {
-                this.ValidationErrors["Description"] = "You must type some text for the note.";
-            }
-
-            this.IsValid = this.ValidationErrors.IsValid;
-// ReSharper disable ExplicitCallerInfoArgument
-            this.OnPropertyChanged("ValidationErrors");
-// ReSharper restore ExplicitCallerInfoArgument
-        }
-
-        /// <summary>
         /// The to string.
         /// </summary>
         /// <returns>
@@ -165,6 +131,22 @@ namespace SafeNotes.Data
         public override string ToString()
         {
             return string.Format("{0} ({1})", this.Title, this.Id);
+        }
+
+        /// <summary>
+        /// The validate self.
+        /// </summary>
+        protected override void ValidateSelf()
+        {            
+            if (string.IsNullOrWhiteSpace(this.title))
+            {
+                this.ValidationErrors["Title"] = "Title is required.";
+            }
+
+            if (string.IsNullOrWhiteSpace(this.description))
+            {
+                this.ValidationErrors["Description"] = "You must type some text for the note.";
+            }            
         }
     }
 }

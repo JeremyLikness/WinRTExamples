@@ -7,16 +7,14 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace SafeNotes.Data
+namespace SafeNotes.Common
 {
     using System.Collections.Generic;
-
-    using SafeNotes.Common;
 
     /// <summary>
     /// The validation error.
     /// </summary>
-    public class ValidationError : BindableBase 
+    public class ValidationErrors : BindableBase 
     {
         /// <summary>
         /// The validation errors.
@@ -73,9 +71,9 @@ namespace SafeNotes.Data
                 }
 
                 this.OnPropertyChanged();
-// ReSharper disable ExplicitCallerInfoArgument
+        // ReSharper disable ExplicitCallerInfoArgument
                 this.OnPropertyChanged("IsValid");
-// ReSharper restore ExplicitCallerInfoArgument
+        // ReSharper restore ExplicitCallerInfoArgument
             }
         }
 
