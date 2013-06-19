@@ -19,7 +19,6 @@ namespace EncryptionExample.Data
     using EncryptionExample.Crypto;
 
     using Windows.Security.Cryptography.Core;
-    using Windows.UI.Core;
     using Windows.UI.Popups;
 
     /// <summary>
@@ -31,11 +30,6 @@ namespace EncryptionExample.Data
         /// The algorithms.
         /// </summary>
         private readonly List<ICryptoAlgorithm> algorithms = new List<ICryptoAlgorithm>();
-
-        /// <summary>
-        /// The dispatcher to get to the UI thread
-        /// </summary>
-        private readonly CoreDispatcher dispatcher;
 
         /// <summary>
         /// The verification algorithms
@@ -140,13 +134,6 @@ namespace EncryptionExample.Data
             this.selectedAlgorithm = this.algorithms[0];
             this.encryptionInput = "Overwrite this with the text you wish to secure.";
             this.decryptionInput = "Overwrite this with the encrypted text you wish to decode or the signature to verify.";
-
-            if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
-            {
-                return;
-            }
-
-            this.dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
         }
 
         /// <summary>
@@ -422,7 +409,7 @@ namespace EncryptionExample.Data
         /// <param name="parameter">
         /// The parameter.
         /// </param>
-        public void Execute(object parameter)
+        public async void Execute(object parameter)
         {
             if (!this.CanExecute(parameter))
             {
@@ -431,19 +418,19 @@ namespace EncryptionExample.Data
 
             if (parameter.Equals("encrypt"))
             {
-                Task.Run(async () => await this.Encrypt());
+                await this.Encrypt();
             }
             else if (parameter.Equals("decrypt"))
             {
-                Task.Run(async () => await this.Decrypt());
+                await this.Decrypt();
             }
             else if (parameter.Equals("sign"))
             {
-                Task.Run(async () => await this.Sign());
+                await this.Sign();
             }
             else if (parameter.Equals("verify"))
             {
-                Task.Run(async () => await this.Verify());
+                await this.Verify();
             }
         }
 
@@ -463,10 +450,10 @@ namespace EncryptionExample.Data
         /// For testing this can be placed in an interface and assigned, i.e. IDialog, so in implementation
         /// the dialog is shown but in testing just the call is verified
         /// </remarks>
-        private async Task ShowDialog(string title, string message)
+        private static async Task ShowDialog(string title, string message)
         {
             var dialog = new MessageDialog(message, title);
-            await this.OnUiThread(async () => await dialog.ShowAsync());
+            await dialog.ShowAsync();
         }
 
         /// <summary>
@@ -479,13 +466,13 @@ namespace EncryptionExample.Data
         {
             if (string.IsNullOrEmpty(this.encryptionInput))
             {
-                await this.ShowDialog("Missing Required Input", "The text to sign is required.");
+                await ShowDialog("Missing Required Input", "The text to sign is required.");
                 return;
             }
 
             if (this.selectedAlgorithm.IsSymmetric && !this.selectedAlgorithm.IsHash && string.IsNullOrEmpty(this.keyInput))
             {
-                await this.ShowDialog("Missing Required Input", "The password is required.");
+                await ShowDialog("Missing Required Input", "The password is required.");
                 return;
             }
 
@@ -494,11 +481,7 @@ namespace EncryptionExample.Data
 
             try
             {
-                await this.OnUiThread(
-                        () =>
-                        {
-                            this.DecryptionInput = this.selectedAlgorithm.Sign(this.keyInput, this.encryptionInput);                            
-                        });
+                this.DecryptionInput = this.selectedAlgorithm.Sign(this.keyInput, this.encryptionInput);                                            
             }
             catch (Exception ex)
             {
@@ -506,7 +489,7 @@ namespace EncryptionExample.Data
                 message = ex.Message;
             }
 
-            await this.ShowDialog(title, message);
+            await ShowDialog(title, message);
         }
 
         /// <summary>
@@ -519,29 +502,25 @@ namespace EncryptionExample.Data
         {
             if (string.IsNullOrEmpty(this.encryptionInput))
             {
-                await this.ShowDialog("Missing Required Input", "The text to verify is required.");
+                await ShowDialog("Missing Required Input", "The text to verify is required.");
                 return;
             }
 
             if (this.selectedAlgorithm.IsSymmetric && !this.selectedAlgorithm.IsHash && string.IsNullOrEmpty(this.keyInput))
             {
-                await this.ShowDialog("Missing Required Input", "The password is required.");
+                await ShowDialog("Missing Required Input", "The password is required.");
                 return;
             }
 
             var title = "Verification complete.";
-            string message = string.Empty;
+            string message;
 
             try
             {
-                await this.OnUiThread(
-                        () =>
-                            {
-                                message = this.selectedAlgorithm.Verify(
-                                    this.keyInput, this.encryptionInput, this.decryptionInput)
-                                              ? "The signature is valid."
-                                              : "The signature is not valid: the text or signature may have been tampered with.";
-                            });
+                message = this.selectedAlgorithm.Verify(
+                            this.keyInput, this.encryptionInput, this.decryptionInput)
+                                        ? "The signature is valid."
+                                        : "The signature is not valid: the text or signature may have been tampered with.";                
             }
             catch (Exception ex)
             {
@@ -549,7 +528,7 @@ namespace EncryptionExample.Data
                 message = ex.Message;
             }
 
-            await this.ShowDialog(title, message);
+            await ShowDialog(title, message);
         }
 
         /// <summary>
@@ -562,13 +541,13 @@ namespace EncryptionExample.Data
         {
             if (string.IsNullOrEmpty(this.encryptionInput))
             {
-                await this.ShowDialog("Missing Required Input", "The text to encrypt is required.");
+                await ShowDialog("Missing Required Input", "The text to encrypt is required.");
                 return;
             }
 
             if (this.selectedAlgorithm.IsSymmetric && string.IsNullOrEmpty(this.keyInput))
             {
-                await this.ShowDialog("Missing Required Input", "The password is required.");
+                await ShowDialog("Missing Required Input", "The password is required.");
                 return;
             }
 
@@ -577,12 +556,8 @@ namespace EncryptionExample.Data
 
             try
             {
-                await this.OnUiThread(
-                        () =>
-                        {
-                            this.DecryptionInput = this.selectedAlgorithm.Encrypt(this.keyInput, this.encryptionInput);
-                            this.EncryptionInput = string.Empty;
-                        });
+                this.DecryptionInput = this.selectedAlgorithm.Encrypt(this.keyInput, this.encryptionInput);
+                this.EncryptionInput = string.Empty;                
             }
             catch (Exception ex)
             {
@@ -590,7 +565,7 @@ namespace EncryptionExample.Data
                 message = ex.Message;
             }
 
-            await this.ShowDialog(title, message);
+            await ShowDialog(title, message);
         }
 
         /// <summary>
@@ -603,13 +578,13 @@ namespace EncryptionExample.Data
         {
             if (string.IsNullOrEmpty(this.decryptionInput))
             {
-                await this.ShowDialog("Missing Required Input", "The data to decrypt is required.");
+                await ShowDialog("Missing Required Input", "The data to decrypt is required.");
                 return;
             }
 
             if (this.selectedAlgorithm.IsSymmetric && string.IsNullOrEmpty(this.keyInput))
             {
-                await this.ShowDialog("Missing Required Input", "The password is required.");
+                await ShowDialog("Missing Required Input", "The password is required.");
                 return;
             }
 
@@ -618,12 +593,8 @@ namespace EncryptionExample.Data
 
             try
             {
-                await this.OnUiThread(
-                    () =>
-                        {
-                            this.EncryptionInput = this.selectedAlgorithm.Decrypt(this.keyInput, this.decryptionInput);
-                            this.DecryptionInput = string.Empty;
-                        });
+                this.EncryptionInput = this.selectedAlgorithm.Decrypt(this.keyInput, this.decryptionInput);
+                this.DecryptionInput = string.Empty;                
             }
             catch (Exception ex)
             {
@@ -631,35 +602,7 @@ namespace EncryptionExample.Data
                 message = ex.Message;
             }
 
-            await this.ShowDialog(title, message);
-        }
-
-        /// <summary>
-        /// The on UI thread.
-        /// </summary>
-        /// <param name="action">
-        /// The action.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Task"/>.
-        /// </returns>
-        private async Task OnUiThread(Func<Task> action)
-        {
-            await this.dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () => await action());
-        }
-
-        /// <summary>
-        /// The on UI thread.
-        /// </summary>
-        /// <param name="action">
-        /// The action.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Task"/>.
-        /// </returns>
-        private async Task OnUiThread(Action action)
-        {
-            await this.dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
+            await ShowDialog(title, message);
         }
 
         /// <summary>
