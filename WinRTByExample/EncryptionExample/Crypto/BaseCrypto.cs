@@ -413,16 +413,8 @@ namespace EncryptionExample.Crypto
         /// </returns>
         private string DecryptAsymmetric(string message)
         {
-            var algorithm = AsymmetricKeyAlgorithmProvider.OpenAlgorithm(this.AlgorithmName);
-            if (this.keyPair == null)
-            {
-                throw new Exception("Must encrypt to generate the key pair first.");
-            }
-
             IBuffer messageData = CryptographicBuffer.DecodeFromBase64String(message);
-
-            var keys = algorithm.ImportKeyPair(this.keyPair.Export());
-            var decryptedMessage = CryptographicEngine.Decrypt(keys, messageData, null);
+            var decryptedMessage = CryptographicEngine.Decrypt(this.keyPair, messageData, null);
             return CryptographicBuffer.ConvertBinaryToString(Encoding, decryptedMessage);
         }
 
@@ -504,7 +496,7 @@ namespace EncryptionExample.Crypto
 
             var macAlgorithm = MacAlgorithmProvider.OpenAlgorithm(this.AlgorithmName);
             IBuffer keyBuffer = CryptographicBuffer.ConvertStringToBinary(key, Encoding);
-            var keyMaterial = macAlgorithm.CreateKey(keyBuffer);
+            CryptographicKey keyMaterial = macAlgorithm.CreateKey(keyBuffer);
             var signature = CryptographicEngine.Sign(keyMaterial, buffer);
             return CryptographicBuffer.EncodeToBase64String(signature);
         }
