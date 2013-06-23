@@ -19,7 +19,6 @@ namespace EncryptionExample.Data
     using EncryptionExample.Crypto;
 
     using Windows.Security.Cryptography.Core;
-    using Windows.UI.Popups;
 
     /// <summary>
     /// The view model.
@@ -140,6 +139,11 @@ namespace EncryptionExample.Data
         /// The can execute changed.
         /// </summary>
         public event EventHandler CanExecuteChanged = delegate { };
+
+        /// <summary>
+        /// Gets or sets the dialog service 
+        /// </summary>
+        public IDialogService Dialog { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether symmetric.
@@ -450,10 +454,9 @@ namespace EncryptionExample.Data
         /// For testing this can be placed in an interface and assigned, i.e. IDialog, so in implementation
         /// the dialog is shown but in testing just the call is verified
         /// </remarks>
-        private static async Task ShowDialog(string title, string message)
+        private async Task ShowDialog(string title, string message)
         {
-            var dialog = new MessageDialog(message, title);
-            await dialog.ShowAsync();
+            await this.Dialog.ShowDialog(title, message);
         }
 
         /// <summary>
@@ -466,13 +469,13 @@ namespace EncryptionExample.Data
         {
             if (string.IsNullOrEmpty(this.encryptionInput))
             {
-                await ShowDialog("Missing Required Input", "The text to sign is required.");
+                await this.ShowDialog("Missing Required Input", "The text to sign is required.");
                 return;
             }
 
             if (this.selectedAlgorithm.IsSymmetric && !this.selectedAlgorithm.IsHash && string.IsNullOrEmpty(this.keyInput))
             {
-                await ShowDialog("Missing Required Input", "The password is required.");
+                await this.ShowDialog("Missing Required Input", "The password is required.");
                 return;
             }
 
@@ -489,7 +492,7 @@ namespace EncryptionExample.Data
                 message = ex.Message;
             }
 
-            await ShowDialog(title, message);
+            await this.ShowDialog(title, message);
         }
 
         /// <summary>
@@ -502,13 +505,13 @@ namespace EncryptionExample.Data
         {
             if (string.IsNullOrEmpty(this.encryptionInput))
             {
-                await ShowDialog("Missing Required Input", "The text to verify is required.");
+                await this.ShowDialog("Missing Required Input", "The text to verify is required.");
                 return;
             }
 
             if (this.selectedAlgorithm.IsSymmetric && !this.selectedAlgorithm.IsHash && string.IsNullOrEmpty(this.keyInput))
             {
-                await ShowDialog("Missing Required Input", "The password is required.");
+                await this.ShowDialog("Missing Required Input", "The password is required.");
                 return;
             }
 
@@ -528,7 +531,7 @@ namespace EncryptionExample.Data
                 message = ex.Message;
             }
 
-            await ShowDialog(title, message);
+            await this.ShowDialog(title, message);
         }
 
         /// <summary>
@@ -541,13 +544,13 @@ namespace EncryptionExample.Data
         {
             if (string.IsNullOrEmpty(this.encryptionInput))
             {
-                await ShowDialog("Missing Required Input", "The text to encrypt is required.");
+                await this.ShowDialog("Missing Required Input", "The text to encrypt is required.");
                 return;
             }
 
             if (this.selectedAlgorithm.IsSymmetric && string.IsNullOrEmpty(this.keyInput))
             {
-                await ShowDialog("Missing Required Input", "The password is required.");
+                await this.ShowDialog("Missing Required Input", "The password is required.");
                 return;
             }
 
@@ -565,7 +568,7 @@ namespace EncryptionExample.Data
                 message = ex.Message;
             }
 
-            await ShowDialog(title, message);
+            await this.ShowDialog(title, message);
         }
 
         /// <summary>
@@ -578,13 +581,13 @@ namespace EncryptionExample.Data
         {
             if (string.IsNullOrEmpty(this.decryptionInput))
             {
-                await ShowDialog("Missing Required Input", "The data to decrypt is required.");
+                await this.ShowDialog("Missing Required Input", "The data to decrypt is required.");
                 return;
             }
 
             if (this.selectedAlgorithm.IsSymmetric && string.IsNullOrEmpty(this.keyInput))
             {
-                await ShowDialog("Missing Required Input", "The password is required.");
+                await this.ShowDialog("Missing Required Input", "The password is required.");
                 return;
             }
 
@@ -602,7 +605,7 @@ namespace EncryptionExample.Data
                 message = ex.Message;
             }
 
-            await ShowDialog(title, message);
+            await this.ShowDialog(title, message);
         }
 
         /// <summary>

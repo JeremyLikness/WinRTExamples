@@ -39,7 +39,11 @@
         
         <Grid Grid.Row="1" Margin="120 0 0 0">
             <Grid.DataContext>
-                <data:ViewModel/>
+                <data:ViewModel>
+                    <data:ViewModel.Dialog>
+                        <data:DialogService/>
+                    </data:ViewModel.Dialog>
+                </data:ViewModel>
             </Grid.DataContext>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
