@@ -5,10 +5,10 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("FluentTestHelper")]
-[assembly: AssemblyDescription("Helper for fluent testing.")]
+[assembly: AssemblyTitle("UIThreadExample")]
+[assembly: AssemblyDescription("Example of dispatching to the UI thread")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyProduct("FluentTestHelper")]
+[assembly: AssemblyProduct("UIThreadExample")]
 [assembly: AssemblyCulture("")]
 
 // Version information for an assembly consists of the following four values:

@@ -613,9 +613,9 @@ namespace EncryptionExample.Data
         /// </summary>
         private void OnFilterChanged()
         {
-// ReSharper disable ExplicitCallerInfoArgument
+        // ReSharper disable ExplicitCallerInfoArgument
             this.OnPropertyChanged("Algorithms");
-// ReSharper restore ExplicitCallerInfoArgument
+        // ReSharper restore ExplicitCallerInfoArgument
         }
     }
 }
