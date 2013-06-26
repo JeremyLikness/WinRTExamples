@@ -5,10 +5,10 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("FluentTestHelper")]
-[assembly: AssemblyDescription("Helper for fluent testing.")]
+[assembly: AssemblyTitle("CascadingListExample")]
+[assembly: AssemblyDescription("Example of generating a cascading list using MVVM")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyProduct("FluentTestHelper")]
+[assembly: AssemblyProduct("CascadingListExample")]
 [assembly: AssemblyCulture("")]
 
 // Version information for an assembly consists of the following four values:

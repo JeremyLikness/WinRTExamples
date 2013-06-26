@@ -20,15 +20,15 @@ namespace SoapServiceExample.Data
         /// Initializes a new instance of the <see cref="DesignForecastEntry"/> class.
         /// </summary>
         public DesignForecastEntry()
-            {
-                this.Day = DateTime.Now;
-                this.ForecastUri = new Uri("http://ws.cdyne.com/WeatherWS/Images/mostlycloudy.gif", UriKind.Absolute);
-                this.Description = "Sample day for weather";
-                this.PrecipitationDay = "50";
-                this.PrecipitationNight = "20";
-                this.TemperatureLow = "25";
-                this.TemperatureHigh = "49";
-                this.TypeId = 1;
-            }
+        {
+            this.Day = DateTime.Now;
+            this.ForecastUri = new Uri("http://ws.cdyne.com/WeatherWS/Images/mostlycloudy.gif", UriKind.Absolute);
+            this.Description = "Sample day for weather";
+            this.PrecipitationDay = "50";
+            this.PrecipitationNight = "20";
+            this.TemperatureLow = "25";
+            this.TemperatureHigh = "49";
+            this.TypeId = 1;
+        }
     }
 }

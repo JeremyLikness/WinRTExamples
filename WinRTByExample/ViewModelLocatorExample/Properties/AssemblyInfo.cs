@@ -5,10 +5,10 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("FluentTestHelper")]
-[assembly: AssemblyDescription("Helper for fluent testing.")]
+[assembly: AssemblyTitle("ViewModelLocatorExample")]
+[assembly: AssemblyDescription("Example app to demonstrate the use of a view model locator.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyProduct("FluentTestHelper")]
+[assembly: AssemblyProduct("ViewModelLocatorExample")]
 [assembly: AssemblyCulture("")]
 
 // Version information for an assembly consists of the following four values:
