@@ -1,0 +1,36 @@
+﻿<Page
+    x:Class="SplitWordsCSharp.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SplitWordsCSharp"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Margin="10" 
+                   Text="Enter the text to split:" 
+                   Style="{StaticResource SubheaderTextBlockStyle}"
+                   HorizontalAlignment="Right"/>
+        <TextBox Margin="10" 
+                 x:Name="TextToSplit"
+                 Grid.Column="1"/>
+        <Button Margin="10"
+                Content="Split"
+                Grid.Row="1"
+                HorizontalAlignment="Right"
+                Click="ButtonBase_OnClick"/>
+        <ListBox Margin="10"
+                 Grid.Row="1"
+                 Grid.Column="1"
+                 x:Name="SplitText"/>
+    </Grid>
+</Page>

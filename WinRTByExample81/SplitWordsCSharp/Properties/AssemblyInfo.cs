@@ -5,10 +5,10 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Example WinRT Component")]
-[assembly: AssemblyDescription("Example of a component build as a WinRT component in C#.")]
+[assembly: AssemblyTitle("Split Words CSharp")]
+[assembly: AssemblyDescription("Example using a WinRT Component from a C# Windows Store app.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyProduct("ExampleWinRTComponent")]
+[assembly: AssemblyProduct("SplitWordsCSharp")]
 [assembly: AssemblyCulture("")]
 
 // Version information for an assembly consists of the following four values:

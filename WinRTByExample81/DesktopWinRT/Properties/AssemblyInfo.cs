@@ -14,7 +14,7 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DesktopWinRT")]
+[assembly: AssemblyTitle("Desktop WinRT")]
 [assembly: AssemblyDescription("Example of referencing Windows RT from a desktop application.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyProduct("DesktopWinRT")]
