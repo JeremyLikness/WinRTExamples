@@ -5,8 +5,8 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ExampleCSharpClass")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Example CSharp Class")]
+[assembly: AssemblyDescription("Example cmponent build as a class in a C# library.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyProduct("ExampleCSharpClass")]
 [assembly: AssemblyCulture("")]
