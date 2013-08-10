@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
-  <Identity Name="WinRTByExampleCustomControlExample" Publisher="CN=Jeremy" Version="1.0.0.0" />
+  <Identity Name="WinRTByExampleLayoutExamples" Publisher="CN=Jeremy" Version="1.0.0.0" />
   <Properties>
-    <DisplayName>Custom Control Example</DisplayName>
+    <DisplayName>Layouts Example</DisplayName>
     <PublisherDisplayName>Jeremy</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -14,9 +14,8 @@
     <Resource Language="x-generate" />
   </Resources>
   <Applications>
-    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="CustomControlExample.App">
-      <m2:VisualElements DisplayName="Custom Control Example" Square150x150Logo="Assets\Logo.png" Square30x30Logo="Assets\SmallLogo.png" Description="Example of using a custom control." ForegroundText="light" BackgroundColor="#464646">
-        <m2:DefaultTile DefaultSize="square150x150Logo" />
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="LayoutsExample.App">
+      <m2:VisualElements DisplayName="Layouts Example" Square150x150Logo="Assets\Logo.png" Square30x30Logo="Assets\SmallLogo.png" Description="Examples of various layout controls." ForegroundText="light" BackgroundColor="#464646">
         <m2:SplashScreen Image="Assets\SplashScreen.png" />
       </m2:VisualElements>
     </Application>
