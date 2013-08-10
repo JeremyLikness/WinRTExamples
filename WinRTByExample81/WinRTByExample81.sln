@@ -39,9 +39,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomControlsLibrary", "Cu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomControlExample", "CustomControlExample\CustomControlExample.csproj", "{978B986F-6C0E-4A26-A6CC-15CB2E8C2A68}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataBindingExample", "DataBindingExample\DataBindingExample.csproj", "{EC521FD5-3867-4F61-9BB9-61C724B4DEF8}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 11
+		SccNumberOfProjects = 12
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs04
 		SccLocalPath0 = .
@@ -85,6 +87,10 @@ Global
 		SccProjectTopLevelParentUniqueName10 = WinRTByExample81.sln
 		SccProjectName10 = CustomControlExample
 		SccLocalPath10 = CustomControlExample
+		SccProjectUniqueName11 = DataBindingExample\\DataBindingExample.csproj
+		SccProjectTopLevelParentUniqueName11 = WinRTByExample81.sln
+		SccProjectName11 = DataBindingExample
+		SccLocalPath11 = DataBindingExample
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -283,6 +289,30 @@ Global
 		{978B986F-6C0E-4A26-A6CC-15CB2E8C2A68}.Release|x86.ActiveCfg = Release|x86
 		{978B986F-6C0E-4A26-A6CC-15CB2E8C2A68}.Release|x86.Build.0 = Release|x86
 		{978B986F-6C0E-4A26-A6CC-15CB2E8C2A68}.Release|x86.Deploy.0 = Release|x86
+		{EC521FD5-3867-4F61-9BB9-61C724B4DEF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC521FD5-3867-4F61-9BB9-61C724B4DEF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC521FD5-3867-4F61-9BB9-61C724B4DEF8}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{EC521FD5-3867-4F61-9BB9-61C724B4DEF8}.Debug|ARM.ActiveCfg = Debug|ARM
+		{EC521FD5-3867-4F61-9BB9-61C724B4DEF8}.Debug|ARM.Build.0 = Debug|ARM
+		{EC521FD5-3867-4F61-9BB9-61C724B4DEF8}.Debug|ARM.Deploy.0 = Debug|ARM
+		{EC521FD5-3867-4F61-9BB9-61C724B4DEF8}.Debug|x64.ActiveCfg = Debug|x64
+		{EC521FD5-3867-4F61-9BB9-61C724B4DEF8}.Debug|x64.Build.0 = Debug|x64
+		{EC521FD5-3867-4F61-9BB9-61C724B4DEF8}.Debug|x64.Deploy.0 = Debug|x64
+		{EC521FD5-3867-4F61-9BB9-61C724B4DEF8}.Debug|x86.ActiveCfg = Debug|x86
+		{EC521FD5-3867-4F61-9BB9-61C724B4DEF8}.Debug|x86.Build.0 = Debug|x86
+		{EC521FD5-3867-4F61-9BB9-61C724B4DEF8}.Debug|x86.Deploy.0 = Debug|x86
+		{EC521FD5-3867-4F61-9BB9-61C724B4DEF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC521FD5-3867-4F61-9BB9-61C724B4DEF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC521FD5-3867-4F61-9BB9-61C724B4DEF8}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{EC521FD5-3867-4F61-9BB9-61C724B4DEF8}.Release|ARM.ActiveCfg = Release|ARM
+		{EC521FD5-3867-4F61-9BB9-61C724B4DEF8}.Release|ARM.Build.0 = Release|ARM
+		{EC521FD5-3867-4F61-9BB9-61C724B4DEF8}.Release|ARM.Deploy.0 = Release|ARM
+		{EC521FD5-3867-4F61-9BB9-61C724B4DEF8}.Release|x64.ActiveCfg = Release|x64
+		{EC521FD5-3867-4F61-9BB9-61C724B4DEF8}.Release|x64.Build.0 = Release|x64
+		{EC521FD5-3867-4F61-9BB9-61C724B4DEF8}.Release|x64.Deploy.0 = Release|x64
+		{EC521FD5-3867-4F61-9BB9-61C724B4DEF8}.Release|x86.ActiveCfg = Release|x86
+		{EC521FD5-3867-4F61-9BB9-61C724B4DEF8}.Release|x86.Build.0 = Release|x86
+		{EC521FD5-3867-4F61-9BB9-61C724B4DEF8}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -298,5 +328,6 @@ Global
 		{4450A134-48F7-45CF-B806-8819183E9786} = {4FE2E422-6D3C-48C2-8EE3-186F0E6AA6CD}
 		{AF2FF59A-8D30-4F04-B747-88A442C6FF1B} = {4FE2E422-6D3C-48C2-8EE3-186F0E6AA6CD}
 		{978B986F-6C0E-4A26-A6CC-15CB2E8C2A68} = {4FE2E422-6D3C-48C2-8EE3-186F0E6AA6CD}
+		{EC521FD5-3867-4F61-9BB9-61C724B4DEF8} = {4FE2E422-6D3C-48C2-8EE3-186F0E6AA6CD}
 	EndGlobalSection
 EndGlobal
