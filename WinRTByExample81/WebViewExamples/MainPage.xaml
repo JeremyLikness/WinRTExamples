@@ -6,7 +6,16 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton Label="Load" Icon="OpenFile" Click="ButtonBase_OnClick"></AppBarButton>
+            <AppBarButton Label="Mobile" Icon="CellPhone" Click="ViewMobile_OnClick"></AppBarButton>
+            <AppBarButton Label="SVG" Icon="WebCam" Click="ViewSvg_OnClick"></AppBarButton>
+            <AppBarButton Label="String" Icon="List" Click="ViewString_OnClick"></AppBarButton>
+            <AppBarButton Label="JavaScript" Icon="Phone" Click="CallJavaScript_OnClick"></AppBarButton>
+            <AppBarButton Label="WebGL" Icon="Street" Click="WebGL_OnClick"></AppBarButton>
+        </CommandBar>        
+    </Page.BottomAppBar>
     <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
