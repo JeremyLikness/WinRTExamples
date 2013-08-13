@@ -47,9 +47,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TemplatesExample", "Templat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualStateExample", "VisualStateExample\VisualStateExample.csproj", "{DBD6E5C2-8DCD-4CE5-AE09-E4F565E1B245}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebViewExamples", "WebViewExamples\WebViewExamples.csproj", "{65C7D80C-7FC1-4EBC-89F7-C760DA7D49BE}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 15
+		SccNumberOfProjects = 16
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs04
 		SccLocalPath0 = .
@@ -109,6 +111,10 @@ Global
 		SccProjectTopLevelParentUniqueName14 = WinRTByExample81.sln
 		SccProjectName14 = VisualStateExample
 		SccLocalPath14 = VisualStateExample
+		SccProjectUniqueName15 = WebViewExamples\\WebViewExamples.csproj
+		SccProjectTopLevelParentUniqueName15 = WinRTByExample81.sln
+		SccProjectName15 = WebViewExamples
+		SccLocalPath15 = WebViewExamples
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -403,6 +409,30 @@ Global
 		{DBD6E5C2-8DCD-4CE5-AE09-E4F565E1B245}.Release|x86.ActiveCfg = Release|x86
 		{DBD6E5C2-8DCD-4CE5-AE09-E4F565E1B245}.Release|x86.Build.0 = Release|x86
 		{DBD6E5C2-8DCD-4CE5-AE09-E4F565E1B245}.Release|x86.Deploy.0 = Release|x86
+		{65C7D80C-7FC1-4EBC-89F7-C760DA7D49BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65C7D80C-7FC1-4EBC-89F7-C760DA7D49BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65C7D80C-7FC1-4EBC-89F7-C760DA7D49BE}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{65C7D80C-7FC1-4EBC-89F7-C760DA7D49BE}.Debug|ARM.ActiveCfg = Debug|ARM
+		{65C7D80C-7FC1-4EBC-89F7-C760DA7D49BE}.Debug|ARM.Build.0 = Debug|ARM
+		{65C7D80C-7FC1-4EBC-89F7-C760DA7D49BE}.Debug|ARM.Deploy.0 = Debug|ARM
+		{65C7D80C-7FC1-4EBC-89F7-C760DA7D49BE}.Debug|x64.ActiveCfg = Debug|x64
+		{65C7D80C-7FC1-4EBC-89F7-C760DA7D49BE}.Debug|x64.Build.0 = Debug|x64
+		{65C7D80C-7FC1-4EBC-89F7-C760DA7D49BE}.Debug|x64.Deploy.0 = Debug|x64
+		{65C7D80C-7FC1-4EBC-89F7-C760DA7D49BE}.Debug|x86.ActiveCfg = Debug|x86
+		{65C7D80C-7FC1-4EBC-89F7-C760DA7D49BE}.Debug|x86.Build.0 = Debug|x86
+		{65C7D80C-7FC1-4EBC-89F7-C760DA7D49BE}.Debug|x86.Deploy.0 = Debug|x86
+		{65C7D80C-7FC1-4EBC-89F7-C760DA7D49BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65C7D80C-7FC1-4EBC-89F7-C760DA7D49BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65C7D80C-7FC1-4EBC-89F7-C760DA7D49BE}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{65C7D80C-7FC1-4EBC-89F7-C760DA7D49BE}.Release|ARM.ActiveCfg = Release|ARM
+		{65C7D80C-7FC1-4EBC-89F7-C760DA7D49BE}.Release|ARM.Build.0 = Release|ARM
+		{65C7D80C-7FC1-4EBC-89F7-C760DA7D49BE}.Release|ARM.Deploy.0 = Release|ARM
+		{65C7D80C-7FC1-4EBC-89F7-C760DA7D49BE}.Release|x64.ActiveCfg = Release|x64
+		{65C7D80C-7FC1-4EBC-89F7-C760DA7D49BE}.Release|x64.Build.0 = Release|x64
+		{65C7D80C-7FC1-4EBC-89F7-C760DA7D49BE}.Release|x64.Deploy.0 = Release|x64
+		{65C7D80C-7FC1-4EBC-89F7-C760DA7D49BE}.Release|x86.ActiveCfg = Release|x86
+		{65C7D80C-7FC1-4EBC-89F7-C760DA7D49BE}.Release|x86.Build.0 = Release|x86
+		{65C7D80C-7FC1-4EBC-89F7-C760DA7D49BE}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -422,5 +452,6 @@ Global
 		{252C4B9B-24E3-4C82-97C0-4F86A938FF67} = {4FE2E422-6D3C-48C2-8EE3-186F0E6AA6CD}
 		{B25E9C8B-3C66-4DE3-9E01-99429B69A06E} = {4FE2E422-6D3C-48C2-8EE3-186F0E6AA6CD}
 		{DBD6E5C2-8DCD-4CE5-AE09-E4F565E1B245} = {4FE2E422-6D3C-48C2-8EE3-186F0E6AA6CD}
+		{65C7D80C-7FC1-4EBC-89F7-C760DA7D49BE} = {4FE2E422-6D3C-48C2-8EE3-186F0E6AA6CD}
 	EndGlobalSection
 EndGlobal
