@@ -1,0 +1,66 @@
+﻿<Page
+    x:Class="FlyoutsExample.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:FlyoutsExample"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton Icon="Bullets">
+                <AppBarButton.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Text="Red" Click="MenuFlyoutItemRed_OnClick"/>
+                        <MenuFlyoutItem Text="Yellow" Click="MenuFlyoutItemYellow_OnClick"/>
+                        <MenuFlyoutSeparator/>
+                        <ToggleMenuFlyoutItem IsChecked="True" Text="Blue Border" Click="MenuFlyoutItem_OnClick"/>
+                    </MenuFlyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
+        </CommandBar>
+    </Page.BottomAppBar>
+    <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">  
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Button Content="Flyout">
+            <Button.Flyout>
+                <Flyout>
+                <StackPanel Width="350">
+                    <TextBlock Text="What would you like to say?"/>
+                    <TextBox x:Name="ValueTextBox" />
+                        <Button Content="Send" HorizontalAlignment="Right" Click="ButtonBase_OnClick"/>
+                    </StackPanel>
+                </Flyout>
+            </Button.Flyout>
+        </Button>
+        <Rectangle Grid.Row="1" 
+                   x:Name="MainRectangle" 
+                   HorizontalAlignment="Stretch" 
+                   Fill="Red" 
+                   Stroke="Blue" 
+                   StrokeThickness="10" 
+                   VerticalAlignment="Stretch" 
+                   Margin="50"/>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="FillGroups">
+                <VisualState x:Name="Default"/>
+                <VisualState x:Name="Yellow">
+                    <Storyboard Storyboard.TargetName="MainRectangle" Storyboard.TargetProperty="(Rectangle.Fill).(SolidColorBrush.Color)">
+                        <ColorAnimation To="Yellow"/>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+            <VisualStateGroup x:Name="BorderGroups">
+                <VisualState x:Name="DefaultBorder"/>
+                <VisualState x:Name="NoBorder">
+                    <Storyboard Storyboard.TargetName="MainRectangle" Storyboard.TargetProperty="(Rectangle.Stroke).(SolidColorBrush.Color)">
+                        <ColorAnimation To="Black"/>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+    </Grid>
+</Page>
