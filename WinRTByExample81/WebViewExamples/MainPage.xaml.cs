@@ -53,7 +53,7 @@ namespace WebViewExamples
         /// <summary>
         /// Demonstrate WebGl technology
         /// </summary>
-        private const string WebGl = "http://todo/";
+        private const string WebGl = "http://jsfiddle.net/ksRyQ/";
 
         /// <summary>
         /// Message from blog

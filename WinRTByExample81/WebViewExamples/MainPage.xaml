@@ -37,10 +37,10 @@
             <Button Content="Call JavaScript Function" Click="CallJavaScript_OnClick"/>
             <Button  Content="WebGL" Click="WebGL_OnClick"/>
         </StackPanel>
-        <WebView Grid.Row="1" Margin="20" x:Name="WebViewControl"></WebView>
+        <WebView Grid.Row="1" Grid.Column="0" Margin="20" x:Name="WebViewControl"/>
         <Rectangle 
             Grid.Row="1" 
-            Grid.Column="2"
+            Grid.Column="1"
             Width="280"
             Height="180"
             Margin="0 20 0 0"
@@ -50,7 +50,7 @@
             </Rectangle.Fill>
         </Rectangle>
         <Ellipse Grid.Row="1"
-                 Grid.Column="2"
+                 Grid.Column="1"
                  Width="280"
                  Height="180"
                  Margin="0 20 0 0"
