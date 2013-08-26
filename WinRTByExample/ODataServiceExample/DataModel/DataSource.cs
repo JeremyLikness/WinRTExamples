@@ -23,7 +23,15 @@ namespace ODataServiceExample.DataModel
         /// <summary>
         /// The service base.
         /// </summary>
-        private static readonly Uri ServiceBase = new Uri("http://services.odata.org/OData/OData.svc", UriKind.Absolute);
+        private static readonly Uri ServiceBase;
+
+        /// <summary>
+        /// Initializes static members of the <see cref="DataSource"/> class.
+        /// </summary>
+        static DataSource()
+        {
+            ServiceBase = new Uri("http://services.odata.org/OData/OData.svc", UriKind.Absolute);
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataSource"/> class. 
