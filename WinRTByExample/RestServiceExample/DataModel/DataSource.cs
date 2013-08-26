@@ -87,16 +87,16 @@ namespace RestServiceExample.DataModel
             }
 
             var json = JsonObject.Parse(jsonResponse);
-            var productsList = json["d"].GetArray();
+            var productsList = json["value"].GetArray();
             foreach (var entry in productsList)
             {
                 var productJson = entry.GetObject();
-                var metadata = productJson["__metadata"].GetObject();
-                var productUri = metadata["uri"].GetString();
+                var id = (int)productJson["ID"].GetNumber();
+                var productUri = string.Format("{0}({1})", new Uri(ServiceBase, productsUri), id);
 
                 var product = new Product
                                   {
-                                      Id = (int)productJson["ID"].GetNumber(),
+                                      Id = id,
                                       Title = productJson["Name"].GetString(),
                                       Description = productJson["Description"].GetString(),
                                       Price = double.Parse(productJson["Price"].GetString()),
@@ -169,28 +169,27 @@ namespace RestServiceExample.DataModel
             var jsonResponse = await client.GetStringAsync(uri);
 
             var json = JsonObject.Parse(jsonResponse);
-            var d = json["d"].GetArray();
+            var value = json["value"].GetArray();
 
-            if (d == null)
+            if (value == null)
             {
                 return;
             }
 
-            foreach (var entry in d)
+            foreach (var entry in value)
             {
                 var categoryJson = entry.GetObject();
-                var metadata = categoryJson["__metadata"].GetObject();
-                var categoryUri = metadata["uri"].GetString();
+                var id = (int)categoryJson["ID"].GetNumber();
+                var categoryUriStr = string.Format("{0}({1})", new Uri(ServiceBase, CategoriesUri), id);
+                var categoryUri = new Uri(categoryUriStr, UriKind.Absolute);
                 var category = new Category
                 {
                     Id = (int)categoryJson["ID"].GetNumber(),
                     Name = categoryJson["Name"].GetString(),
-                    Location = new Uri(categoryUri, UriKind.Absolute)
+                    Location = categoryUri
                 };
                 this.Categories.Add(category);
-                var productsUri = categoryJson["Products"]
-                    .GetObject()["__deferred"]
-                    .GetObject()["uri"].GetString();
+                var productsUri = string.Format("{0}/Products", categoryUriStr);
                 await LoadProductsForCategory(new Uri(productsUri, UriKind.Absolute), category);
             }
         }
