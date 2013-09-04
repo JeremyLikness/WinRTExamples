@@ -8,6 +8,25 @@
     mc:Ignorable="d">
 
     <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Margin="10"
+                    Orientation="Horizontal">
+            <Button x:Name="Parse"
+                    Content="Transform XML to JSON"                
+                    Click="Parse_OnClick"/>
+            <Button x:Name="Transform"
+                    Content="Transform XML with XSLT"
+                    Click="Transform_OnClick"></Button>
+        </StackPanel>
+        <TextBlock x:Name="TransformedText"
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Stretch"
+                   Grid.Row="1"
+                   Style="{StaticResource SubheaderTextBlockStyle}"
+                   TextWrapping="Wrap"
+                   Text="Click the button..."/>
     </Grid>
 </Page>
