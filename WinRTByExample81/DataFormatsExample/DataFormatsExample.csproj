@@ -119,6 +119,8 @@
     <Content Include="..\Common\StoreLogo.scale-100.png">
       <Link>Assets\StoreLogo.scale-100.png</Link>
     </Content>
+    <Content Include="Books.xml" />
+    <Content Include="Books.xslt" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Common\CommonAssemblyInfo.cs">
