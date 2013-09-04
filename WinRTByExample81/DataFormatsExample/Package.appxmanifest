@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
-  <Identity Name="WinRTByExampleHelloWorldGridApp" Publisher="CN=Jeremy" Version="1.0.0.0" />
+  <Identity Name="WinRTByExampleDataFormatsExample" Publisher="CN=Jeremy" Version="1.0.0.0" />
   <Properties>
-    <DisplayName>Hello World Grid App</DisplayName>
+    <DisplayName>Data Formats Example</DisplayName>
     <PublisherDisplayName>Jeremy</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -14,14 +14,14 @@
     <Resource Language="x-generate" />
   </Resources>
   <Applications>
-    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="HelloWorldGridApp.App">
-      <m2:VisualElements DisplayName="Hello World Grid App" Square150x150Logo="Assets\Logo.png" Square30x30Logo="Assets\SmallLogo.png" Description="An example of using the grid template to create a new Windows Store app." ForegroundText="light" BackgroundColor="#464646">
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="DataFormatsExample.App">
+      <m2:VisualElements DisplayName="Data Formats Example" Square150x150Logo="Assets\Logo.png" Square30x30Logo="Assets\SmallLogo.png" Description="Example of manipulating various data formats." ForegroundText="light" BackgroundColor="#464646">
         <m2:DefaultTile>
           <m2:ShowNameOnTiles>
             <m2:ShowOn Tile="square150x150Logo" />
           </m2:ShowNameOnTiles>
         </m2:DefaultTile>
-        <m2:SplashScreen Image="Assets\SplashScreen.png" />
+        <m2:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#464646" />
       </m2:VisualElements>
     </Application>
   </Applications>
