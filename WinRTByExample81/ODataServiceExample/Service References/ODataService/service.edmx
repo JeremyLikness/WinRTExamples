@@ -1,0 +1,112 @@
+﻿<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx">
+  <edmx:DataServices m:DataServiceVersion="3.0" m:MaxDataServiceVersion="3.0" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
+    <Schema Namespace="ODataDemo" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <EntityType Name="Product">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Name="ID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" m:FC_TargetPath="SyndicationTitle" m:FC_ContentKind="text" m:FC_KeepInContent="false" />
+        <Property Name="Description" Type="Edm.String" m:FC_TargetPath="SyndicationSummary" m:FC_ContentKind="text" m:FC_KeepInContent="false" />
+        <Property Name="ReleaseDate" Type="Edm.DateTime" Nullable="false" />
+        <Property Name="DiscontinuedDate" Type="Edm.DateTime" />
+        <Property Name="Rating" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Price" Type="Edm.Decimal" Nullable="false" />
+        <NavigationProperty Name="Category" Relationship="ODataDemo.Product_Category_Category_Products" ToRole="Category_Products" FromRole="Product_Category" />
+        <NavigationProperty Name="Supplier" Relationship="ODataDemo.Product_Supplier_Supplier_Products" ToRole="Supplier_Products" FromRole="Product_Supplier" />
+      </EntityType>
+      <EntityType Name="FeaturedProduct" BaseType="ODataDemo.Product">
+        <NavigationProperty Name="Advertisement" Relationship="ODataDemo.FeaturedProduct_Advertisement_Advertisement_FeaturedProduct" ToRole="Advertisement_FeaturedProduct" FromRole="FeaturedProduct_Advertisement" />
+      </EntityType>
+      <EntityType Name="Advertisement">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" />
+        <Property Name="AirDate" Type="Edm.DateTime" Nullable="false" />
+        <NavigationProperty Name="FeaturedProduct" Relationship="ODataDemo.FeaturedProduct_Advertisement_Advertisement_FeaturedProduct" ToRole="FeaturedProduct_Advertisement" FromRole="Advertisement_FeaturedProduct" />
+      </EntityType>
+      <EntityType Name="Category">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Name="ID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" m:FC_TargetPath="SyndicationTitle" m:FC_ContentKind="text" m:FC_KeepInContent="true" />
+        <NavigationProperty Name="Products" Relationship="ODataDemo.Product_Category_Category_Products" ToRole="Product_Category" FromRole="Category_Products" />
+      </EntityType>
+      <EntityType Name="Supplier">
+        <Key>
+          <PropertyRef Name="ID" />
+        </Key>
+        <Property Name="ID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" m:FC_TargetPath="SyndicationTitle" m:FC_ContentKind="text" m:FC_KeepInContent="true" />
+        <Property Name="Address" Type="ODataDemo.Address" />
+        <Property Name="Location" Type="Edm.GeographyPoint" SRID="Variable" />
+        <Property Name="Concurrency" Type="Edm.Int32" ConcurrencyMode="Fixed" Nullable="false" />
+        <NavigationProperty Name="Products" Relationship="ODataDemo.Product_Supplier_Supplier_Products" ToRole="Product_Supplier" FromRole="Supplier_Products" />
+      </EntityType>
+      <ComplexType Name="Address">
+        <Property Name="Street" Type="Edm.String" />
+        <Property Name="City" Type="Edm.String" />
+        <Property Name="State" Type="Edm.String" />
+        <Property Name="ZipCode" Type="Edm.String" />
+        <Property Name="Country" Type="Edm.String" />
+      </ComplexType>
+      <Association Name="Product_Category_Category_Products">
+        <End Type="ODataDemo.Category" Role="Category_Products" Multiplicity="0..1" />
+        <End Type="ODataDemo.Product" Role="Product_Category" Multiplicity="*" />
+      </Association>
+      <Association Name="Product_Supplier_Supplier_Products">
+        <End Type="ODataDemo.Supplier" Role="Supplier_Products" Multiplicity="0..1" />
+        <End Type="ODataDemo.Product" Role="Product_Supplier" Multiplicity="*" />
+      </Association>
+      <Association Name="FeaturedProduct_Advertisement_Advertisement_FeaturedProduct">
+        <End Type="ODataDemo.Advertisement" Role="Advertisement_FeaturedProduct" Multiplicity="0..1" />
+        <End Type="ODataDemo.FeaturedProduct" Role="FeaturedProduct_Advertisement" Multiplicity="0..1" />
+      </Association>
+      <EntityContainer Name="DemoService" m:IsDefaultEntityContainer="true">
+        <EntitySet Name="Products" EntityType="ODataDemo.Product" />
+        <EntitySet Name="Advertisements" EntityType="ODataDemo.Advertisement" />
+        <EntitySet Name="Categories" EntityType="ODataDemo.Category" />
+        <EntitySet Name="Suppliers" EntityType="ODataDemo.Supplier" />
+        <FunctionImport Name="GetProductsByRating" ReturnType="Collection(ODataDemo.Product)" EntitySet="Products" m:HttpMethod="GET">
+          <Parameter Name="rating" Type="Edm.Int32" Nullable="false" />
+        </FunctionImport>
+        <AssociationSet Name="Products_Advertisement_Advertisements" Association="ODataDemo.FeaturedProduct_Advertisement_Advertisement_FeaturedProduct">
+          <End Role="FeaturedProduct_Advertisement" EntitySet="Products" />
+          <End Role="Advertisement_FeaturedProduct" EntitySet="Advertisements" />
+        </AssociationSet>
+        <AssociationSet Name="Products_Category_Categories" Association="ODataDemo.Product_Category_Category_Products">
+          <End Role="Product_Category" EntitySet="Products" />
+          <End Role="Category_Products" EntitySet="Categories" />
+        </AssociationSet>
+        <AssociationSet Name="Products_Supplier_Suppliers" Association="ODataDemo.Product_Supplier_Supplier_Products">
+          <End Role="Product_Supplier" EntitySet="Products" />
+          <End Role="Supplier_Products" EntitySet="Suppliers" />
+        </AssociationSet>
+      </EntityContainer>
+      <Annotations Target="ODataDemo.DemoService">
+        <ValueAnnotation Term="Org.OData.Display.V1.Description" String="This is a sample OData service with vocabularies" />
+      </Annotations>
+      <Annotations Target="ODataDemo.Product">
+        <ValueAnnotation Term="Org.OData.Display.V1.Description" String="All Products available in the online store" />
+      </Annotations>
+      <Annotations Target="ODataDemo.Product/Name">
+        <ValueAnnotation Term="Org.OData.Display.V1.DisplayName" String="Product Name" />
+      </Annotations>
+      <Annotations Target="ODataDemo.DemoService/Suppliers">
+        <ValueAnnotation Term="Org.OData.Publication.V1.PublisherName" String="Microsoft Corp." />
+        <ValueAnnotation Term="Org.OData.Publication.V1.PublisherId" String="MSFT" />
+        <ValueAnnotation Term="Org.OData.Publication.V1.Keywords" String="Inventory, Supplier, Advertisers, Sales, Finance" />
+        <ValueAnnotation Term="Org.OData.Publication.V1.AttributionUrl" String="http://www.odata.org/" />
+        <ValueAnnotation Term="Org.OData.Publication.V1.AttributionDescription" String="All rights reserved" />
+        <ValueAnnotation Term="Org.OData.Publication.V1.DocumentationUrl " String="http://www.odata.org/" />
+        <ValueAnnotation Term="Org.OData.Publication.V1.TermsOfUseUrl" String="All rights reserved" />
+        <ValueAnnotation Term="Org.OData.Publication.V1.PrivacyPolicyUrl" String="http://www.odata.org/" />
+        <ValueAnnotation Term="Org.OData.Publication.V1.LastModified" String="4/2/2013" />
+        <ValueAnnotation Term="Org.OData.Publication.V1.ImageUrl " String="http://www.odata.org/" />
+      </Annotations>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
