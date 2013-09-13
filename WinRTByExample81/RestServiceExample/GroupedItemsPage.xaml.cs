@@ -1,18 +1,16 @@
-﻿namespace ODataServiceExample
-{
-    using Common;
-    using System;
-    using System.Linq;
-    using Windows.UI.Xaml;
-    using Windows.UI.Xaml.Controls;
-    using Windows.UI.Xaml.Navigation;
-    using DataModel;
+﻿using System;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
+using RestServiceExample.Common;
+using RestServiceExample.DataModel;
 
+namespace RestServiceExample
+{
     /// <summary>
-    /// A page that displays an overview of a single group, including a preview of the items
-    /// within the group.
+    /// A page that displays a grouped collection of items.
     /// </summary>
-    public sealed partial class GroupDetailPage
+    public sealed partial class GroupedItemsPage
     {
         private readonly NavigationHelper navigationHelper;
         private readonly ObservableDictionary defaultViewModel = new ObservableDictionary();
@@ -21,21 +19,20 @@
         /// NavigationHelper is used on each page to aid in navigation and 
         /// process lifetime management
         /// </summary>
-        public NavigationHelper NavigationHelper 
-        { 
-            get { return this.navigationHelper; } 
+        public NavigationHelper NavigationHelper
+        {
+            get { return this.navigationHelper; }
         }
 
         /// <summary>
         /// This can be changed to a strongly typed view model.
         /// </summary>
-        public ObservableDictionary DefaultViewModel 
-        { 
-            get { return this.defaultViewModel; } 
+        public ObservableDictionary DefaultViewModel
+        {
+            get { return this.defaultViewModel; }
         }
-        
 
-        public GroupDetailPage()
+        public GroupedItemsPage()
         {
             this.InitializeComponent();
             this.navigationHelper = new NavigationHelper(this);
@@ -55,30 +52,41 @@
         /// session.  The state will be null the first time a page is visited.</param>
         private void navigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            var categoryId = (int)e.NavigationParameter;
-            var category = ((App)Application.Current).DataSource.Categories.FirstOrDefault(c => c.Id == categoryId);
-            this.DefaultViewModel["Category"] = category;
-            this.DefaultViewModel["Products"] = category.Products;
+            var dataSource = ((App)Application.Current).DataSource;
+            DefaultViewModel["Groups"] = dataSource.Categories;
         }
 
         /// <summary>
-        /// Invoked when an item is clicked.
+        /// Invoked when a group header is clicked.
         /// </summary>
-        /// <param name="sender">The GridView displaying the item clicked.</param>
-        /// <param name="e">Event data that describes the item clicked.</param>
-        void ItemView_ItemClick(object sender, ItemClickEventArgs e)
+        /// <param name="sender">The Button used as a group header for the selected group.</param>
+        /// <param name="e">Event data that describes how the click was initiated.</param>
+        void HeaderClick(object sender, RoutedEventArgs e)
         {
-            // Navigate to the appropriate destination page, configuring the new page
-            // by passing required information as a navigation parameter
+            var frameworkElement = sender as FrameworkElement;
+            if (frameworkElement == null)
+            {
+                return;
+            }
+
+            var category = frameworkElement.DataContext;
+            this.Frame.Navigate(typeof(GroupDetailPage), ((Category)category).Id);
+        }
+
+        /// <summary>
+        /// Invoked when an item within a group is clicked.
+        /// </summary>
+        /// <param name="sender">The GridView (or ListView when the application is snapped)
+        /// displaying the item clicked.</param>
+        /// <param name="e">Event data that describes the item clicked.</param>
+        void ItemViewItemClick(object sender, ItemClickEventArgs e)
+        {
             var itemId = ((Product)e.ClickedItem).Id;
             this.Frame.Navigate(typeof(ItemDetailPage), itemId);
         }
 
         #region NavigationHelper registration
 
-        /// The methods provided in this section are simply used to allow
-        /// NavigationHelper to respond to the page's navigation methods.
-        
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             navigationHelper.OnNavigatedTo(e);

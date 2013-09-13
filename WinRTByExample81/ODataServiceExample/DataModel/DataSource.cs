@@ -125,7 +125,7 @@ namespace ODataServiceExample.DataModel
            
             foreach (var item in categories)
             {
-                var category = new Category { Id = item.ID, Name = item.Name, Location = ServiceBase };
+                var category = new Category { Id = item.ID, Name = item.Name, Location = new Uri(ServiceBase, string.Format("OData.svc/Categories({0})", item.ID)) };
 
                 foreach (
                     var product in
@@ -138,7 +138,7 @@ namespace ODataServiceExample.DataModel
                                     Price = (double)item1.Price,
                                     Rating = item1.Rating,
                                     Title = item1.Name,
-                                    Location = ServiceBase
+                                    Location = new Uri(ServiceBase, string.Format("OData.svc/Products({0})", item1.ID))
                                 }))
                 {
                     category.Products.Add(product);

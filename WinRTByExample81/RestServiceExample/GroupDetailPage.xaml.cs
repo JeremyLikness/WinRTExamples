@@ -1,13 +1,13 @@
-﻿namespace ODataServiceExample
-{
-    using Common;
-    using System;
-    using System.Linq;
-    using Windows.UI.Xaml;
-    using Windows.UI.Xaml.Controls;
-    using Windows.UI.Xaml.Navigation;
-    using DataModel;
+﻿using System;
+using System.Linq;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
+using RestServiceExample.Common;
+using RestServiceExample.DataModel;
 
+namespace RestServiceExample
+{
     /// <summary>
     /// A page that displays an overview of a single group, including a preview of the items
     /// within the group.
@@ -21,19 +21,19 @@
         /// NavigationHelper is used on each page to aid in navigation and 
         /// process lifetime management
         /// </summary>
-        public NavigationHelper NavigationHelper 
-        { 
-            get { return this.navigationHelper; } 
+        public NavigationHelper NavigationHelper
+        {
+            get { return this.navigationHelper; }
         }
 
         /// <summary>
         /// This can be changed to a strongly typed view model.
         /// </summary>
-        public ObservableDictionary DefaultViewModel 
-        { 
-            get { return this.defaultViewModel; } 
+        public ObservableDictionary DefaultViewModel
+        {
+            get { return this.defaultViewModel; }
         }
-        
+
 
         public GroupDetailPage()
         {
@@ -78,7 +78,7 @@
 
         /// The methods provided in this section are simply used to allow
         /// NavigationHelper to respond to the page's navigation methods.
-        
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             navigationHelper.OnNavigatedTo(e);

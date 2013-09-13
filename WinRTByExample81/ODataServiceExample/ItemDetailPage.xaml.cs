@@ -1,12 +1,12 @@
-﻿using ODataServiceExample.Common;
-using System;
-using System.Linq;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
-
-namespace ODataServiceExample
+﻿namespace ODataServiceExample
 {
+    using Common;
+    using System;
+    using System.Linq;
+    using Windows.UI.Xaml;
+    using Windows.UI.Xaml.Controls;
+    using Windows.UI.Xaml.Navigation;
+
     /// <summary>
     /// A page that displays details for a single item within a group.
     /// </summary>
@@ -76,13 +76,5 @@ namespace ODataServiceExample
         }
 
         #endregion
-
-        private void BackButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            if (Frame.CanGoBack)
-            {
-                Frame.GoBack();
-            }
-        }
     }
 }
