@@ -131,7 +131,6 @@
       <DependentUpon>ItemDetailPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DataModel\SampleDataSource.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
     <Compile Include="Common\NavigationHelper.cs" />
     <Compile Include="Common\RelayCommand.cs" />
@@ -155,7 +154,6 @@
     <Content Include="..\Common\StoreLogo.scale-100.png">
       <Link>Assets\StoreLogo.scale-100.png</Link>
     </Content>
-    <Content Include="DataModel\SampleData.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\LightGray.png" />
