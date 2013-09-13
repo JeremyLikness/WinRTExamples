@@ -1,14 +1,14 @@
 ﻿<Page
     x:Name="pageRoot"
-    x:Class="ODataServiceExample.GroupedItemsPage"
+    x:Class="RestServiceExample.GroupedItemsPage"
     DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:ODataServiceExample"
-    xmlns:common="using:ODataServiceExample.Common"
+    xmlns:local="using:RestServiceExample"
+    xmlns:dataModel="using:RestServiceExample.DataModel"
+    xmlns:common="using:RestServiceExample.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:dataModel="using:ODataServiceExample.DataModel"
     mc:Ignorable="d">
 
     <Page.Resources>

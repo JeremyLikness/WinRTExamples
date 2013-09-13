@@ -1,0 +1,119 @@
+﻿<Page
+    x:Name="pageRoot"
+    x:Class="RestServiceExample.ItemDetailPage"
+    DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:RestServiceExample"
+    xmlns:dataModel="using:RestServiceExample.DataModel"
+    xmlns:common="using:RestServiceExample.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <!-- Collection of items displayed by this page -->
+        <CollectionViewSource
+            x:Name="itemsViewSource"
+            Source="{Binding Products}"
+            d:Source="{Binding Categories[0].Products, Source={d:DesignInstance Type=dataModel:DataSource, IsDesignTimeCreatable=True}}"/>
+    </Page.Resources>
+
+    <!--
+        This grid acts as a root panel for the page that defines two rows:
+        * Row 0 contains the back button and page title
+        * Row 1 contains the rest of the page layout
+    -->
+    <Grid
+        DataContext="{Binding Category}"
+        d:DataContext="{Binding Categories[0], Source={d:DesignInstance Type=dataModel:DataSource, IsDesignTimeCreatable=True}}">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="140"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--
+            The remainder of the page is one large FlipView that displays details for
+            one item at a time, allowing the user to flip through all items in the chosen
+            group
+        -->
+        <FlipView
+            x:Name="flipView"
+            AutomationProperties.AutomationId="ItemsFlipView"
+            AutomationProperties.Name="Item Details"
+            TabIndex="1"
+            Grid.RowSpan="2"
+            ItemsSource="{Binding Source={StaticResource itemsViewSource}}">
+
+            <FlipView.ItemContainerStyle>
+                <Style TargetType="FlipViewItem">
+                    <Setter Property="Margin" Value="0,137,0,0"/>
+                </Style>
+            </FlipView.ItemContainerStyle>
+
+            <FlipView.ItemTemplate>
+                <DataTemplate>
+
+                    <ScrollViewer x:Name="scrollViewer">
+
+                        <!-- Content is allowed to flow across as many columns as needed -->
+                        <RichTextBlock x:Name="richTextBlock" Width="560" Style="{StaticResource BaseRichTextBlockStyle}" IsTextSelectionEnabled="False">
+                            <Paragraph>
+                                <Run FontSize="26.667" FontWeight="Light" Text="{Binding Title}"/>
+                                <LineBreak/>
+                                <LineBreak/>
+                                <Run FontWeight="Normal" Text="{Binding Description}"/>
+                                <LineBreak/>
+                            </Paragraph>
+                            <Paragraph>
+                                <InlineUIContainer>
+                                    <HyperlinkButton FontSize="18" Content="View Online" NavigateUri="{Binding Location}"/>
+                                </InlineUIContainer>
+                            </Paragraph>
+                            <Paragraph LineStackingStrategy="MaxHeight">
+                                <InlineUIContainer>
+                                    <Image x:Name="image" MaxHeight="480" Margin="0,20,0,10" Stretch="Uniform" Source="{Binding Image}" AutomationProperties.Name="{Binding Title}"/>
+                                </InlineUIContainer>
+                            </Paragraph>
+                            <Paragraph>
+                                <Run FontWeight="SemiLight" Text="$"/>
+                                <Run FontWeight="SemiLight" Text="{Binding Price}"/>
+                                <LineBreak/>
+                            </Paragraph>
+                            <Paragraph>
+                                <Run FontWeight="Bold" Text="Rating: "/>
+                                <Run Text="{Binding Rating}"/>
+                                <Run Text="/ 5"></Run>
+                                <LineBreak/>
+                            </Paragraph>
+                            <Paragraph>
+                                <InlineUIContainer>
+                                    <Slider Maximum="5" Value="{Binding Rating}" IsEnabled="False" Width="100" Height="50"></Slider>
+                                </InlineUIContainer>
+                            </Paragraph>
+                        </RichTextBlock>
+
+
+                    </ScrollViewer>
+                </DataTemplate>
+            </FlipView.ItemTemplate>
+        </FlipView>
+
+        <!-- Back button and page title -->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <AppBarButton x:Name="backButton" Icon="Back" Height="95" Margin="10,46,10,0"
+                          Command="{Binding NavigationHelper.GoBackCommand, ElementName=pageRoot}" 
+                          Visibility="{Binding IsEnabled, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource Mode=Self}}"
+                          AutomationProperties.Name="Back"
+                          AutomationProperties.AutomationId="BackButton"
+                          AutomationProperties.ItemType="Navigation Button"/>
+            <TextBlock x:Name="pageTitle" Text="{Binding Name}" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
+                       IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,30,40"/>
+        </Grid>
+    </Grid>
+</Page>

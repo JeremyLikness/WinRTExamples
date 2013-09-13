@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.20623.1 VSUPREVIEW
+VisualStudioVersion = 12.0.20827.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorldGridApp", "HelloWorldGridApp\HelloWorldGridApp.csproj", "{B270835A-3249-4284-9399-E885C80229E9}"
 EndProject
@@ -69,9 +69,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter5", "Chapter5", "{4C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODataServiceExample", "ODataServiceExample\ODataServiceExample.csproj", "{23179A47-4718-41B1-BFE7-94353A876E4C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestServiceExample", "RestServiceExample\RestServiceExample.csproj", "{280E37D0-C516-4AD7-9184-B7F95D3A4931}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 24
+		SccNumberOfProjects = 25
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs04
 		SccLocalPath0 = .
@@ -167,6 +169,10 @@ Global
 		SccProjectTopLevelParentUniqueName23 = WinRTByExample81.sln
 		SccProjectName23 = ODataServiceExample
 		SccLocalPath23 = ODataServiceExample
+		SccProjectUniqueName24 = RestServiceExample\\RestServiceExample.csproj
+		SccProjectTopLevelParentUniqueName24 = WinRTByExample81.sln
+		SccProjectName24 = RestServiceExample
+		SccLocalPath24 = RestServiceExample
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -677,6 +683,30 @@ Global
 		{23179A47-4718-41B1-BFE7-94353A876E4C}.Release|x86.ActiveCfg = Release|x86
 		{23179A47-4718-41B1-BFE7-94353A876E4C}.Release|x86.Build.0 = Release|x86
 		{23179A47-4718-41B1-BFE7-94353A876E4C}.Release|x86.Deploy.0 = Release|x86
+		{280E37D0-C516-4AD7-9184-B7F95D3A4931}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{280E37D0-C516-4AD7-9184-B7F95D3A4931}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{280E37D0-C516-4AD7-9184-B7F95D3A4931}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{280E37D0-C516-4AD7-9184-B7F95D3A4931}.Debug|ARM.ActiveCfg = Debug|ARM
+		{280E37D0-C516-4AD7-9184-B7F95D3A4931}.Debug|ARM.Build.0 = Debug|ARM
+		{280E37D0-C516-4AD7-9184-B7F95D3A4931}.Debug|ARM.Deploy.0 = Debug|ARM
+		{280E37D0-C516-4AD7-9184-B7F95D3A4931}.Debug|x64.ActiveCfg = Debug|x64
+		{280E37D0-C516-4AD7-9184-B7F95D3A4931}.Debug|x64.Build.0 = Debug|x64
+		{280E37D0-C516-4AD7-9184-B7F95D3A4931}.Debug|x64.Deploy.0 = Debug|x64
+		{280E37D0-C516-4AD7-9184-B7F95D3A4931}.Debug|x86.ActiveCfg = Debug|x86
+		{280E37D0-C516-4AD7-9184-B7F95D3A4931}.Debug|x86.Build.0 = Debug|x86
+		{280E37D0-C516-4AD7-9184-B7F95D3A4931}.Debug|x86.Deploy.0 = Debug|x86
+		{280E37D0-C516-4AD7-9184-B7F95D3A4931}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{280E37D0-C516-4AD7-9184-B7F95D3A4931}.Release|Any CPU.Build.0 = Release|Any CPU
+		{280E37D0-C516-4AD7-9184-B7F95D3A4931}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{280E37D0-C516-4AD7-9184-B7F95D3A4931}.Release|ARM.ActiveCfg = Release|ARM
+		{280E37D0-C516-4AD7-9184-B7F95D3A4931}.Release|ARM.Build.0 = Release|ARM
+		{280E37D0-C516-4AD7-9184-B7F95D3A4931}.Release|ARM.Deploy.0 = Release|ARM
+		{280E37D0-C516-4AD7-9184-B7F95D3A4931}.Release|x64.ActiveCfg = Release|x64
+		{280E37D0-C516-4AD7-9184-B7F95D3A4931}.Release|x64.Build.0 = Release|x64
+		{280E37D0-C516-4AD7-9184-B7F95D3A4931}.Release|x64.Deploy.0 = Release|x64
+		{280E37D0-C516-4AD7-9184-B7F95D3A4931}.Release|x86.ActiveCfg = Release|x86
+		{280E37D0-C516-4AD7-9184-B7F95D3A4931}.Release|x86.Build.0 = Release|x86
+		{280E37D0-C516-4AD7-9184-B7F95D3A4931}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -705,5 +735,6 @@ Global
 		{0DB8B083-8BDB-45BD-BF41-A8C9A80088E0} = {ADD994D7-0BB2-4DAE-B5E0-9B9D077A9CF4}
 		{8AE8E574-56B7-44C7-B986-D450E0248C9C} = {ADD994D7-0BB2-4DAE-B5E0-9B9D077A9CF4}
 		{23179A47-4718-41B1-BFE7-94353A876E4C} = {4C5AE9B3-E41E-4043-9A1C-FDE4946A9C7E}
+		{280E37D0-C516-4AD7-9184-B7F95D3A4931} = {4C5AE9B3-E41E-4043-9A1C-FDE4946A9C7E}
 	EndGlobalSection
 EndGlobal

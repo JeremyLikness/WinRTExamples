@@ -1,12 +1,12 @@
-﻿using ODataServiceExample.Common;
-using System;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
-using ODataServiceExample.DataModel;
-
-namespace ODataServiceExample
+﻿namespace ODataServiceExample
 {
+    using Common;
+    using System;
+    using Windows.UI.Xaml;
+    using Windows.UI.Xaml.Controls;
+    using Windows.UI.Xaml.Navigation;
+    using DataModel;
+
     /// <summary>
     /// A page that displays a grouped collection of items.
     /// </summary>
@@ -98,13 +98,5 @@ namespace ODataServiceExample
         }
 
         #endregion
-
-        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
-        {
-            if (this.Frame.CanGoBack)
-            {
-                this.Frame.GoBack();
-            }
-        }
     }
 }

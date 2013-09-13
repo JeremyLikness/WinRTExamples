@@ -1,18 +1,16 @@
-﻿namespace ODataServiceExample
-{
-    using Common;
-    using System;
-    using System.Linq;
-    using Windows.UI.Xaml;
-    using Windows.UI.Xaml.Controls;
-    using Windows.UI.Xaml.Navigation;
-    using DataModel;
+﻿using System;
+using System.Linq;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
+using RestServiceExample.Common;
 
+namespace RestServiceExample
+{
     /// <summary>
-    /// A page that displays an overview of a single group, including a preview of the items
-    /// within the group.
+    /// A page that displays details for a single item within a group.
     /// </summary>
-    public sealed partial class GroupDetailPage
+    public sealed partial class ItemDetailPage
     {
         private readonly NavigationHelper navigationHelper;
         private readonly ObservableDictionary defaultViewModel = new ObservableDictionary();
@@ -21,21 +19,20 @@
         /// NavigationHelper is used on each page to aid in navigation and 
         /// process lifetime management
         /// </summary>
-        public NavigationHelper NavigationHelper 
-        { 
-            get { return this.navigationHelper; } 
+        public NavigationHelper NavigationHelper
+        {
+            get { return this.navigationHelper; }
         }
 
         /// <summary>
         /// This can be changed to a strongly typed view model.
         /// </summary>
-        public ObservableDictionary DefaultViewModel 
-        { 
-            get { return this.defaultViewModel; } 
+        public ObservableDictionary DefaultViewModel
+        {
+            get { return this.defaultViewModel; }
         }
-        
 
-        public GroupDetailPage()
+        public ItemDetailPage()
         {
             this.InitializeComponent();
             this.navigationHelper = new NavigationHelper(this);
@@ -55,30 +52,19 @@
         /// session.  The state will be null the first time a page is visited.</param>
         private void navigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            var categoryId = (int)e.NavigationParameter;
-            var category = ((App)Application.Current).DataSource.Categories.FirstOrDefault(c => c.Id == categoryId);
-            this.DefaultViewModel["Category"] = category;
-            this.DefaultViewModel["Products"] = category.Products;
-        }
-
-        /// <summary>
-        /// Invoked when an item is clicked.
-        /// </summary>
-        /// <param name="sender">The GridView displaying the item clicked.</param>
-        /// <param name="e">Event data that describes the item clicked.</param>
-        void ItemView_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            // Navigate to the appropriate destination page, configuring the new page
-            // by passing required information as a navigation parameter
-            var itemId = ((Product)e.ClickedItem).Id;
-            this.Frame.Navigate(typeof(ItemDetailPage), itemId);
+            var itemId = (int)e.NavigationParameter;
+            var item =
+                (from c in ((App)Application.Current).DataSource.Categories
+                 from p in c.Products
+                 where p.Id == itemId
+                 select new { p, c }).FirstOrDefault();
+            this.DefaultViewModel["Category"] = item.c;
+            this.DefaultViewModel["Products"] = item.c.Products;
+            this.flipView.SelectedItem = item.p;
         }
 
         #region NavigationHelper registration
 
-        /// The methods provided in this section are simply used to allow
-        /// NavigationHelper to respond to the page's navigation methods.
-        
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             navigationHelper.OnNavigatedTo(e);
