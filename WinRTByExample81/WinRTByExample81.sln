@@ -77,6 +77,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoapServiceExample", "SoapS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationHelper", "NotificationHelper\NotificationHelper.csproj", "{18CFD343-5194-4819-9578-55C4FF5E0308}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter7", "Chapter7", "{2EFE7EA2-FDE5-4366-984D-4542ADA7B1E3}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
 		SccNumberOfProjects = 28
