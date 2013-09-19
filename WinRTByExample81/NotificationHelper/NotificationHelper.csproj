@@ -111,6 +111,9 @@
     <Compile Include="..\Common\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Badges\BadgeGlyphTypes.cs" />
+    <Compile Include="Badges\BadgeHelper.cs" />
+    <Compile Include="Badges\BaseBadge.cs" />
     <Compile Include="Common\BaseNotification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tiles\BaseTile.cs" />
