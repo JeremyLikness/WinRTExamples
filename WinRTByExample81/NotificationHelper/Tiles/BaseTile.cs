@@ -26,19 +26,22 @@ namespace WinRTByExample.NotificationHelper.Tiles
         private static readonly Dictionary<string, TileTypes> TemplateMap = 
             new Dictionary<string, TileTypes>
             {
-                {"TileSquare150x150", TileTypes.Square}, 
-                {"TileWide310x150", TileTypes.Wide},
-                {"TileSquare310x310", TileTypes.Large}
+                {"150x150", TileTypes.Square}, 
+                {"310x150", TileTypes.Wide},
+                {"310x310", TileTypes.Large}
             };
 
-        private static TileTypes GetTileType(TileTemplateType type)
+        private static string GetTemplateName(TileTemplateType templateType)
         {
-            var templateType = type.ToString();
-            foreach (var prefix in TemplateMap.Keys.Where(templateType.StartsWith))
+            var binding = TileUpdateManager.GetTemplateContent(templateType).GetElementsByTagName("binding")[0];
+            var template = binding.Attributes.GetNamedItem("template");
+
+            if (template == null)
             {
-                return TemplateMap[prefix];
+                return templateType.ToString();
             }
-            return TileTypes.Unknown;
+
+            return template.NodeValue.ToString();
         }
 
         /// <summary>
@@ -47,10 +50,13 @@ namespace WinRTByExample.NotificationHelper.Tiles
         /// <param name="templateType">
         /// The template Type.
         /// </param>
-        public BaseTile(TileTemplateType templateType) : base(TileUpdateManager.GetTemplateContent(templateType), templateType.ToString())
+        public BaseTile(TileTemplateType templateType) : base(TileUpdateManager.GetTemplateContent(templateType), GetTemplateName(templateType))
         {
             this.Type = templateType;
-            this.TileType = GetTileType(templateType);
+
+            var size = TemplateMap.Keys.FirstOrDefault(s => this.TemplateType.Contains(s));
+
+            this.TileType = !string.IsNullOrWhiteSpace(size) ? TemplateMap[size] : TileTypes.Unknown;
         }
 
         /// <summary>
@@ -228,6 +234,16 @@ namespace WinRTByExample.NotificationHelper.Tiles
             var otherBinding = this.Xml.ImportNode(otherTile.Xml.GetElementsByTagName("visual")[0].LastChild, true);
             this.Xml.GetElementsByTagName("visual")[0].AppendChild(otherBinding);
             return this;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is BaseTile && ((BaseTile) obj).TemplateType.Equals(TemplateType);
+        }
+
+        public override int GetHashCode()
+        {
+            return TemplateType.GetHashCode();
         }
     }
 }

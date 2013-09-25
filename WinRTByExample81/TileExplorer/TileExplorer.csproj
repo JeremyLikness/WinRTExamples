@@ -119,6 +119,12 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Common\TileToExampleConverter.cs" />
+    <Compile Include="Common\TileToSizeConverter.cs" />
+    <Compile Include="DataModel\BadgeItem.cs" />
+    <Compile Include="DataModel\DataSource.cs" />
+    <Compile Include="DataModel\TileGroup.cs" />
+    <Compile Include="DataModel\TileItem.cs" />
     <Compile Include="GroupedItemsPage.xaml.cs">
       <DependentUpon>GroupedItemsPage.xaml</DependentUpon>
     </Compile>

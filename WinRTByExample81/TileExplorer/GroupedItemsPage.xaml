@@ -5,10 +5,10 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:TileExplorer"
-    xmlns:data="using:TileExplorer.Data"
     xmlns:common="using:TileExplorer.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:dataModel="using:TileExplorer.DataModel"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -22,7 +22,7 @@
             Source="{Binding Groups}"
             IsSourceGrouped="true"
             ItemsPath="Items"
-            d:Source="{Binding Groups, Source={d:DesignData Source=/DataModel/SampleData.json, Type=data:SampleDataSource}}"/>
+            d:Source="{Binding AllGroups, Source={d:DesignInstance Type=dataModel:DataSource, IsDesignTimeCreatable=True}}"/>
     </Page.Resources>
 
     <!--
@@ -57,11 +57,11 @@
                 <DataTemplate>
                     <Grid HorizontalAlignment="Left" Width="250" Height="250">
                         <Border Background="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}">
-                            <Image Source="{Binding ImagePath}" Stretch="UniformToFill" AutomationProperties.Name="{Binding Title}"/>
+                            <Image Source="{Binding Converter={StaticResource TileConverter}}" Stretch="Uniform" AutomationProperties.Name="{Binding Name}"/>
                         </Border>
                         <StackPanel VerticalAlignment="Bottom" Background="{ThemeResource ListViewItemOverlayBackgroundThemeBrush}">
-                            <TextBlock Text="{Binding Title}" Foreground="{ThemeResource ListViewItemOverlayForegroundThemeBrush}" Style="{StaticResource TitleTextBlockStyle}" Height="60" Margin="15,0,15,0"/>
-                            <TextBlock Text="{Binding Subtitle}" Foreground="{ThemeResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap" Margin="15,0,15,10"/>
+                            <TextBlock Text="{Binding Id}" Foreground="{ThemeResource ListViewItemOverlayForegroundThemeBrush}" Style="{StaticResource TitleTextBlockStyle}" Height="60" Margin="15,0,15,0"/>
+                            <TextBlock Text="{Binding Description}" Foreground="{ThemeResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap" Margin="15,0,15,10"/>
                         </StackPanel>
                     </Grid>
                 </DataTemplate>
@@ -81,7 +81,7 @@
                                     Click="Header_Click"
                                     Style="{StaticResource TextBlockButtonStyle}" >
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding Title}" Margin="3,-7,10,10" Style="{StaticResource SubheaderTextBlockStyle}" TextWrapping="NoWrap" />
+                                        <TextBlock Text="{Binding Name}" Margin="3,-7,10,10" Style="{StaticResource SubheaderTextBlockStyle}" TextWrapping="NoWrap" />
                                         <TextBlock Text="{StaticResource ChevronGlyph}" FontFamily="Segoe UI Symbol" Margin="0,-7,0,10" Style="{StaticResource SubheaderTextBlockStyle}" TextWrapping="NoWrap" />
                                     </StackPanel>
                                 </Button>

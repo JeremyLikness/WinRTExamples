@@ -39,6 +39,7 @@ namespace WinRTByExample.NotificationHelper.Tiles
                            .Select(tileType => (TileTemplateType)Enum.Parse(typeof(TileTemplateType), tileType))
                            .Select(tileTemplateType => new BaseTile(tileTemplateType))
                            .Where(tile => !tile.TileType.Equals(TileTypes.Unknown))
+                           .Distinct()
                            .ToArray());
         }
 
