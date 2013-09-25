@@ -13,8 +13,8 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-
 // The Item Detail Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234232
+using TileExplorer.DataModel;
 
 namespace TileExplorer
 {
@@ -48,6 +48,13 @@ namespace TileExplorer
             this.InitializeComponent();
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += navigationHelper_LoadState;
+            this.navigationHelper.SaveState += navigationHelper_SaveState;
+        }
+
+        void navigationHelper_SaveState(object sender, SaveStateEventArgs e)
+        {
+            var selectedItem = (TileItem)this.flipView.SelectedItem;
+            e.PageState["SelectedItem"] = selectedItem.Id;
         }
 
         /// <summary>
@@ -61,11 +68,16 @@ namespace TileExplorer
         /// <see cref="Frame.Navigate(Type, Object)"/> when this page was initially requested and
         /// a dictionary of state preserved by this page during an earlier
         /// session.  The state will be null the first time a page is visited.</param>
-        private async void navigationHelper_LoadState(object sender, LoadStateEventArgs e)
+        private void navigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            // TODO: Create an appropriate data model for your problem domain to replace the sample data
-            var item = await SampleDataSource.GetItemAsync((String)e.NavigationParameter);
-            this.DefaultViewModel["Item"] = item;
+            var navigationParameter = e.PageState != null && e.PageState.ContainsKey("SelectedItem")
+                ? e.PageState["SelectedItem"]
+                : e.NavigationParameter;
+            var item = App.CurrentDataSource.GetTile((string) navigationParameter);
+            var itemGroup = App.CurrentDataSource.GetGroupForItem(item.Id);
+            this.DefaultViewModel["Group"] = itemGroup;
+            this.DefaultViewModel["Items"] = itemGroup.Items;
+            this.flipView.SelectedItem = item;
         }
 
         #region NavigationHelper registration

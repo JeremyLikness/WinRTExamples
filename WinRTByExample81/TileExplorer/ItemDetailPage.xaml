@@ -9,7 +9,15 @@
     xmlns:common="using:TileExplorer.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:dataModel="using:TileExplorer.DataModel"
     mc:Ignorable="d">
+    
+    <Page.Resources>
+        <CollectionViewSource
+            x:Name="itemsViewSource"
+            Source="{Binding Items}"
+            d:Source="{Binding AllGroups[0].Items, Source={d:DesignInstance Type=dataModel:DataSource, IsDesignTimeCreatable=True}}"/>
+    </Page.Resources>
 
     <!--
         This grid acts as a root panel for the page that defines two rows:
@@ -17,8 +25,8 @@
         * Row 1 contains the rest of the page layout
     -->
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-        DataContext="{Binding Item}"
-        d:DataContext="{Binding Groups[0].Items[0], Source={d:DesignData Source=/DataModel/SampleData.json, Type=data:SampleDataSource}}">
+        DataContext="{Binding Group}"
+        d:DataContext="{Binding AllGroups[0], Source={d:DesignData Type=dataModel:DataSource, IsDesignTimeCreatable=True}}">
         <Grid.ChildrenTransitions>
             <TransitionCollection>
                 <EntranceThemeTransition/>
@@ -33,7 +41,43 @@
             TODO: Content should be placed within the following grid 
                   to show details for the current item
         -->
-        <Grid Grid.Row="1" x:Name="contentRegion"/>
+        <Grid Grid.Row="1" x:Name="contentRegion">
+            <FlipView 
+                x:Name="flipView"
+                TabIndex="1"
+                Grid.RowSpan="2"
+                ItemsSource="{Binding Source={StaticResource itemsViewSource}}">
+                <FlipView.ItemContainerStyle>
+                    <Style TargetType="FlipViewItem">
+                        <Setter Property="Margin" Value="0,137,0,0"/>
+                    </Style>
+                </FlipView.ItemContainerStyle>
+                <FlipView.ItemTemplate>
+                    <DataTemplate>
+                        <ScrollViewer x:Name="scrollViewer">
+                            <Grid x:Name="FullItem" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="600"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="350"/>
+                                    <ColumnDefinition Width="400"/>
+                                </Grid.ColumnDefinitions>
+                                <Image VerticalAlignment="Top"
+                                       Width="{Binding Converter={StaticResource TileSizer}, ConverterParameter='w'}"
+                                       Height="{Binding Converter={StaticResource TileSizer}, ConverterParameter='h'}"
+                                       Source="{Binding Converter={StaticResource TileConverter}}"/>
+                                <StackPanel Orientation="Vertical" Grid.Column="1">
+                                    <TextBlock Text="{Binding Id}" Style="{StaticResource HeaderTextBlockStyle}" FontSize="30"/>
+                                    <TextBlock Text="{Binding Description}" Style="{StaticResource CaptionTextBlockStyle}" Margin="0 10 0 0"/>
+                                    <TextBlock Text="{Binding Xml}" TextWrapping="Wrap" Style="{StaticResource BaseTextBlockStyle}" Margin="0 10 0 0"></TextBlock>
+                                </StackPanel>
+                            </Grid>
+                        </ScrollViewer>
+                    </DataTemplate>                    
+                </FlipView.ItemTemplate>
+            </FlipView>
+        </Grid>
 
         <!-- Back button and page title -->
         <Grid>
@@ -47,7 +91,7 @@
                         AutomationProperties.Name="Back"
                         AutomationProperties.AutomationId="BackButton"
                         AutomationProperties.ItemType="Navigation Button"/>
-            <TextBlock x:Name="pageTitle" Text="{Binding Title}" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
+            <TextBlock x:Name="pageTitle" Text="{Binding Name}" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
                         IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,30,40"/>
         </Grid>
     </Grid>

@@ -1,30 +1,20 @@
-﻿using TileExplorer.Common;
-using TileExplorer.Data;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-
-// The Grouped Items Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234231
+﻿using TileExplorer.DataModel;
 
 namespace TileExplorer
 {
+    using Common;
+    using System;
+    using Windows.UI.Xaml;
+    using Windows.UI.Xaml.Controls;
+    using Windows.UI.Xaml.Navigation;
+
     /// <summary>
     /// A page that displays a grouped collection of items.
     /// </summary>
-    public sealed partial class GroupedItemsPage : Page
+    public sealed partial class GroupedItemsPage
     {
-        private NavigationHelper navigationHelper;
-        private ObservableDictionary defaultViewModel = new ObservableDictionary();
+        private readonly NavigationHelper navigationHelper;
+        private readonly ObservableDictionary defaultViewModel = new ObservableDictionary();
 
         /// <summary>
         /// NavigationHelper is used on each page to aid in navigation and 
@@ -61,11 +51,10 @@ namespace TileExplorer
         /// <see cref="Frame.Navigate(Type, Object)"/> when this page was initially requested and
         /// a dictionary of state preserved by this page during an earlier
         /// session.  The state will be null the first time a page is visited.</param>
-        private async void navigationHelper_LoadState(object sender, LoadStateEventArgs e)
+        private void navigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            // TODO: Create an appropriate data model for your problem domain to replace the sample data
-            var sampleDataGroups = await SampleDataSource.GetGroupsAsync();
-            this.DefaultViewModel["Groups"] = sampleDataGroups;
+            var dataGroups = App.CurrentDataSource.GetGroups();
+            this.DefaultViewModel["Groups"] = dataGroups;
         }
 
         /// <summary>
@@ -76,11 +65,18 @@ namespace TileExplorer
         void Header_Click(object sender, RoutedEventArgs e)
         {
             // Determine what group the Button instance represents
-            var group = (sender as FrameworkElement).DataContext;
+            var frameworkElement = sender as FrameworkElement;
+
+            if (frameworkElement == null)
+            {
+                return;
+            }
+
+            var group = frameworkElement.DataContext;
 
             // Navigate to the appropriate destination page, configuring the new page
             // by passing required information as a navigation parameter
-            this.Frame.Navigate(typeof(GroupDetailPage), ((SampleDataGroup)group).UniqueId);
+            this.Frame.Navigate(typeof(GroupDetailPage), ((TileGroup)@group).Name);
         }
 
         /// <summary>
@@ -93,20 +89,11 @@ namespace TileExplorer
         {
             // Navigate to the appropriate destination page, configuring the new page
             // by passing required information as a navigation parameter
-            var itemId = ((SampleDataItem)e.ClickedItem).UniqueId;
+            var itemId = ((TileItem)e.ClickedItem).Id;
             this.Frame.Navigate(typeof(ItemDetailPage), itemId);
         }
 
         #region NavigationHelper registration
-
-        /// The methods provided in this section are simply used to allow
-        /// NavigationHelper to respond to the page's navigation methods.
-        /// 
-        /// Page specific logic should be placed in event handlers for the  
-        /// <see cref="GridCS.Common.NavigationHelper.LoadState"/>
-        /// and <see cref="GridCS.Common.NavigationHelper.SaveState"/>.
-        /// The navigation parameter is available in the LoadState method 
-        /// in addition to page state preserved during an earlier session.
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
