@@ -106,5 +106,10 @@ namespace TileExplorer
         }
 
         #endregion
+
+        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof (Badges), string.Empty);
+        }
     }
 }

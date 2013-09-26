@@ -1,31 +1,19 @@
-﻿using TileExplorer.Common;
-using TileExplorer.Data;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-
-// The Group Detail Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234229
-
-namespace TileExplorer
+﻿namespace TileExplorer
 {
+    using Common;
+    using System;
+    using Windows.UI.Xaml.Controls;
+    using Windows.UI.Xaml.Navigation;
+    using DataModel;
+
     /// <summary>
     /// A page that displays an overview of a single group, including a preview of the items
     /// within the group.
     /// </summary>
-    public sealed partial class GroupDetailPage : Page
+    public sealed partial class GroupDetailPage
     {
-        private NavigationHelper navigationHelper;
-        private ObservableDictionary defaultViewModel = new ObservableDictionary();
+        private readonly NavigationHelper navigationHelper;
+        private readonly ObservableDictionary defaultViewModel = new ObservableDictionary();
 
         /// <summary>
         /// NavigationHelper is used on each page to aid in navigation and 
@@ -63,10 +51,9 @@ namespace TileExplorer
         /// <see cref="Frame.Navigate(Type, Object)"/> when this page was initially requested and
         /// a dictionary of state preserved by this page during an earlier
         /// session.  The state will be null the first time a page is visited.</param>
-        private async void navigationHelper_LoadState(object sender, LoadStateEventArgs e)
+        private void navigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            // TODO: Create an appropriate data model for your problem domain to replace the sample data
-            var group = await SampleDataSource.GetGroupAsync((String)e.NavigationParameter);
+            var group = App.CurrentDataSource.GetGroup((string) e.NavigationParameter);
             this.DefaultViewModel["Group"] = group;
             this.DefaultViewModel["Items"] = group.Items;
         }
@@ -78,9 +65,7 @@ namespace TileExplorer
         /// <param name="e">Event data that describes the item clicked.</param>
         void ItemView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            // Navigate to the appropriate destination page, configuring the new page
-            // by passing required information as a navigation parameter
-            var itemId = ((SampleDataItem)e.ClickedItem).UniqueId;
+            var itemId = ((TileItem)e.ClickedItem).Id;
             this.Frame.Navigate(typeof(ItemDetailPage), itemId);
         }
 
@@ -89,9 +74,6 @@ namespace TileExplorer
         /// The methods provided in this section are simply used to allow
         /// NavigationHelper to respond to the page's navigation methods.
         /// 
-        /// Page specific logic should be placed in event handlers for the  
-        /// <see cref="GridCS.Common.NavigationHelper.LoadState"/>
-        /// and <see cref="GridCS.Common.NavigationHelper.SaveState"/>.
         /// The navigation parameter is available in the LoadState method 
         /// in addition to page state preserved during an earlier session.
 

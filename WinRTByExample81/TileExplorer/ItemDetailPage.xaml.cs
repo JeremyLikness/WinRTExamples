@@ -1,30 +1,18 @@
-﻿using TileExplorer.Common;
-using TileExplorer.Data;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-// The Item Detail Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234232
-using TileExplorer.DataModel;
-
-namespace TileExplorer
+﻿namespace TileExplorer
 {
+    using Common;
+    using System;
+    using Windows.UI.Xaml.Controls;
+    using Windows.UI.Xaml.Navigation;
+    using DataModel;
+
     /// <summary>
     /// A page that displays details for a single item within a group.
     /// </summary>
-    public sealed partial class ItemDetailPage : Page
+    public sealed partial class ItemDetailPage
     {
-        private NavigationHelper navigationHelper;
-        private ObservableDictionary defaultViewModel = new ObservableDictionary();
+        private readonly NavigationHelper navigationHelper;
+        private readonly ObservableDictionary defaultViewModel = new ObservableDictionary();
 
         /// <summary>
         /// NavigationHelper is used on each page to aid in navigation and 
@@ -54,7 +42,10 @@ namespace TileExplorer
         void navigationHelper_SaveState(object sender, SaveStateEventArgs e)
         {
             var selectedItem = (TileItem)this.flipView.SelectedItem;
-            e.PageState["SelectedItem"] = selectedItem.Id;
+            if (selectedItem != null)
+            {
+                e.PageState["SelectedItem"] = selectedItem.Id;
+            }
         }
 
         /// <summary>
@@ -85,9 +76,6 @@ namespace TileExplorer
         /// The methods provided in this section are simply used to allow
         /// NavigationHelper to respond to the page's navigation methods.
         /// 
-        /// Page specific logic should be placed in event handlers for the  
-        /// <see cref="GridCS.Common.NavigationHelper.LoadState"/>
-        /// and <see cref="GridCS.Common.NavigationHelper.SaveState"/>.
         /// The navigation parameter is available in the LoadState method 
         /// in addition to page state preserved during an earlier session.
 
