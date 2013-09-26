@@ -24,6 +24,12 @@
             ItemsPath="Items"
             d:Source="{Binding AllGroups, Source={d:DesignInstance Type=dataModel:DataSource, IsDesignTimeCreatable=True}}"/>
     </Page.Resources>
+    
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton Icon="Favorite" Label="Update Badge" Click="ButtonBase_OnClick"></AppBarButton>
+        </CommandBar>
+    </Page.BottomAppBar>
 
     <!--
         This grid acts as a root panel for the page that defines two rows:
