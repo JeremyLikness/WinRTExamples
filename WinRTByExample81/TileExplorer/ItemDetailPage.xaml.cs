@@ -1,4 +1,13 @@
-﻿namespace TileExplorer
+﻿using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation;
+using Windows.UI.Notifications;
+using Windows.UI.Popups;
+using Windows.UI.StartScreen;
+using Windows.UI.Xaml;
+using WinRTByExample.NotificationHelper.Tiles;
+
+namespace TileExplorer
 {
     using Common;
     using System;
@@ -11,8 +20,192 @@
     /// </summary>
     public sealed partial class ItemDetailPage
     {
+        /// <summary>
+        /// The text.
+        /// </summary>
+        private readonly string[] text =
+        {
+            "Tile Explorer", "by Jeremy Likness",
+            "WinRT by Examples", "Automatically generates tiles",
+            "Helper classes for tiles.", "Updates own tile",
+            "Written in C#", "Standalone Windows Store app",
+            "Uses Windows Runtime", "Full source code"
+        };
+
+        /// <summary>
+        /// The images.
+        /// </summary>
+        private readonly string[] images =
+        {
+            "ms-appx:///Assets/slbookcover.png", "ms-appx:///Assets/buildingwind8cover.jpg",
+            "ms-appx:///Assets/avatar.png", "ms-appx:///Assets/paris.jpg",
+            "http://gallery.jeremylikness.com/main.php?g2_view=core.DownloadItem&g2_itemId=273&g2_serialNumber=1", 
+            "http://lh5.ggpht.com/--mPuxdvKqf8/USFpzDUXXiI/AAAAAAAAA5s/DCz4EuXvIn8/s1600-h/keyboard3.jpg"
+        };
+
         private readonly NavigationHelper navigationHelper;
         private readonly ObservableDictionary defaultViewModel = new ObservableDictionary();
+
+        /// <summary>
+        /// Set the notification button icon
+        /// </summary>
+        /// <param name="sender">The button to set</param>
+        private static void SetNotificationButtonIcon(object sender)
+        {
+            ((AppBarButton) sender).Icon = App.NotificationsOn
+                ? new SymbolIcon(Symbol.Stop)
+                : new SymbolIcon(Symbol.Play);
+            ((AppBarButton) sender).Label = App.NotificationsOn
+                ? "Stop"
+                : "Start";
+        }
+
+        /// <summary>
+        /// The copy on click.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        private async Task CopyOnClick()
+        {
+            var selectedItem = (TileItem)this.flipView.SelectedItem;
+            if (selectedItem == null)
+            {
+                return;
+            }
+
+            var dataPackage = new DataPackage();
+            dataPackage.SetText(selectedItem.Tile.ToString());
+
+            var content = "The XML for the tile has been copied to the clipboard.";
+            var title = "Success";
+
+            try
+            {
+                // Set the DataPackage to clipboard. 
+                Clipboard.SetContent(dataPackage);
+            }
+            catch (Exception ex)
+            {
+                // Copying data to Clipboard can potentially fail - for example, if another application is holding Clipboard open 
+                content = ex.Message;
+                title = "Copy to Clipboard Failed";
+            }
+
+            var dialog = new MessageDialog(content, title);
+            await dialog.ShowAsync();
+        }
+
+        /// <summary>
+        /// The set on click.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        private async Task SetOnClick()
+        {
+            var selectedItem = (TileItem)this.flipView.SelectedItem;
+            if (selectedItem == null)
+            {
+                return;
+            }
+
+            var content = "The tile was successfully set.";
+            var title = "Success";
+
+            try
+            {
+                var baseTile = new BaseTile(selectedItem.Tile.Type);
+
+                for (var textLines = 0; textLines < baseTile.TextLines; textLines++)
+                {
+                    baseTile.AddText(this.text[textLines]);
+                }
+
+                for (var imageIndex = 0; imageIndex < baseTile.Images; imageIndex++)
+                {
+                    baseTile.AddImage(this.images[imageIndex], "Sample Image");
+                }
+
+                baseTile.WithNoBranding().Set();
+            }
+            catch (Exception ex)
+            {
+                title = "Error";
+                content = ex.Message;
+            }
+
+            var dialog = new MessageDialog(content, title);
+            await dialog.ShowAsync();
+        }
+
+        /// <summary>
+        /// The set on click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        private async Task PinOnClick(object sender)
+        {
+            var selectedItem = (TileItem)this.flipView.SelectedItem;
+            if (selectedItem == null)
+            {
+                return;
+            }
+
+            var content = "The tile was successfully pinned.";
+            var title = "Success";
+
+            try
+            {
+                var logo = new Uri("ms-appx:///Assets/Logo.png");
+                var smallLogo = new Uri("ms-appx:///Assets/SmallLogo.png");
+                var wideLogo = new Uri("ms-appx:///Assets/WideLogo.png");
+
+                var tile = new SecondaryTile(
+                    selectedItem.Id,
+                    selectedItem.Id,
+                    selectedItem.Description,
+                    string.Format("Id={0}", selectedItem.Id),
+                    TileOptions.ShowNameOnLogo | TileOptions.ShowNameOnWideLogo,
+                    logo)
+                {
+                    ForegroundText = ForegroundText.Light,
+                    SmallLogo = smallLogo,
+                    WideLogo = wideLogo
+                };
+
+                var appBarButton = sender as FrameworkElement;
+                if (appBarButton != null)
+                {
+                    var transformation = appBarButton.TransformToVisual(null);
+                    var point = transformation.TransformPoint(new Point());
+                    var rect = new Rect(point, new Size(appBarButton.ActualWidth, appBarButton.ActualHeight));
+                    var success = await tile.RequestCreateForSelectionAsync(rect, Placement.Above);
+                    if (!success)
+                    {
+                        title = "Canceled";
+                        content = "The pin request was canceled.";
+                    }
+                }
+                else
+                {
+                    throw new Exception("Could not aquire source element for positioning.");
+                }
+            }
+            catch (Exception ex)
+            {
+                title = "Error";
+                content = ex.Message;
+            }
+
+            var dialog = new MessageDialog(content, title);
+            await dialog.ShowAsync();
+        }
+
 
         /// <summary>
         /// NavigationHelper is used on each page to aid in navigation and 
@@ -91,5 +284,43 @@
         }
 
         #endregion
+
+        private void HomeCommand_OnClick(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof (GroupedItemsPage), "AllGroups");
+        }
+
+        private void NotificationButton_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            SetNotificationButtonIcon(sender);
+        }
+
+        private async void NotificationCommand_OnClick(object sender, RoutedEventArgs e)
+        {
+            var current = App.NotificationsOn;
+
+            TileUpdateManager.CreateTileUpdaterForApplication().EnableNotificationQueue(!current);
+            App.NotificationsOn = !current;
+            var message = current ? "Notifications have been turned off." : "Notifications have been turned on. Tiles should cycle.";
+            SetNotificationButtonIcon(sender);
+
+            var dialog = new MessageDialog(message);
+            await dialog.ShowAsync();
+        }
+
+        private async void CopyCommand_OnClick(object sender, RoutedEventArgs e)
+        {
+            await this.CopyOnClick();
+        }
+
+        private async void SetCommand_OnClick(object sender, RoutedEventArgs e)
+        {
+            await this.SetOnClick();
+        }
+
+        private async void PinCommand_OnClick(object sender, RoutedEventArgs e)
+        {
+            await this.PinOnClick(sender);
+        }
     }
 }

@@ -7,8 +7,6 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-using Windows.UI.Notifications;
-
 namespace TileExplorer.DataModel
 {
     using System.Collections.Generic;
