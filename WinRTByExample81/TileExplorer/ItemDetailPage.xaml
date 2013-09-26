@@ -17,6 +17,20 @@
             Source="{Binding Items}"
             d:Source="{Binding AllGroups[0].Items, Source={d:DesignInstance Type=dataModel:DataSource, IsDesignTimeCreatable=True}}"/>
     </Page.Resources>
+    
+    <Page.BottomAppBar>
+        <CommandBar>
+            <CommandBar.PrimaryCommands>
+                <AppBarButton Icon="Home" Label="Home" Click="HomeCommand_OnClick"></AppBarButton>
+                <AppBarButton Icon="Play" Loaded="NotificationButton_OnLoaded" Click="NotificationCommand_OnClick"></AppBarButton>
+            </CommandBar.PrimaryCommands>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Icon="Copy" Label="Copy" Click="CopyCommand_OnClick"></AppBarButton>
+                <AppBarButton Icon="Accept" Label="Set" Click="SetCommand_OnClick"></AppBarButton>
+                <AppBarButton Icon="Pin" Label="Pin" Click="PinCommand_OnClick"></AppBarButton>
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
 
     <!--
         This grid acts as a root panel for the page that defines two rows:
