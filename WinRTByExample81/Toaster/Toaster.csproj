@@ -4,24 +4,24 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{18CFD343-5194-4819-9578-55C4FF5E0308}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{9B3BFFCA-03C1-4A36-A136-E4EF248D5E04}</ProjectGuid>
+    <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WinRTByExample.NotificationHelper</RootNamespace>
-    <AssemblyName>WinRTByExample.NotificationHelper</AssemblyName>
+    <RootNamespace>Toaster</RootNamespace>
+    <AssemblyName>Toaster</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformVersion>8.1</TargetPlatformVersion>
     <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <PackageCertificateKeyFile>Toaster_TemporaryKey.pfx</PackageCertificateKeyFile>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -31,6 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -106,24 +107,61 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <Content Include="..\Common\Logo.scale-100.png">
+      <Link>Assets\Logo.scale-100.png</Link>
+    </Content>
+    <Content Include="..\Common\SmallLogo.scale-100.png">
+      <Link>Assets\SmallLogo.scale-100.png</Link>
+    </Content>
+    <Content Include="..\Common\SplashScreen.scale-100.png">
+      <Link>Assets\SplashScreen.scale-100.png</Link>
+    </Content>
+    <Content Include="..\Common\StoreLogo.scale-100.png">
+      <Link>Assets\StoreLogo.scale-100.png</Link>
+    </Content>
+    <Content Include="Assets\avatar.png" />
+    <Content Include="Assets\buildingwind8cover.jpg" />
+    <Content Include="Assets\paris.jpg" />
+    <Content Include="Assets\slbookcover.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Common\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Badges\BadgeGlyphTypes.cs" />
-    <Compile Include="Badges\BadgeHelper.cs" />
-    <Compile Include="Badges\BaseBadge.cs" />
-    <Compile Include="Common\BaseNotification.cs" />
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Common\BindableBase.cs" />
+    <Compile Include="Common\BitmapImageConverter.cs" />
+    <Compile Include="Common\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Data\ToastItem.cs" />
+    <Compile Include="Data\ViewModel.cs" />
+    <Compile Include="MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tiles\BaseTile.cs" />
-    <Compile Include="Tiles\TileHelper.cs" />
-    <Compile Include="Tiles\TileTypes.cs" />
-    <Compile Include="Toasts\AudioLoopType.cs" />
-    <Compile Include="Toasts\AudioType.cs" />
-    <Compile Include="Toasts\BaseToast.cs" />
-    <Compile Include="Toasts\ICanLoop.cs" />
-    <Compile Include="Toasts\ToastHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </AppxManifest>
+    <None Include="Toaster_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Page Include="MainPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NotificationHelper\NotificationHelper.csproj">
+      <Project>{18cfd343-5194-4819-9578-55c4ff5e0308}</Project>
+      <Name>NotificationHelper</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>
