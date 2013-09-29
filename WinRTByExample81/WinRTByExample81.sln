@@ -82,9 +82,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter7", "Chapter7", "{2E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TileExplorer", "TileExplorer\TileExplorer.csproj", "{379CC5D0-039B-43D0-B2B0-D001A3EFF12B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toaster", "Toaster\Toaster.csproj", "{9B3BFFCA-03C1-4A36-A136-E4EF248D5E04}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 29
+		SccNumberOfProjects = 30
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs04
 		SccLocalPath0 = .
@@ -200,6 +202,10 @@ Global
 		SccProjectTopLevelParentUniqueName28 = WinRTByExample81.sln
 		SccProjectName28 = TileExplorer
 		SccLocalPath28 = TileExplorer
+		SccProjectUniqueName29 = Toaster\\Toaster.csproj
+		SccProjectTopLevelParentUniqueName29 = WinRTByExample81.sln
+		SccProjectName29 = Toaster
+		SccLocalPath29 = Toaster
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -822,6 +828,30 @@ Global
 		{379CC5D0-039B-43D0-B2B0-D001A3EFF12B}.Release|x86.ActiveCfg = Release|x86
 		{379CC5D0-039B-43D0-B2B0-D001A3EFF12B}.Release|x86.Build.0 = Release|x86
 		{379CC5D0-039B-43D0-B2B0-D001A3EFF12B}.Release|x86.Deploy.0 = Release|x86
+		{9B3BFFCA-03C1-4A36-A136-E4EF248D5E04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B3BFFCA-03C1-4A36-A136-E4EF248D5E04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B3BFFCA-03C1-4A36-A136-E4EF248D5E04}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{9B3BFFCA-03C1-4A36-A136-E4EF248D5E04}.Debug|ARM.ActiveCfg = Debug|ARM
+		{9B3BFFCA-03C1-4A36-A136-E4EF248D5E04}.Debug|ARM.Build.0 = Debug|ARM
+		{9B3BFFCA-03C1-4A36-A136-E4EF248D5E04}.Debug|ARM.Deploy.0 = Debug|ARM
+		{9B3BFFCA-03C1-4A36-A136-E4EF248D5E04}.Debug|x64.ActiveCfg = Debug|x64
+		{9B3BFFCA-03C1-4A36-A136-E4EF248D5E04}.Debug|x64.Build.0 = Debug|x64
+		{9B3BFFCA-03C1-4A36-A136-E4EF248D5E04}.Debug|x64.Deploy.0 = Debug|x64
+		{9B3BFFCA-03C1-4A36-A136-E4EF248D5E04}.Debug|x86.ActiveCfg = Debug|x86
+		{9B3BFFCA-03C1-4A36-A136-E4EF248D5E04}.Debug|x86.Build.0 = Debug|x86
+		{9B3BFFCA-03C1-4A36-A136-E4EF248D5E04}.Debug|x86.Deploy.0 = Debug|x86
+		{9B3BFFCA-03C1-4A36-A136-E4EF248D5E04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B3BFFCA-03C1-4A36-A136-E4EF248D5E04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B3BFFCA-03C1-4A36-A136-E4EF248D5E04}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{9B3BFFCA-03C1-4A36-A136-E4EF248D5E04}.Release|ARM.ActiveCfg = Release|ARM
+		{9B3BFFCA-03C1-4A36-A136-E4EF248D5E04}.Release|ARM.Build.0 = Release|ARM
+		{9B3BFFCA-03C1-4A36-A136-E4EF248D5E04}.Release|ARM.Deploy.0 = Release|ARM
+		{9B3BFFCA-03C1-4A36-A136-E4EF248D5E04}.Release|x64.ActiveCfg = Release|x64
+		{9B3BFFCA-03C1-4A36-A136-E4EF248D5E04}.Release|x64.Build.0 = Release|x64
+		{9B3BFFCA-03C1-4A36-A136-E4EF248D5E04}.Release|x64.Deploy.0 = Release|x64
+		{9B3BFFCA-03C1-4A36-A136-E4EF248D5E04}.Release|x86.ActiveCfg = Release|x86
+		{9B3BFFCA-03C1-4A36-A136-E4EF248D5E04}.Release|x86.Build.0 = Release|x86
+		{9B3BFFCA-03C1-4A36-A136-E4EF248D5E04}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -855,5 +885,6 @@ Global
 		{7D48EB61-130C-4BF6-BBF1-4A19927F8322} = {4C5AE9B3-E41E-4043-9A1C-FDE4946A9C7E}
 		{5D7B391D-871D-4ACF-94C9-F2147E27002D} = {4C5AE9B3-E41E-4043-9A1C-FDE4946A9C7E}
 		{379CC5D0-039B-43D0-B2B0-D001A3EFF12B} = {2EFE7EA2-FDE5-4366-984D-4542ADA7B1E3}
+		{9B3BFFCA-03C1-4A36-A136-E4EF248D5E04} = {2EFE7EA2-FDE5-4366-984D-4542ADA7B1E3}
 	EndGlobalSection
 EndGlobal
