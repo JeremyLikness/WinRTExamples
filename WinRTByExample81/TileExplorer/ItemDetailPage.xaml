@@ -59,22 +59,24 @@
                 x:Name="flipView"
                 TabIndex="1"
                 Grid.RowSpan="2"
-                ItemsSource="{Binding Source={StaticResource itemsViewSource}}">
+                ItemsSource="{Binding Source={StaticResource itemsViewSource}}"
+                VerticalAlignment="Top"
+                VerticalContentAlignment="Top">
                 <FlipView.ItemContainerStyle>
                     <Style TargetType="FlipViewItem">
-                        <Setter Property="Margin" Value="0,137,0,0"/>
+                        <Setter Property="Margin" Value="0,37,0,0"/>
                     </Style>
                 </FlipView.ItemContainerStyle>
                 <FlipView.ItemTemplate>
                     <DataTemplate>
-                        <ScrollViewer x:Name="scrollViewer">
-                            <Grid x:Name="FullItem" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <ScrollViewer x:Name="scrollViewer" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                            <Grid x:Name="FullItem" HorizontalAlignment="Center" VerticalAlignment="Top">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="600"/>
+                                    <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="350"/>
-                                    <ColumnDefinition Width="400"/>
+                                    <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <Image VerticalAlignment="Top"
                                        Width="{Binding Converter={StaticResource TileSizer}, ConverterParameter='w'}"
