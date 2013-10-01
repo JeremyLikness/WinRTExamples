@@ -26,7 +26,7 @@ namespace TileExplorer.DataModel
         {
             this.Id = tile.TemplateType;
             this.Tile = tile;
-            this.Xml = tile.ToString();
+            this.Xml = System.Xml.Linq.XDocument.Parse(tile.ToString()).ToString();            
             this.Description = tile.GetDescription();
         }
 

@@ -38,6 +38,7 @@ namespace TileExplorer
             this.InitializeComponent();
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += navigationHelper_LoadState;
+            gridZoomedOut.Loaded += (o,e) => gridZoomedOut.ItemsSource = groupedItemsViewSource.View.CollectionGroups;
         }
 
         /// <summary>
