@@ -16,7 +16,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <ScrollViewer Grid.Row="1">
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
             <Grid DataContext="{StaticResource ViewModel}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
