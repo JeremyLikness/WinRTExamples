@@ -41,6 +41,11 @@ namespace TileExplorer
             gridZoomedOut.Loaded += (o,e) => gridZoomedOut.ItemsSource = groupedItemsViewSource.View.CollectionGroups;
         }
 
+        public void NavigateToTile(string tile)
+        {
+            this.Frame.Navigate(typeof (ItemDetailPage), tile);
+        }
+
         /// <summary>
         /// Populates the page with content passed during navigation.  Any saved state is also
         /// provided when recreating a page from a prior session.
@@ -55,7 +60,7 @@ namespace TileExplorer
         private void navigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
             var dataGroups = App.CurrentDataSource.GetGroups();
-            this.DefaultViewModel["Groups"] = dataGroups;
+            this.DefaultViewModel["Groups"] = dataGroups;            
         }
 
         /// <summary>

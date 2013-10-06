@@ -161,23 +161,22 @@ namespace TileExplorer
 
             try
             {
-                var logo = new Uri("ms-appx:///Assets/Logo.png");
-                var smallLogo = new Uri("ms-appx:///Assets/SmallLogo.png");
-                var wideLogo = new Uri("ms-appx:///Assets/WideLogo.png");
+                var logo150X150 = new Uri("ms-appx:///Assets/Logo.png");
+                var logo30X30 = new Uri("ms-appx:///Assets/SmallLogo.png");
+                var logo310X150 = new Uri("ms-appx:///Assets/WideLogo.png");
 
                 var tile = new SecondaryTile(
                     selectedItem.Id,
                     selectedItem.Id,
-                    selectedItem.Description,
                     string.Format("Id={0}", selectedItem.Id),
-                    TileOptions.ShowNameOnLogo | TileOptions.ShowNameOnWideLogo,
-                    logo)
-                {
-                    ForegroundText = ForegroundText.Light,
-                    SmallLogo = smallLogo,
-                    WideLogo = wideLogo
-                };
+                    logo150X150,
+                    TileSize.Square150x150);
 
+                tile.VisualElements.ForegroundText = ForegroundText.Light;
+                tile.VisualElements.Square30x30Logo = logo30X30;
+                tile.VisualElements.Wide310x150Logo = logo310X150;
+                tile.VisualElements.ShowNameOnSquare150x150Logo = true;
+                
                 var appBarButton = sender as FrameworkElement;
                 if (appBarButton != null)
                 {
