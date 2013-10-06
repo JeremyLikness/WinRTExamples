@@ -100,16 +100,11 @@ namespace TileExplorer
                 // Place the frame in the current Window
                 Window.Current.Content = rootFrame;
             }
+
             if (rootFrame.Content == null)
             {
                 var navigationType = typeof (GroupedItemsPage);
                 var navigationArgs = "AllGroups";
-
-                if (e.Arguments.StartsWith("Id="))
-                {
-                    navigationType = typeof (ItemDetailPage);
-                    navigationArgs = e.Arguments.Split('=')[1];
-                }
 
                 if (!rootFrame.Navigate(navigationType, navigationArgs))
                 {
@@ -120,22 +115,37 @@ namespace TileExplorer
             // Ensure the current window is active
             Window.Current.Activate();
 
-            if (ApplicationData.Current.LocalSettings.Values.ContainsKey("firstRun"))
+            if (!ApplicationData.Current.LocalSettings.Values.ContainsKey("firstRun"))
             {
-                return;
-            }
-
-            // set some default tiles 
-            TileTemplateType.TileWide310x150Text03.GetTile()
-                                .AddText("Tile Explorer")
-                                .WithNoBranding()
-                                .WithTile(TileTemplateType.TileSquare150x150Text03.GetTile()
+                // set some default tiles 
+                TileTemplateType.TileWide310x150Text03.GetTile()
                                     .AddText("Tile Explorer")
-                                    .AddText("A WinRT Example")
-                                    .AddText("by Jeremy Likness"))                               
-                                .Set();
+                                    .WithNoBranding()
+                                    .WithTile(TileTemplateType.TileSquare150x150Text03.GetTile()
+                                        .AddText("Tile Explorer")
+                                        .AddText("A WinRT Example")
+                                        .AddText("by Jeremy Likness"))
+                                    .Set();
 
-            ApplicationData.Current.LocalSettings.Values["firstRun"] = true;
+                ApplicationData.Current.LocalSettings.Values["firstRun"] = true;
+            }
+            
+            if (e.Arguments.StartsWith("Id="))
+            {
+                var tile = e.Arguments.Split('=')[1];
+                if (!string.IsNullOrWhiteSpace(tile))
+                {
+                    var groupedItemsPage = rootFrame.Content as GroupedItemsPage;
+                    if (groupedItemsPage != null)
+                    {
+                        groupedItemsPage.NavigateToTile(tile);
+                    }
+                    else
+                    {
+                        rootFrame.Navigate(typeof (ItemDetailPage), tile);
+                    }                    
+                }
+            }
         }
 
         /// <summary>
