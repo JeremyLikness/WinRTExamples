@@ -3,8 +3,8 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyCompany("Jeremy Likness")]
-[assembly: AssemblyCopyright("Copyright (c) Jeremy Likness 2013")]
+[assembly: AssemblyCompany("Jeremy Likness and John Garland")]
+[assembly: AssemblyCopyright("Copyright (c) Jeremy Likness and John Garland 2013")]
 [assembly: AssemblyTrademark("")]
 
 #if !NETFX_CORE
