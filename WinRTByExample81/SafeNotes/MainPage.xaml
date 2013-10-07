@@ -1,0 +1,100 @@
+﻿<Page
+    x:Class="SafeNotes.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SafeNotes"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:data="using:SafeNotes.Data"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+          DataContext="{StaticResource GlobalViewModel}">
+        <Grid.Resources>
+            <CollectionViewSource IsSourceGrouped="True" Source="{Binding NotableGroups}" ItemsPath="Notes" x:Name="NoteList"
+                                  d:Source="{Binding NotableGroups, Source={d:DesignInstance Type=data:ViewModel, IsDesignTimeCreatable=True}}"/>
+        </Grid.Resources>
+
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="140"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Back button and page title -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="backButton" Margin="39,59,39,0" Command="{Binding NavigationHelper.GoBackCommand, ElementName=pageRoot}"
+                        Style="{StaticResource NavigationBackButtonNormalStyle}"
+                        VerticalAlignment="Top"
+                        AutomationProperties.Name="Back"
+                        AutomationProperties.AutomationId="BackButton"
+                        AutomationProperties.ItemType="Navigation Button"/>
+            <TextBlock x:Name="pageTitle" Text="{StaticResource AppName}" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
+                        IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,30,40"/>
+            <AppBarButton Label="Add" Icon="Add" VerticalAlignment="Bottom" Margin="0 0 0 10" Grid.Column="2" Click="ButtonBase_OnClick"></AppBarButton>
+        </Grid>
+        <GridView x:Name="MainGrid" 
+                  ItemsSource="{Binding Source={StaticResource NoteList}}" 
+                  SelectedItem="{Binding CurrentNote, Mode=TwoWay}"
+                  Grid.Row="1"
+                  IsItemClickEnabled="True"
+                  ItemClick="MainGrid_OnItemClick"
+                  ItemTemplate="{StaticResource NoteGridStyle}">
+            <GridView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </GridView.ItemsPanel>
+            <GridView.GroupStyle>
+                <GroupStyle HeaderTemplate="{StaticResource NoteGroupHeaderStyle}">
+                    <GroupStyle.Panel>
+                        <ItemsPanelTemplate>
+                            <VariableSizedWrapGrid Orientation="Vertical" Margin="0,0,80,0"/>
+                        </ItemsPanelTemplate>
+                    </GroupStyle.Panel>
+                </GroupStyle>
+            </GridView.GroupStyle>
+        </GridView>
+
+        <Grid Grid.Row="0" x:Name="Loading" Visibility="Collapsed" HorizontalAlignment="Stretch" Grid.RowSpan="2" VerticalAlignment="Stretch">
+            <Rectangle Fill="Black" Opacity="0.3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></Rectangle>
+            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.RowSpan="2" Fill="{StaticResource ApplicationPageBackgroundThemeBrush}" Opacity="0.5"></Rectangle>
+                <TextBlock Grid.Row="0" Text="Loading and Decrypting Notes..." Style="{StaticResource HeaderTextBlockStyle}" Margin="12"/>
+                <ProgressRing Grid.Row="1" Width="30" Height="30" Margin="12" IsActive="True" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Grid>
+        </Grid>
+
+        <VisualStateManager.VisualStateGroups>
+
+            <!-- Visual states reflect the application's view state -->
+            <VisualStateGroup x:Name="ApplicationLoadingStates">
+                <VisualState x:Name="LoadedState"/>
+                <VisualState x:Name="LoadingState">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Loading" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>Visible</Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+       </VisualStateManager.VisualStateGroups>             
+    </Grid>
+</Page>

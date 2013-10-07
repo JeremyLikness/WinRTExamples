@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
-  <Identity Name="WinRTByExampleAuthenticationExample" Publisher="CN=Jeremy" Version="1.0.0.0" />
+  <Identity Name="WinRTByExampleSafeNotes" Publisher="CN=Jeremy" Version="1.0.0.0" />
   <Properties>
-    <DisplayName>Authentication Example</DisplayName>
+    <DisplayName>Safe Notes</DisplayName>
     <PublisherDisplayName>Jeremy</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -14,11 +14,13 @@
     <Resource Language="x-generate" />
   </Resources>
   <Applications>
-    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="AuthenticationExample.App">
-      <m2:VisualElements DisplayName="Authentication Example" Square150x150Logo="Assets\Logo.png" Square30x30Logo="Assets\SmallLogo.png" Description="Example of using Facebook and Google authentication in a Windows Store app." ForegroundText="light" BackgroundColor="#464646">
-        <m2:DefaultTile>
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="SafeNotes.App">
+      <m2:VisualElements DisplayName="Safe Notes" Square150x150Logo="Assets\Logo.png" Square30x30Logo="Assets\SmallLogo.png" Description="Use the data protection API to store notes securely in a Windows Store app" ForegroundText="light" BackgroundColor="#464646">
+        <m2:DefaultTile Wide310x150Logo="Assets\WideLogo.png" Square310x310Logo="Assets\LargeLogo.png">
           <m2:ShowNameOnTiles>
             <m2:ShowOn Tile="square150x150Logo" />
+            <m2:ShowOn Tile="wide310x150Logo" />
+            <m2:ShowOn Tile="square310x310Logo" />
           </m2:ShowNameOnTiles>
         </m2:DefaultTile>
         <m2:SplashScreen Image="Assets\SplashScreen.png" />

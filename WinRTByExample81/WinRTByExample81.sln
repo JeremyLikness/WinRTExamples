@@ -88,9 +88,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter8", "Chapter8", "{43
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthenticationExample", "AuthenticationExample\AuthenticationExample.csproj", "{7156F9B2-73C4-41A4-8BD9-60131A245E5B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SafeNotes", "SafeNotes\SafeNotes.csproj", "{6CB212C3-80F3-49BC-8FA2-997DBEA70024}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 31
+		SccNumberOfProjects = 32
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs04
 		SccLocalPath0 = .
@@ -214,6 +216,10 @@ Global
 		SccProjectTopLevelParentUniqueName30 = WinRTByExample81.sln
 		SccProjectName30 = AuthenticationExample
 		SccLocalPath30 = AuthenticationExample
+		SccProjectUniqueName31 = SafeNotes\\SafeNotes.csproj
+		SccProjectTopLevelParentUniqueName31 = WinRTByExample81.sln
+		SccProjectName31 = SafeNotes
+		SccLocalPath31 = SafeNotes
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -884,6 +890,30 @@ Global
 		{7156F9B2-73C4-41A4-8BD9-60131A245E5B}.Release|x86.ActiveCfg = Release|x86
 		{7156F9B2-73C4-41A4-8BD9-60131A245E5B}.Release|x86.Build.0 = Release|x86
 		{7156F9B2-73C4-41A4-8BD9-60131A245E5B}.Release|x86.Deploy.0 = Release|x86
+		{6CB212C3-80F3-49BC-8FA2-997DBEA70024}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CB212C3-80F3-49BC-8FA2-997DBEA70024}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CB212C3-80F3-49BC-8FA2-997DBEA70024}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{6CB212C3-80F3-49BC-8FA2-997DBEA70024}.Debug|ARM.ActiveCfg = Debug|ARM
+		{6CB212C3-80F3-49BC-8FA2-997DBEA70024}.Debug|ARM.Build.0 = Debug|ARM
+		{6CB212C3-80F3-49BC-8FA2-997DBEA70024}.Debug|ARM.Deploy.0 = Debug|ARM
+		{6CB212C3-80F3-49BC-8FA2-997DBEA70024}.Debug|x64.ActiveCfg = Debug|x64
+		{6CB212C3-80F3-49BC-8FA2-997DBEA70024}.Debug|x64.Build.0 = Debug|x64
+		{6CB212C3-80F3-49BC-8FA2-997DBEA70024}.Debug|x64.Deploy.0 = Debug|x64
+		{6CB212C3-80F3-49BC-8FA2-997DBEA70024}.Debug|x86.ActiveCfg = Debug|x86
+		{6CB212C3-80F3-49BC-8FA2-997DBEA70024}.Debug|x86.Build.0 = Debug|x86
+		{6CB212C3-80F3-49BC-8FA2-997DBEA70024}.Debug|x86.Deploy.0 = Debug|x86
+		{6CB212C3-80F3-49BC-8FA2-997DBEA70024}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CB212C3-80F3-49BC-8FA2-997DBEA70024}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CB212C3-80F3-49BC-8FA2-997DBEA70024}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{6CB212C3-80F3-49BC-8FA2-997DBEA70024}.Release|ARM.ActiveCfg = Release|ARM
+		{6CB212C3-80F3-49BC-8FA2-997DBEA70024}.Release|ARM.Build.0 = Release|ARM
+		{6CB212C3-80F3-49BC-8FA2-997DBEA70024}.Release|ARM.Deploy.0 = Release|ARM
+		{6CB212C3-80F3-49BC-8FA2-997DBEA70024}.Release|x64.ActiveCfg = Release|x64
+		{6CB212C3-80F3-49BC-8FA2-997DBEA70024}.Release|x64.Build.0 = Release|x64
+		{6CB212C3-80F3-49BC-8FA2-997DBEA70024}.Release|x64.Deploy.0 = Release|x64
+		{6CB212C3-80F3-49BC-8FA2-997DBEA70024}.Release|x86.ActiveCfg = Release|x86
+		{6CB212C3-80F3-49BC-8FA2-997DBEA70024}.Release|x86.Build.0 = Release|x86
+		{6CB212C3-80F3-49BC-8FA2-997DBEA70024}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -919,5 +949,6 @@ Global
 		{379CC5D0-039B-43D0-B2B0-D001A3EFF12B} = {2EFE7EA2-FDE5-4366-984D-4542ADA7B1E3}
 		{9B3BFFCA-03C1-4A36-A136-E4EF248D5E04} = {2EFE7EA2-FDE5-4366-984D-4542ADA7B1E3}
 		{7156F9B2-73C4-41A4-8BD9-60131A245E5B} = {43421F7E-57ED-469E-8D2D-6CCB8D3CDDAD}
+		{6CB212C3-80F3-49BC-8FA2-997DBEA70024} = {43421F7E-57ED-469E-8D2D-6CCB8D3CDDAD}
 	EndGlobalSection
 EndGlobal
