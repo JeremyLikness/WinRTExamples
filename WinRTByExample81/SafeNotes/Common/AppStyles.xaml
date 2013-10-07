@@ -1,0 +1,33 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SafeNotes.Common">
+    <DataTemplate x:Key="NoteGridStyle">
+        <Grid Width="300" Height="150" Background="{StaticResource TextBoxDisabledBorderThemeBrush}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="{Binding Title}" Margin="3" TextWrapping="Wrap" Style="{StaticResource TitleTextBlockStyle}"/>
+            <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="3">
+                <TextBlock Text="Created:" Style="{StaticResource CaptionTextBlockStyle}"/>
+                <TextBlock Text="{Binding DateCreated}" Style="{StaticResource CaptionTextBlockStyle}" Margin="12 0 0 0"/>
+            </StackPanel>
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="3">
+                <TextBlock Text="Modified:" Style="{StaticResource CaptionTextBlockStyle}"/>
+                <TextBlock Text="{Binding DateModified}" Style="{StaticResource CaptionTextBlockStyle}" Margin="12 0 0 0"/>
+            </StackPanel>
+            <TextBlock Grid.Row="3" 
+                                   Margin="12"
+                                   Text="{Binding Description}" TextWrapping="Wrap" 
+                                   TextTrimming="WordEllipsis" Style="{StaticResource CaptionTextBlockStyle}"></TextBlock>
+        </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="NoteGroupHeaderStyle">
+        <Grid Margin="1,0,0,6">
+            <TextBlock Text="{Binding Name}" Margin="3,-7,10,10" Style="{StaticResource SubheaderTextBlockStyle}" />
+        </Grid>
+    </DataTemplate>
+</ResourceDictionary>
