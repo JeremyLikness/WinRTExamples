@@ -1,0 +1,16 @@
+﻿<Application
+    x:Class="ShareTargetExample.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ShareTargetExample"
+    xmlns:localData="using:ShareTargetExample.Data"
+    RequestedTheme="Light">
+
+    <Application.Resources>
+
+        <!-- Application-specific resources -->
+
+        <x:String x:Key="AppName">Share Target Example</x:String>
+
+    </Application.Resources>
+</Application>
