@@ -1,0 +1,204 @@
+﻿<Page
+    x:Name="PageRoot"
+    x:Class="ShareSourceExample.MainPage"
+    DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <!--<x:String x:Key="ChevronGlyph">&#xE26B;</x:String>-->
+    </Page.Resources>
+
+    <!--
+        This grid acts as a root panel for the page that defines two rows:
+        * Row 0 contains the back button and page title
+        * Row 1 contains the rest of the page layout
+    -->
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="140"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <ScrollViewer Grid.Row="1" Margin="120, -3, 40, 46" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <Grid.Resources>
+                    <Style TargetType="TextBlock" BasedOn="{StaticResource BodyTextBlockStyle}">
+                        <Setter Property="Margin" Value="5"/>
+                    </Style>
+                    <Style x:Name="GroupHeaderStyle" TargetType="TextBlock" BasedOn="{StaticResource SubheaderTextBlockStyle}">
+                        <Setter Property="Margin" Value="10"/>
+                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                    </Style>
+                    <Style TargetType="CheckBox">
+                        <Setter Property="Margin" Value="5"/>
+                    </Style>
+                    <Style TargetType="TextBox">
+                        <Setter Property="Margin" Value="5"/>
+                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                    </Style>
+                </Grid.Resources>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="300"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- DataPackage "meta" values -->
+                    <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Data Package Values" Style="{StaticResource GroupHeaderStyle}"/>
+                    
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Title:" />
+                    <TextBox x:Name="SetTitleTextBox" Grid.Row="1" Grid.Column="1" Text="Share Charm Title"/>
+
+                    <CheckBox x:Name="SetDescriptionCheckBox" Grid.Row="2" Grid.Column="0" Content="Set Description: "/>
+                    <TextBox x:Name="SetDescriptionTextBox" Grid.Row="2" Grid.Column="1" IsEnabled="{Binding IsChecked, ElementName=SetDescriptionCheckBox}" />
+
+
+                    <CheckBox x:Name="SetLogoCheckBox" Grid.Row="3" Grid.Column="0" Content="Set Logo (30x30): "/>
+                    <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+                        <RadioButton x:Name="LogoImage1RadioButton" IsEnabled="{Binding IsChecked, ElementName=SetLogoCheckBox}" IsChecked="True">
+                            <Image Source="Assets/SampleOne.png"></Image>
+                        </RadioButton>
+                        <RadioButton x:Name="LogoImage2RadioButton" IsEnabled="{Binding IsChecked, ElementName=SetLogoCheckBox}" >
+                            <Image Source="Assets/SampleTwo.png"></Image>
+                        </RadioButton>
+                        <RadioButton x:Name="LogoImage3RadioButton" IsEnabled="{Binding IsChecked, ElementName=SetLogoCheckBox}">
+                            <Image Source="Assets/SampleThree.png"></Image>
+                        </RadioButton>
+                    </StackPanel>
+
+                    <!--<CheckBox x:Name="SetLogoBackgroundCheckBox" Grid.Row="4" Grid.Column="0" Content="Set Logo Background: "/>-->
+                    <Grid Grid.Row="4" Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height ="Auto"/>
+                            <RowDefinition Height ="Auto"/>
+                            <RowDefinition Height ="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row ="0" Grid.Column="0" Text="Background (hex):"/>
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="R: "/>
+                        <TextBox Grid.Row="0" Grid.Column="2" x:Name="SetLogoBackgroundRedTextBox" Width="50" IsEnabled="{Binding IsChecked, ElementName=SetLogoCheckBox}" Text="00"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="G: "/>
+                        <TextBox Grid.Row="1" Grid.Column="2" x:Name="SetLogoBackgroundGreenTextBox" Width="50" IsEnabled="{Binding IsChecked, ElementName=SetLogoCheckBox}" Text="00"/>
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="B: "/>
+                        <TextBox Grid.Row="2" Grid.Column="2" x:Name="SetLogoBackgroundBlueTextBox" Width="50" IsEnabled="{Binding IsChecked, ElementName=SetLogoCheckBox}" Text="00"/>
+                    </Grid>
+
+                    <CheckBox x:Name="SetContentSourceAppLinkCheckBox" Grid.Row="5" Grid.Column="0" Content="Set Content Source App Link: "/>
+                    <TextBox x:Name="SetContentSourceAppLinkTextBox" Grid.Row="5" Grid.Column="1" IsEnabled="{Binding IsChecked, ElementName=SetContentSourceAppLinkCheckBox}" IsReadOnly="True" Text="winrt-by-example:applaunch"/>
+
+                    <CheckBox x:Name="SetContentSourceWebLinkCheckBox" Grid.Row="6" Grid.Column="0" Content="Set Content Source Web Link: "/>
+                    <TextBox x:Name="SetContentSourceWebLinkTextBox" Grid.Row="6" Grid.Column="1" IsEnabled="{Binding IsChecked, ElementName=SetContentSourceWebLinkCheckBox}" IsReadOnly="True" Text="http://winrtexamples.codeplex.com"/>
+                </Grid>
+                <Grid x:Name="ShareContentGrid" Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="400"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Data being shared-->
+                    <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Sharing Values" Style="{StaticResource GroupHeaderStyle}"/>
+
+                    <CheckBox x:Name="SetShareTextCheckBox" Grid.Row="1" Grid.Column="0" Content="Plain Text: "/>
+                    <TextBox x:Name="SetShareTextTextBox" Grid.Row="1" Grid.Column="1" IsEnabled="{Binding IsChecked, ElementName=SetShareTextCheckBox}" />
+
+                    <CheckBox x:Name="SetShareRtfTextCheckBox" Grid.Row="2" Grid.Column="0" Content="RTF Text: " IsEnabled="False"/>
+                    <TextBox x:Name="SetShareRtfTextBox" Grid.Row="2" Grid.Column="1" IsEnabled="{Binding IsChecked, ElementName=SetShareRtfTextCheckBox}" />
+
+                    <CheckBox x:Name="SetShareHtmlCheckBox" Grid.Row="3" Grid.Column="0" Content="HTML: "/>
+                    <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+                        <CheckBox x:Name="IncludeHtmlImagesCheckBox" Content="Include Images" IsEnabled="{Binding IsChecked, ElementName=SetShareHtmlCheckBox}"/>
+                        <CheckBox x:Name="SetShareHtmlUseDelayedCheckBox" Content="Use Delayed" IsEnabled="{Binding IsChecked, ElementName=SetShareHtmlCheckBox}"/>
+                    </StackPanel>
+
+                    <CheckBox x:Name="SetShareBitmapCheckBox" Grid.Row="4" Grid.Column="0" Content="Bitmap: "/>
+                    <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal">
+                        <CheckBox x:Name="SetShareBitmapUseDelayedCheckBox" Content="Use Delayed" IsEnabled="{Binding IsChecked, ElementName=SetShareBitmapCheckBox}"/>
+                        <!--<CheckBox x:Name="UseCustomBitmapCheckBox" Content="Select Custom" IsEnabled="{Binding IsChecked, ElementName=SetShareBitmapCheckBox}"/>-->
+                        <!--<Button Content="Select File" IsEnabled="{Binding IsChecked, ElementName=UseCustomBitmapCheckBox}"  Width="125"/>-->
+                    </StackPanel>
+
+                    <CheckBox x:Name="SetShareFileListCheckBox" Grid.Row="5" Grid.Column="0" Content="Files: "/>
+                    <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
+                        <!--<CheckBox x:Name="UseCustomFileListCheckBox" Content="Select Custom" IsEnabled="{Binding IsChecked, ElementName=SetShareFileListCheckBox}"/>-->
+                        <!--<Button Content="Select Files" IsEnabled="{Binding IsChecked, ElementName=UseCustomFileListCheckBox}" Width="125"/>-->
+                    </StackPanel>
+
+                    <CheckBox x:Name="SetShareLinksCheckBox" Grid.Row="6" Grid.Column="0" Content="Links: "/>
+                    <Grid Grid.Row="6" Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Application Link:"/>
+                        <TextBox Grid.Row="0" Grid.Column="1" IsEnabled="{Binding IsChecked, ElementName=SetShareLinksCheckBox}" Text="winrt-by-example:applaunch?key=val"/>
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Web Link:"/>
+                        <TextBox Grid.Row="1" Grid.Column="1" IsEnabled="{Binding IsChecked, ElementName=SetShareLinksCheckBox}" Text="http://winrtexamples.codeplex.com"/>
+                    </Grid>
+                    
+                    <CheckBox x:Name="SetShareCustomDataCheckBox" Grid.Row="7" Grid.Column="0" Content="Custom Data"/>
+                    <CheckBox x:Name="SetShareCustomDataUseDelayedCheckBox" Grid.Row="7" Grid.Column="1" Content="Use Delayed" IsEnabled="{Binding IsChecked, ElementName=SetShareCustomDataCheckBox}"/>
+                </Grid>
+            </Grid>
+        </ScrollViewer>
+
+        <!-- Back button and page title -->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Margin="39,59,39,0" Command="{Binding NavigationHelper.GoBackCommand, ElementName=PageRoot}"
+                        Style="{StaticResource NavigationBackButtonNormalStyle}"
+                        VerticalAlignment="Top"
+                        AutomationProperties.Name="Back"
+                        AutomationProperties.AutomationId="BackButton"
+                        AutomationProperties.ItemType="Navigation Button"/>
+            <TextBlock Text="{StaticResource AppName}" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
+                        IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,30,40"/>
+        </Grid>
+    </Grid>
+</Page>
