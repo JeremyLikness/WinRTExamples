@@ -5,7 +5,7 @@ VisualStudioVersion = 12.0.20827.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorldGridApp", "HelloWorldGridApp\HelloWorldGridApp.csproj", "{B270835A-3249-4284-9399-E885C80229E9}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter1", "Chapter1", "{5BB376EF-DB48-4BB2-9047-E9D9E19B76FA}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter01", "Chapter01", "{5BB376EF-DB48-4BB2-9047-E9D9E19B76FA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{D1D12C89-FE48-439C-AA92-07E75223DE74}"
 	ProjectSection(SolutionItems) = preProject
@@ -26,13 +26,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleCSharpClass", "Examp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleWinRTComponent", "ExampleWinRTComponent\ExampleWinRTComponent.csproj", "{1247DC4B-DD9F-47F6-BDDA-2EB4613ABAE8}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter2", "Chapter2", "{BC048F5D-8C83-412F-B11C-C2A5D9C98ADC}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter02", "Chapter02", "{BC048F5D-8C83-412F-B11C-C2A5D9C98ADC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyLibrary", "MyLibrary\MyLibrary.csproj", "{8DC0AC27-9769-435F-92CC-379177E5DC8C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SplitWordsCSharp", "SplitWordsCSharp\SplitWordsCSharp.csproj", "{53EC1AD3-0A33-4C08-B717-BBEB6272B300}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter3", "Chapter3", "{4FE2E422-6D3C-48C2-8EE3-186F0E6AA6CD}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter03", "Chapter03", "{4FE2E422-6D3C-48C2-8EE3-186F0E6AA6CD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimationsExample", "AnimationsExample\AnimationsExample.csproj", "{4450A134-48F7-45CF-B806-8819183E9786}"
 EndProject
@@ -54,7 +54,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XamlParsingExample", "XamlP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlyoutsExample", "FlyoutsExample\FlyoutsExample.csproj", "{391CF6D1-22A1-4AA0-800C-4DAA9E8391F0}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter4", "Chapter4", "{ADD994D7-0BB2-4DAE-B5E0-9B9D077A9CF4}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter04", "Chapter04", "{ADD994D7-0BB2-4DAE-B5E0-9B9D077A9CF4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataFormatsExample", "DataFormatsExample\DataFormatsExample.csproj", "{378DF65E-65DF-47A4-98AF-DA682CECEC3F}"
 EndProject
@@ -66,7 +66,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QueryPicturesLibrary", "Que
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skrape", "Skrape\Skrape.csproj", "{8AE8E574-56B7-44C7-B986-D450E0248C9C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter5", "Chapter5", "{4C5AE9B3-E41E-4043-9A1C-FDE4946A9C7E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter05", "Chapter05", "{4C5AE9B3-E41E-4043-9A1C-FDE4946A9C7E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODataServiceExample", "ODataServiceExample\ODataServiceExample.csproj", "{23179A47-4718-41B1-BFE7-94353A876E4C}"
 EndProject
@@ -78,13 +78,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoapServiceExample", "SoapS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationHelper", "NotificationHelper\NotificationHelper.csproj", "{18CFD343-5194-4819-9578-55C4FF5E0308}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter7", "Chapter7", "{2EFE7EA2-FDE5-4366-984D-4542ADA7B1E3}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter07", "Chapter07", "{2EFE7EA2-FDE5-4366-984D-4542ADA7B1E3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TileExplorer", "TileExplorer\TileExplorer.csproj", "{379CC5D0-039B-43D0-B2B0-D001A3EFF12B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toaster", "Toaster\Toaster.csproj", "{9B3BFFCA-03C1-4A36-A136-E4EF248D5E04}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter8", "Chapter8", "{43421F7E-57ED-469E-8D2D-6CCB8D3CDDAD}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter08", "Chapter08", "{43421F7E-57ED-469E-8D2D-6CCB8D3CDDAD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthenticationExample", "AuthenticationExample\AuthenticationExample.csproj", "{7156F9B2-73C4-41A4-8BD9-60131A245E5B}"
 EndProject
