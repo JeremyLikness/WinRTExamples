@@ -102,7 +102,8 @@ namespace ShareTargetExample
         /// Invoked when the application is activated as the target of a sharing operation.
         /// </summary>
         /// <param name="e">Details about the activation request.</param>
-        protected override void OnShareTargetActivated(ShareTargetActivatedEventArgs e)
+        protected override void OnShareTargetActivated
+            (ShareTargetActivatedEventArgs e)
         {
             var shareTargetPage = new ShareTargetPage();
             shareTargetPage.Activate(e);

@@ -88,6 +88,7 @@ namespace ShareTargetExample
             DefaultViewModel["ThumbnailImage"] = new BitmapImage();
             DefaultViewModel["ShowThumbnailImage"] = false;
 
+            // Sharing content
             DefaultViewModel["SharedText"] = null;
             DefaultViewModel["IsTextShared"] = false;
             DefaultViewModel["SharedRtf"] = null;
@@ -108,6 +109,7 @@ namespace ShareTargetExample
             DefaultViewModel["IsCustomItemShared"] = false;
             DefaultViewModel["IsCustomItemLoading"] = false;
 
+            // Controls for updating processing status
             DefaultViewModel["ProcessingSharedData"] = false;
             DefaultViewModel["UseQuickLink"] = false;
             DefaultViewModel["QuickLinkTitle"] = String.Empty;
@@ -171,8 +173,7 @@ namespace ShareTargetExample
                     showContentTaskList.Add(task);
                 }
 
-                // Note - SetUri is effectively Deprecated - see SetApplicationLink and/or SetWebLink instead
-                // TODO - _shareOperation.Data.GetUriAsync() vs _shareOperation.Data.GetWebLinkAsync()
+                // NOTE - SetUri is effectively Deprecated - see SetApplicationLink and/or SetWebLink instead
                 if (shareData.Contains(StandardDataFormats.ApplicationLink))
                 {
                     var task = ShowSharedAppLink(shareData);
@@ -234,7 +235,9 @@ namespace ShareTargetExample
                 // Convert the shared content that contains extra header data into just the working fragment
                 var sharedHtmlFragment = HtmlFormatHelper.GetStaticFragment(sharedHtmlContent);
 
-                // Reconcile any resource-mapped image references
+                // Reconcile any resource-mapped image references by locating the named reference in the HTML
+                // and then replacing the image reference with an inline base-64 encoded image entry that is 
+                // obtained by processing the named entry in the Resource Map.
                 var sharedResourceMap = await shareData.GetResourceMapAsync();
                 foreach (var resource in sharedResourceMap)
                 {
@@ -316,13 +319,21 @@ namespace ShareTargetExample
                 if (String.IsNullOrWhiteSpace(quickLinkTag)) return;
 
                 var quickLink = new QuickLink
-                          {
-                              Id = quickLinkTag,
-                              SupportedDataFormats = { StandardDataFormats.Bitmap },
-                              SupportedFileTypes = { "*" },
-                              Thumbnail = quickLinkThumbnail,
-                              Title = quickLinkTitle
-                          };
+                {
+                    SupportedFileTypes = { "*" },
+                    Thumbnail = quickLinkThumbnail,
+                    Title = quickLinkTitle,
+                    Id = quickLinkTag,
+                };
+
+                // Just reuse the current set of data formats, though it could be selective 
+                // based on the context of how the id value will be used.
+                var quickLinkFormats = _shareOperation.Data.AvailableFormats;
+                foreach (var item in quickLinkFormats)
+                {
+                    quickLink.SupportedDataFormats.Add(item);
+                }
+
                 _shareOperation.ReportCompleted(quickLink);
             }
             else
@@ -338,7 +349,6 @@ namespace ShareTargetExample
             if (!String.IsNullOrWhiteSpace(errorMessage))
             {
                 _shareOperation.ReportError(errorMessage);
-                //_shareOperation.DismissUI();
             }
         }
 
