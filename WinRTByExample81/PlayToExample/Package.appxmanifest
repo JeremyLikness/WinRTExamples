@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
-  <Identity Name="282efc50-0eeb-4ef5-b5cd-835427179ddf" Publisher="CN=John" Version="1.0.0.0" />
+  <Identity Name="929beec9-51e0-47ec-88e4-da87b4180eb4" Publisher="CN=John" Version="1.0.0.0" />
   <Properties>
-    <DisplayName>ShareSourceExample</DisplayName>
+    <DisplayName>PlayToExample</DisplayName>
     <PublisherDisplayName>John</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -14,9 +14,9 @@
     <Resource Language="x-generate" />
   </Resources>
   <Applications>
-    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="ShareSourceExample.App">
-      <m2:VisualElements DisplayName="Share Source Example" Square150x150Logo="Assets\Logo.png" Square30x30Logo="Assets\SmallLogo.png" Description="Example that illustrates the functionality available to apps that behave as Share Source apps" ForegroundText="light" BackgroundColor="#464646">
-        <m2:DefaultTile ShortName="11 - Share Source Example">
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="PlayToExample.App">
+      <m2:VisualElements DisplayName="Play To Example" Square150x150Logo="Assets\Logo.png" Square30x30Logo="Assets\SmallLogo.png" Description="Work with the Device Charm's Play functionality by streaming audio, video, and pictures to connected PlayTo devices on the local network" ForegroundText="light" BackgroundColor="#464646">
+        <m2:DefaultTile ShortName="11 - Play To Example">
           <m2:ShowNameOnTiles>
             <m2:ShowOn Tile="square150x150Logo" />
           </m2:ShowNameOnTiles>
@@ -25,19 +25,13 @@
         <m2:InitialRotationPreference>
           <m2:Rotation Preference="landscape" />
         </m2:InitialRotationPreference>
-        <m2:ApplicationView MinWidth="width500" />
       </m2:VisualElements>
-      <Extensions>
-        <Extension Category="windows.protocol">
-          <Protocol Name="winrt-by-example">
-            <Logo>Assets\SmallLogo.png</Logo>
-            <DisplayName>WinRT by Example Share Source Example</DisplayName>
-          </Protocol>
-        </Extension>
-      </Extensions>
     </Application>
   </Applications>
   <Capabilities>
     <Capability Name="internetClient" />
+    <Capability Name="privateNetworkClientServer" />
+    <DeviceCapability Name="webcam" />
+    <DeviceCapability Name="microphone" />
   </Capabilities>
 </Package>

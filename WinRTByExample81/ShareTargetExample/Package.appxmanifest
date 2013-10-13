@@ -16,6 +16,11 @@
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="ShareTargetExample.App">
       <m2:VisualElements DisplayName="Share Target Example" Square150x150Logo="Assets\Logo.png" Square30x30Logo="Assets\SmallLogo.png" Description="Example that illustrates the functionality available to apps that behave as Share Target apps" ForegroundText="light" BackgroundColor="#464646">
+        <m2:DefaultTile ShortName="11 - Share Target Example">
+          <m2:ShowNameOnTiles>
+            <m2:ShowOn Tile="square150x150Logo" />
+          </m2:ShowNameOnTiles>
+        </m2:DefaultTile>
         <m2:SplashScreen Image="Assets\SplashScreen.png" />
         <m2:InitialRotationPreference>
           <m2:Rotation Preference="landscape" />
