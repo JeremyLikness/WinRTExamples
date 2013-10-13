@@ -1,5 +1,6 @@
 ﻿using System;
 using Windows.Media.PlayTo;
+using Windows.Storage.Streams;
 using Windows.System.Display;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -117,35 +118,43 @@ namespace PlayToExample
                     _receiver = new PlayToReceiver();
                 }
 
-                // Set the Properties that describe this receiver device to other systems
+                // Set the Properties that describe this receiver device
                 _receiver.FriendlyName = "Example Play To Receiver";
                 _receiver.SupportsAudio = true;
                 _receiver.SupportsVideo = true;
                 _receiver.SupportsImage = true;
 
                 // Subscribe to Play To Receiver events
-                // Receive the request from the Play To source and map it to how it should be handled in this app
-                // (Marshall the call and tell the MediaElement to respond in-kind.)
-                _receiver.SourceChangeRequested += HandleReceiverSourceChangeRequested; 
+                // Receive the request from the Play To source 
+                // and map it to how it should be handled in this app
+                _receiver.SourceChangeRequested += 
+                    HandleReceiverSourceChangeRequested; 
 
                 // Playback commands
                 _receiver.PlayRequested += HandleReceiverPlayRequested;
                 _receiver.PauseRequested += HandleReceiverPauseRequested;
                 _receiver.StopRequested += HandleReceiverStopRequested; 
-                _receiver.PlaybackRateChangeRequested += HandleReceiverPlaybackRateChangeRequested;
+                _receiver.PlaybackRateChangeRequested += 
+                    HandleReceiverPlaybackRateChangeRequested;
 
                 // Seek commands
-                _receiver.CurrentTimeChangeRequested += HandleReceiverCurrentTimeChangeRequested;
-                _receiver.TimeUpdateRequested += HandleReceiverTimeUpdateRequested;
+                _receiver.CurrentTimeChangeRequested += 
+                    HandleReceiverCurrentTimeChangeRequested;
+                _receiver.TimeUpdateRequested += 
+                    HandleReceiverTimeUpdateRequested;
                 
                 // Volume commands
-                _receiver.VolumeChangeRequested += HandleReceiverVolumeChangeRequested;
-                _receiver.MuteChangeRequested += HandleReceiverMuteChangeRequested;
+                _receiver.VolumeChangeRequested += 
+                    HandleReceiverVolumeChangeRequested;
+                _receiver.MuteChangeRequested += 
+                    HandleReceiverMuteChangeRequested;
               
-                // Advertise the receiver on the local network and start receiving commands
+                // Advertise the receiver on the local network 
+                // and start receiving commands
                 await _receiver.StartAsync();
 
-                // Use the DisplayRequest to prevent power-save from interrupting the playback experience
+                // Use the DisplayRequest to prevent power-save 
+                // from interrupting the playback experience
                 if (_displayRequest == null)
                 {
                     _displayRequest = new DisplayRequest();
@@ -209,61 +218,83 @@ namespace PlayToExample
         {
             if (args.Stream != null)
             {
-                if (args.Stream.ContentType.Contains("image"))
+                var newStream = args.Stream;
+                if (newStream.ContentType.Contains("image"))
                 {
-                    Dispatch(() =>
-                    {
-                        _imageSource = new BitmapImage();
-                        RoutedEventHandler handler = null;
-                        handler = (o, eventArgs) =>
-                        {
-                            _receiver.NotifyLoadedMetadata();
-                            _imageSource.ImageOpened -= handler;
-                        };
-                        _imageSource.ImageOpened += handler;
-                        _imageSource.SetSource(args.Stream);
-
-                        if (_currentPlaybackType != PlaybackType.Image)
-                        {
-                            if (_currentPlaybackType == PlaybackType.Video)
-                            {
-                                VideoPlayer.Stop();
-                            }
-
-                            ImagePlayer.Opacity = 1;
-                            VideoPlayer.Opacity = 0;
-                        }
-                        _currentPlaybackType = PlaybackType.Image;
-                    });
+                    Dispatch(() => ShowImageStream(newStream));
                 }
                 else
                 {
-                    Dispatch(() =>
-                    {
-                        VideoPlayer.SetSource(args.Stream, args.Stream.ContentType);
-                        if (_currentPlaybackType != PlaybackType.Video)
-                        {
-                            if (_currentPlaybackType == PlaybackType.Image)
-                            {
-                                ImagePlayer.Source = null;
-                            }
-
-                            ImagePlayer.Opacity = 0;
-                            VideoPlayer.Opacity = 1;
-                        }
-                        _currentPlaybackType = PlaybackType.Video;
-                    });
+                    Dispatch(() => ShowVideoStream(newStream));
                 }
             }
         }
 
-        private void HandleReceiverPlayRequested(PlayToReceiver sender, Object args)
+        private void ShowImageStream(IRandomAccessStreamWithContentType newStream)
+        {
+            // The incoming stream has image data.  Hide video controls/show image controls and set the image source
+
+            _imageSource = new BitmapImage();
+
+            //Callback to notify the receiver and then detach when the image has completed its loading
+            RoutedEventHandler handler = null;
+            handler = (o, eventArgs) =>
+                      {
+                          _receiver.NotifyLoadedMetadata();
+                          _imageSource.ImageOpened -= handler;
+                      };
+            _imageSource.ImageOpened += handler;
+            _imageSource.SetSource(newStream);
+
+            // Toggle the visibility of the video/image controls if necessary
+            if (_currentPlaybackType != PlaybackType.Image)
+            {
+                if (_currentPlaybackType == PlaybackType.Video)
+                {
+                    VideoPlayer.Stop();
+                }
+
+                ImagePlayer.Opacity = 1;
+                VideoPlayer.Opacity = 0;
+            }
+
+            // Track the current playback type
+            _currentPlaybackType = PlaybackType.Image;
+        }
+
+        private void ShowVideoStream(IRandomAccessStreamWithContentType newStream)
+        {
+            // The incoming stream has video data.  Hide image controls/show video controls and set the video source
+            
+            // Set the video source - the receiver will be called back when the MediaElement raises its MediaOpened event
+            VideoPlayer.SetSource(newStream, newStream.ContentType);
+            // Receiver notification occurs in the HandleVideoPlayerMediaOpened handler
+
+            // Toggle the visibility of the video/image controls if necessary
+            if (_currentPlaybackType != PlaybackType.Video)
+            {
+                if (_currentPlaybackType == PlaybackType.Image)
+                {
+                    ImagePlayer.Source = null;
+                }
+
+                ImagePlayer.Opacity = 0;
+                VideoPlayer.Opacity = 1;
+            }
+
+            // Track the current playback type
+            _currentPlaybackType = PlaybackType.Video;
+        }
+
+        private void HandleReceiverPlayRequested(PlayToReceiver sender, 
+            Object args)
         {
             Dispatch(() =>
             {
                 if (_currentPlaybackType == PlaybackType.Video)
                 {
                     VideoPlayer.Play();
+                    // Receiver notification occurs in the HandleVideoPlayerCurrentStateChanged handler
                 }
                 else if (_currentPlaybackType == PlaybackType.Image)
                 {
@@ -275,7 +306,18 @@ namespace PlayToExample
 
         private void HandleReceiverPauseRequested(PlayToReceiver sender, Object args)
         {
-            Dispatch(() => VideoPlayer.Pause());
+            Dispatch(() =>
+            {
+                if (_currentPlaybackType == PlaybackType.Video)
+                {
+                    VideoPlayer.Pause();
+                    // Receiver notification occurs in the HandleVideoPlayerCurrentStateChanged handler
+                }
+                else if (_currentPlaybackType == PlaybackType.Image)
+                {
+                    _receiver.NotifyPaused();
+                }
+            });
         }
 
         private void HandleReceiverStopRequested(PlayToReceiver sender, Object args)
@@ -285,36 +327,52 @@ namespace PlayToExample
                 if (_currentPlaybackType == PlaybackType.Video)
                 {
                     VideoPlayer.Stop();
+                    // Receiver notification occurs in the HandleVideoPlayerCurrentStateChanged handler
                 }
                 else if (_currentPlaybackType == PlaybackType.Image)
                 {
                     ImagePlayer.Source = null;
+                    _receiver.NotifyStopped();
                 }
             });
         }
 
         private void HandleReceiverPlaybackRateChangeRequested(PlayToReceiver sender, PlaybackRateChangeRequestedEventArgs args)
         {
-            Dispatch(() => { VideoPlayer.PlaybackRate = args.Rate; });
+            Dispatch(() =>
+            {
+                if (_currentPlaybackType == PlaybackType.Video)
+                {
+                    VideoPlayer.PlaybackRate = args.Rate;
+                    // Receiver notification occurs in the HandleVideoPlayerRateChanged handler
+                }
+                else if (_currentPlaybackType == PlaybackType.Image)
+                {
+                    // Setting playback rate is a no-op in image playback.  Just indicate it was accepted
+                    _receiver.NotifyRateChange(args.Rate);
+                }
+            });
         }
 
 
         private void HandleReceiverCurrentTimeChangeRequested(PlayToReceiver sender, CurrentTimeChangeRequestedEventArgs args)
         {
             Dispatch(() =>
-                     {
-                         if (_currentPlaybackType == PlaybackType.Video)
-                         {
-                             VideoPlayer.Position = args.Time;
-                             _receiver.NotifySeeking();
-                             _isSeeking = true;
-                         }
-                         else if (_currentPlaybackType == PlaybackType.Image)
-                         {
-                             _receiver.NotifySeeking();
-                             _receiver.NotifySeeked();
-                         }
-                     });
+            {
+                if (_currentPlaybackType == PlaybackType.Video)
+                {
+                    VideoPlayer.Position = args.Time;
+                    _receiver.NotifySeeking();
+                    // "Seeked" receiver notification occurs in the HandleVideoPlayerSeekCompleted handler
+                    _isSeeking = true;
+                }
+                else if (_currentPlaybackType == PlaybackType.Image)
+                {
+                    // Seeking is a no-op in image playback.  Just indicate it started and finished.
+                    _receiver.NotifySeeking();
+                    _receiver.NotifySeeked();
+                }
+            });
         }
 
         private void HandleReceiverTimeUpdateRequested(PlayToReceiver sender, Object args)
@@ -334,7 +392,18 @@ namespace PlayToExample
 
         private void HandleReceiverVolumeChangeRequested(PlayToReceiver sender, VolumeChangeRequestedEventArgs args)
         {
-            Dispatch(() => { VideoPlayer.Volume = args.Volume; });
+            Dispatch(() =>
+            {
+                if (_currentPlaybackType == PlaybackType.Video)
+                {
+                    VideoPlayer.Volume = args.Volume;
+                    // Receiver notification occurs in the HandleVideoPlayerVolumeChanged handler
+                }
+                else
+                {
+                    _receiver.NotifyVolumeChange(args.Volume, args.Volume == 0);
+                }
+            });
         }
 
         private void HandleReceiverMuteChangeRequested(PlayToReceiver sender, MuteChangeRequestedEventArgs args)
@@ -344,6 +413,7 @@ namespace PlayToExample
                 if (_currentPlaybackType == PlaybackType.Video)
                 {
                     VideoPlayer.IsMuted = args.Mute;
+                    // Receiver notification occurs in the HandleVideoPlayerVolumeChanged handler
                 }
                 else if (_currentPlaybackType == PlaybackType.Image)
                 {
@@ -413,15 +483,6 @@ namespace PlayToExample
             }
         }
 
-        private void HandleVideoPlayerMediaEnded(Object sender, RoutedEventArgs e)
-        {
-            if (_receiver != null)
-            {
-                _receiver.NotifyEnded();
-                VideoPlayer.Stop();
-            }
-        }
-
         private void HandleVideoPlayerVolumeChanged(Object sender, RoutedEventArgs e)
         {
             if (_receiver != null)
@@ -433,7 +494,16 @@ namespace PlayToExample
         private void HandleVideoPlayerMediaFailed(Object sender, ExceptionRoutedEventArgs e)
         {
             if (_receiver != null) { _receiver.NotifyError(); }
-        } 
+        }
+
+        private void HandleVideoPlayerMediaEnded(Object sender, RoutedEventArgs e)
+        {
+            if (_receiver != null)
+            {
+                _receiver.NotifyEnded();
+                VideoPlayer.Stop();
+            }
+        }
         #endregion
 
         private void HandleImagePlayerImageFailed(object sender, ExceptionRoutedEventArgs e)
