@@ -47,25 +47,29 @@ namespace PlayToExample
             PlayToManager.GetForCurrentView().SourceRequested -= OnPlayToSourceRequested;
         }
 
-        private void OnPlayToSourceRequested(PlayToManager sender, PlayToSourceRequestedEventArgs args)
+        private void OnPlayToSourceRequested(PlayToManager sender, 
+            PlayToSourceRequestedEventArgs args)
         {
+            // This request will come in on a non-UI thread, 
+            // so it will need to be marshalled over.  
+            // Since doing that is an async operation, 
+            // a deferral will be required.
             var deferral = args.SourceRequest.GetDeferral();
-            // This request will come in on a non-UI thread, so it will need to be marshalled over.  
-            // Since doing that is an an async operation, a deferral will be required.
-            Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                () =>
+
+            Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                if (MediaElement.PlayToSource == null)
                 {
-                    if (MediaElement.PlayToSource == null)
-                    {
-                        args.SourceRequest.DisplayErrorString("There is no video selected to be streamed.");
-                    }
-                    else
-                    {
-                        args.SourceRequest.SetSource(MediaElement.PlayToSource);
-                    }
+                    var errorMessage = "There is no video selected to be streamed.";
+                    args.SourceRequest.DisplayErrorString(errorMessage);
+                }
+                else
+                {
+                    args.SourceRequest.SetSource(MediaElement.PlayToSource);
+                }
                    
-                    deferral.Complete();
-                });
+                deferral.Complete();
+            });
         }
 
         private async void HandleUseWebCamClicked(Object sender, RoutedEventArgs e)
