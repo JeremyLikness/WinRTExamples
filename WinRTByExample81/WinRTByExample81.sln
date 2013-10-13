@@ -98,9 +98,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShareSourceExample", "Share
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShareTargetExample", "ShareTargetExample\ShareTargetExample.csproj", "{85E45E90-3817-45A8-9C57-F78CE595A77A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayToExample", "PlayToExample\PlayToExample.csproj", "{40294EC6-3FD6-416A-91D9-1A3F75D6E6FB}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 35
+		SccNumberOfProjects = 36
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs04
 		SccLocalPath0 = .
@@ -240,6 +242,10 @@ Global
 		SccProjectTopLevelParentUniqueName34 = WinRTByExample81.sln
 		SccProjectName34 = ShareTargetExample
 		SccLocalPath34 = ShareTargetExample
+		SccProjectUniqueName35 = PlayToExample\\PlayToExample.csproj
+		SccProjectTopLevelParentUniqueName35 = WinRTByExample81.sln
+		SccProjectName35 = PlayToExample
+		SccLocalPath35 = PlayToExample
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1006,6 +1012,30 @@ Global
 		{85E45E90-3817-45A8-9C57-F78CE595A77A}.Release|x86.ActiveCfg = Release|x86
 		{85E45E90-3817-45A8-9C57-F78CE595A77A}.Release|x86.Build.0 = Release|x86
 		{85E45E90-3817-45A8-9C57-F78CE595A77A}.Release|x86.Deploy.0 = Release|x86
+		{40294EC6-3FD6-416A-91D9-1A3F75D6E6FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40294EC6-3FD6-416A-91D9-1A3F75D6E6FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40294EC6-3FD6-416A-91D9-1A3F75D6E6FB}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{40294EC6-3FD6-416A-91D9-1A3F75D6E6FB}.Debug|ARM.ActiveCfg = Debug|ARM
+		{40294EC6-3FD6-416A-91D9-1A3F75D6E6FB}.Debug|ARM.Build.0 = Debug|ARM
+		{40294EC6-3FD6-416A-91D9-1A3F75D6E6FB}.Debug|ARM.Deploy.0 = Debug|ARM
+		{40294EC6-3FD6-416A-91D9-1A3F75D6E6FB}.Debug|x64.ActiveCfg = Debug|x64
+		{40294EC6-3FD6-416A-91D9-1A3F75D6E6FB}.Debug|x64.Build.0 = Debug|x64
+		{40294EC6-3FD6-416A-91D9-1A3F75D6E6FB}.Debug|x64.Deploy.0 = Debug|x64
+		{40294EC6-3FD6-416A-91D9-1A3F75D6E6FB}.Debug|x86.ActiveCfg = Debug|x86
+		{40294EC6-3FD6-416A-91D9-1A3F75D6E6FB}.Debug|x86.Build.0 = Debug|x86
+		{40294EC6-3FD6-416A-91D9-1A3F75D6E6FB}.Debug|x86.Deploy.0 = Debug|x86
+		{40294EC6-3FD6-416A-91D9-1A3F75D6E6FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40294EC6-3FD6-416A-91D9-1A3F75D6E6FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40294EC6-3FD6-416A-91D9-1A3F75D6E6FB}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{40294EC6-3FD6-416A-91D9-1A3F75D6E6FB}.Release|ARM.ActiveCfg = Release|ARM
+		{40294EC6-3FD6-416A-91D9-1A3F75D6E6FB}.Release|ARM.Build.0 = Release|ARM
+		{40294EC6-3FD6-416A-91D9-1A3F75D6E6FB}.Release|ARM.Deploy.0 = Release|ARM
+		{40294EC6-3FD6-416A-91D9-1A3F75D6E6FB}.Release|x64.ActiveCfg = Release|x64
+		{40294EC6-3FD6-416A-91D9-1A3F75D6E6FB}.Release|x64.Build.0 = Release|x64
+		{40294EC6-3FD6-416A-91D9-1A3F75D6E6FB}.Release|x64.Deploy.0 = Release|x64
+		{40294EC6-3FD6-416A-91D9-1A3F75D6E6FB}.Release|x86.ActiveCfg = Release|x86
+		{40294EC6-3FD6-416A-91D9-1A3F75D6E6FB}.Release|x86.Build.0 = Release|x86
+		{40294EC6-3FD6-416A-91D9-1A3F75D6E6FB}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1045,5 +1075,6 @@ Global
 		{3B377D8E-F329-433A-AA07-1CBFD671C7C4} = {43421F7E-57ED-469E-8D2D-6CCB8D3CDDAD}
 		{AFA4BBEE-59F8-49D0-9568-42899AF21CAF} = {CC3B0469-D630-4EDE-82D1-5D90F759EFDD}
 		{85E45E90-3817-45A8-9C57-F78CE595A77A} = {CC3B0469-D630-4EDE-82D1-5D90F759EFDD}
+		{40294EC6-3FD6-416A-91D9-1A3F75D6E6FB} = {CC3B0469-D630-4EDE-82D1-5D90F759EFDD}
 	EndGlobalSection
 EndGlobal
