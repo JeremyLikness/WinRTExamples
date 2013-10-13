@@ -108,9 +108,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EncryptionExampleTests", "E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentTestHelper", "FluentTestHelper\FluentTestHelper.csproj", "{4173D369-2E8F-4F01-8FA5-4896FD777301}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIThreadExample", "UIThreadExample\UIThreadExample.csproj", "{8EC977BF-E7F8-430E-B809-7C1D59EC3833}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewModelLocatorExample", "ViewModelLocatorExample\ViewModelLocatorExample.csproj", "{2844B475-EF52-4F7B-A952-BA2CD727E181}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 36
+		SccNumberOfProjects = 41
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs04
 		SccLocalPath0 = .
@@ -242,18 +246,6 @@ Global
 		SccProjectTopLevelParentUniqueName32 = WinRTByExample81.sln
 		SccProjectName32 = EncryptionExample
 		SccLocalPath32 = EncryptionExample
-		SccProjectUniqueName33 = ShareSourceExample\\ShareSourceExample.csproj
-		SccProjectTopLevelParentUniqueName33 = WinRTByExample81.sln
-		SccProjectName33 = ShareSourceExample
-		SccLocalPath33 = ShareSourceExample
-		SccProjectUniqueName34 = ShareTargetExample\\ShareTargetExample.csproj
-		SccProjectTopLevelParentUniqueName34 = WinRTByExample81.sln
-		SccProjectName34 = ShareTargetExample
-		SccLocalPath34 = ShareTargetExample
-		SccProjectUniqueName35 = PlayToExample\\PlayToExample.csproj
-		SccProjectTopLevelParentUniqueName35 = WinRTByExample81.sln
-		SccProjectName35 = PlayToExample
-		SccLocalPath35 = PlayToExample
 		SccProjectUniqueName33 = CascadingListExample\\CascadingListExample.csproj
 		SccProjectTopLevelParentUniqueName33 = WinRTByExample81.sln
 		SccProjectName33 = CascadingListExample
@@ -266,6 +258,26 @@ Global
 		SccProjectTopLevelParentUniqueName35 = WinRTByExample81.sln
 		SccProjectName35 = FluentTestHelper
 		SccLocalPath35 = FluentTestHelper
+		SccProjectUniqueName36 = ShareSourceExample\\ShareSourceExample.csproj
+		SccProjectTopLevelParentUniqueName36 = WinRTByExample81.sln
+		SccProjectName36 = ShareSourceExample
+		SccLocalPath36 = ShareSourceExample
+		SccProjectUniqueName37 = ShareTargetExample\\ShareTargetExample.csproj
+		SccProjectTopLevelParentUniqueName37 = WinRTByExample81.sln
+		SccProjectName37 = ShareTargetExample
+		SccLocalPath37 = ShareTargetExample
+		SccProjectUniqueName38 = PlayToExample\\PlayToExample.csproj
+		SccProjectTopLevelParentUniqueName38 = WinRTByExample81.sln
+		SccProjectName38 = PlayToExample
+		SccLocalPath38 = PlayToExample
+		SccProjectUniqueName39 = UIThreadExample\\UIThreadExample.csproj
+		SccProjectTopLevelParentUniqueName39 = WinRTByExample81.sln
+		SccProjectName39 = UIThreadExample
+		SccLocalPath39 = UIThreadExample
+		SccProjectUniqueName40 = ViewModelLocatorExample\\ViewModelLocatorExample.csproj
+		SccProjectTopLevelParentUniqueName40 = WinRTByExample81.sln
+		SccProjectName40 = ViewModelLocatorExample
+		SccLocalPath40 = ViewModelLocatorExample
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1120,6 +1132,54 @@ Global
 		{4173D369-2E8F-4F01-8FA5-4896FD777301}.Release|x64.Build.0 = Release|x64
 		{4173D369-2E8F-4F01-8FA5-4896FD777301}.Release|x86.ActiveCfg = Release|x86
 		{4173D369-2E8F-4F01-8FA5-4896FD777301}.Release|x86.Build.0 = Release|x86
+		{8EC977BF-E7F8-430E-B809-7C1D59EC3833}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EC977BF-E7F8-430E-B809-7C1D59EC3833}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EC977BF-E7F8-430E-B809-7C1D59EC3833}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{8EC977BF-E7F8-430E-B809-7C1D59EC3833}.Debug|ARM.ActiveCfg = Debug|ARM
+		{8EC977BF-E7F8-430E-B809-7C1D59EC3833}.Debug|ARM.Build.0 = Debug|ARM
+		{8EC977BF-E7F8-430E-B809-7C1D59EC3833}.Debug|ARM.Deploy.0 = Debug|ARM
+		{8EC977BF-E7F8-430E-B809-7C1D59EC3833}.Debug|x64.ActiveCfg = Debug|x64
+		{8EC977BF-E7F8-430E-B809-7C1D59EC3833}.Debug|x64.Build.0 = Debug|x64
+		{8EC977BF-E7F8-430E-B809-7C1D59EC3833}.Debug|x64.Deploy.0 = Debug|x64
+		{8EC977BF-E7F8-430E-B809-7C1D59EC3833}.Debug|x86.ActiveCfg = Debug|x86
+		{8EC977BF-E7F8-430E-B809-7C1D59EC3833}.Debug|x86.Build.0 = Debug|x86
+		{8EC977BF-E7F8-430E-B809-7C1D59EC3833}.Debug|x86.Deploy.0 = Debug|x86
+		{8EC977BF-E7F8-430E-B809-7C1D59EC3833}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EC977BF-E7F8-430E-B809-7C1D59EC3833}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EC977BF-E7F8-430E-B809-7C1D59EC3833}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{8EC977BF-E7F8-430E-B809-7C1D59EC3833}.Release|ARM.ActiveCfg = Release|ARM
+		{8EC977BF-E7F8-430E-B809-7C1D59EC3833}.Release|ARM.Build.0 = Release|ARM
+		{8EC977BF-E7F8-430E-B809-7C1D59EC3833}.Release|ARM.Deploy.0 = Release|ARM
+		{8EC977BF-E7F8-430E-B809-7C1D59EC3833}.Release|x64.ActiveCfg = Release|x64
+		{8EC977BF-E7F8-430E-B809-7C1D59EC3833}.Release|x64.Build.0 = Release|x64
+		{8EC977BF-E7F8-430E-B809-7C1D59EC3833}.Release|x64.Deploy.0 = Release|x64
+		{8EC977BF-E7F8-430E-B809-7C1D59EC3833}.Release|x86.ActiveCfg = Release|x86
+		{8EC977BF-E7F8-430E-B809-7C1D59EC3833}.Release|x86.Build.0 = Release|x86
+		{8EC977BF-E7F8-430E-B809-7C1D59EC3833}.Release|x86.Deploy.0 = Release|x86
+		{2844B475-EF52-4F7B-A952-BA2CD727E181}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2844B475-EF52-4F7B-A952-BA2CD727E181}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2844B475-EF52-4F7B-A952-BA2CD727E181}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{2844B475-EF52-4F7B-A952-BA2CD727E181}.Debug|ARM.ActiveCfg = Debug|ARM
+		{2844B475-EF52-4F7B-A952-BA2CD727E181}.Debug|ARM.Build.0 = Debug|ARM
+		{2844B475-EF52-4F7B-A952-BA2CD727E181}.Debug|ARM.Deploy.0 = Debug|ARM
+		{2844B475-EF52-4F7B-A952-BA2CD727E181}.Debug|x64.ActiveCfg = Debug|x64
+		{2844B475-EF52-4F7B-A952-BA2CD727E181}.Debug|x64.Build.0 = Debug|x64
+		{2844B475-EF52-4F7B-A952-BA2CD727E181}.Debug|x64.Deploy.0 = Debug|x64
+		{2844B475-EF52-4F7B-A952-BA2CD727E181}.Debug|x86.ActiveCfg = Debug|x86
+		{2844B475-EF52-4F7B-A952-BA2CD727E181}.Debug|x86.Build.0 = Debug|x86
+		{2844B475-EF52-4F7B-A952-BA2CD727E181}.Debug|x86.Deploy.0 = Debug|x86
+		{2844B475-EF52-4F7B-A952-BA2CD727E181}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2844B475-EF52-4F7B-A952-BA2CD727E181}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2844B475-EF52-4F7B-A952-BA2CD727E181}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{2844B475-EF52-4F7B-A952-BA2CD727E181}.Release|ARM.ActiveCfg = Release|ARM
+		{2844B475-EF52-4F7B-A952-BA2CD727E181}.Release|ARM.Build.0 = Release|ARM
+		{2844B475-EF52-4F7B-A952-BA2CD727E181}.Release|ARM.Deploy.0 = Release|ARM
+		{2844B475-EF52-4F7B-A952-BA2CD727E181}.Release|x64.ActiveCfg = Release|x64
+		{2844B475-EF52-4F7B-A952-BA2CD727E181}.Release|x64.Build.0 = Release|x64
+		{2844B475-EF52-4F7B-A952-BA2CD727E181}.Release|x64.Deploy.0 = Release|x64
+		{2844B475-EF52-4F7B-A952-BA2CD727E181}.Release|x86.ActiveCfg = Release|x86
+		{2844B475-EF52-4F7B-A952-BA2CD727E181}.Release|x86.Build.0 = Release|x86
+		{2844B475-EF52-4F7B-A952-BA2CD727E181}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1163,5 +1223,7 @@ Global
 		{40294EC6-3FD6-416A-91D9-1A3F75D6E6FB} = {CC3B0469-D630-4EDE-82D1-5D90F759EFDD}
 		{B7B5FB66-14DC-4021-8F4A-3DC6F2CAAC39} = {09F7AC30-5A77-4CCC-90F4-D80FCDCA9467}
 		{444C523C-6FB9-4B0D-AB13-C2E5A67AA985} = {09F7AC30-5A77-4CCC-90F4-D80FCDCA9467}
+		{8EC977BF-E7F8-430E-B809-7C1D59EC3833} = {09F7AC30-5A77-4CCC-90F4-D80FCDCA9467}
+		{2844B475-EF52-4F7B-A952-BA2CD727E181} = {09F7AC30-5A77-4CCC-90F4-D80FCDCA9467}
 	EndGlobalSection
 EndGlobal
