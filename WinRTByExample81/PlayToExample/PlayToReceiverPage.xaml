@@ -44,8 +44,17 @@
                 </Grid.RowDefinitions>
                 <Border Grid.Row="0" BorderBrush="Black" BorderThickness="1">
                     <Grid>
-                        <Image Grid.Row="0" Source="Assets/SplashScreen.png" HorizontalAlignment="Center" />
-                        <MediaElement x:Name="VideoPlayer" AreTransportControlsEnabled="True"/>
+                        <Image x:Name="ImagePlayer" HorizontalAlignment="Center" ImageFailed="HandleImagePlayerImageFailed"/>
+                        <MediaElement x:Name="VideoPlayer" 
+                                      MediaOpened = "HandleVideoPlayerMediaOpened"
+                                      CurrentStateChanged = "HandleVideoPlayerCurrentStateChanged"
+                                      RateChanged = "HandleVideoPlayerRateChanged"
+                                      SeekCompleted = "HandleVideoPlayerSeekCompleted"
+                                      MediaEnded = "HandleVideoPlayerMediaEnded"
+                                      VolumeChanged = "HandleVideoPlayerVolumeChanged"
+                                      MediaFailed = "HandleVideoPlayerMediaFailed"
+                                      AreTransportControlsEnabled="True"
+                                      PosterSource="Assets/SplashScreen.png"/>
                     </Grid>
                 </Border>
                 <Grid Grid.Row="1">

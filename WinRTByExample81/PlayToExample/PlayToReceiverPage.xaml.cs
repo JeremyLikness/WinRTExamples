@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Windows.Media.PlayTo;
 using Windows.System.Display;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using PlayToExample.Common;
 
@@ -18,6 +18,15 @@ namespace PlayToExample
     {
 
         private readonly NavigationHelper _navigationHelper;
+
+        private enum PlaybackType
+        {
+            None,
+            Video,
+            Image
+        }
+
+        private PlaybackType _currentPlaybackType;
 
         /// <summary>
         /// NavigationHelper is used on each page to aid in navigation and 
@@ -110,9 +119,9 @@ namespace PlayToExample
 
                 // Set the Properties that describe this receiver device to other systems
                 _receiver.FriendlyName = "Example Play To Receiver";
-                _receiver.SupportsAudio = false;
+                _receiver.SupportsAudio = true;
                 _receiver.SupportsVideo = true;
-                _receiver.SupportsImage = false;
+                _receiver.SupportsImage = true;
 
                 // Subscribe to Play To Receiver events
                 // Receive the request from the Play To source and map it to how it should be handled in this app
@@ -132,17 +141,7 @@ namespace PlayToExample
                 // Volume commands
                 _receiver.VolumeChangeRequested += HandleReceiverVolumeChangeRequested;
                 _receiver.MuteChangeRequested += HandleReceiverMuteChangeRequested;
-
-                // Subscribe to MediaElement events
-                // Receive the request from the MediaElement and map it to how it should be handled in the source
-                VideoPlayer.MediaOpened += HandleVideoPlayerMediaOpened;
-                VideoPlayer.CurrentStateChanged += HandleVideoPlayerCurrentStateChanged;
-                VideoPlayer.RateChanged += HandleVideoPlayerRateChanged;
-                VideoPlayer.SeekCompleted += HandleVideoPlayerSeekCompleted;
-                VideoPlayer.MediaEnded += HandleVideoPlayerMediaEnded;
-                VideoPlayer.VolumeChanged += HandleVideoPlayerVolumeChanged; 
-                VideoPlayer.MediaFailed += HandleVideoPlayerMediaFailed;
-               
+              
                 // Advertise the receiver on the local network and start receiving commands
                 await _receiver.StartAsync();
 
@@ -192,14 +191,6 @@ namespace PlayToExample
                     //  Remove MediaElement events
                     VideoPlayer.Pause();
 
-                    VideoPlayer.MediaOpened -= HandleVideoPlayerMediaOpened;
-                    VideoPlayer.CurrentStateChanged -= HandleVideoPlayerCurrentStateChanged;
-                    VideoPlayer.RateChanged -= HandleVideoPlayerRateChanged;
-                    VideoPlayer.SeekCompleted -= HandleVideoPlayerSeekCompleted; 
-                    VideoPlayer.MediaEnded -= HandleVideoPlayerMediaEnded;
-                    VideoPlayer.VolumeChanged -= HandleVideoPlayerVolumeChanged;
-                    VideoPlayer.MediaFailed -= HandleVideoPlayerMediaFailed;
-
                     StatusText.Text = "Stopped '" + _receiver.FriendlyName + "'.";
                 }
             }
@@ -212,17 +203,74 @@ namespace PlayToExample
 
         #region Play To Receiver Event Mappings
 
+        private BitmapImage _imageSource;
+
         private void HandleReceiverSourceChangeRequested(PlayToReceiver sender, SourceChangeRequestedEventArgs args)
         {
             if (args.Stream != null)
             {
-                Dispatch(() => VideoPlayer.SetSource(args.Stream, args.Stream.ContentType));
+                if (args.Stream.ContentType.Contains("image"))
+                {
+                    Dispatch(() =>
+                    {
+                        _imageSource = new BitmapImage();
+                        RoutedEventHandler handler = null;
+                        handler = (o, eventArgs) =>
+                        {
+                            _receiver.NotifyLoadedMetadata();
+                            _imageSource.ImageOpened -= handler;
+                        };
+                        _imageSource.ImageOpened += handler;
+                        _imageSource.SetSource(args.Stream);
+
+                        if (_currentPlaybackType != PlaybackType.Image)
+                        {
+                            if (_currentPlaybackType == PlaybackType.Video)
+                            {
+                                VideoPlayer.Stop();
+                            }
+
+                            ImagePlayer.Opacity = 1;
+                            VideoPlayer.Opacity = 0;
+                        }
+                        _currentPlaybackType = PlaybackType.Image;
+                    });
+                }
+                else
+                {
+                    Dispatch(() =>
+                    {
+                        VideoPlayer.SetSource(args.Stream, args.Stream.ContentType);
+                        if (_currentPlaybackType != PlaybackType.Video)
+                        {
+                            if (_currentPlaybackType == PlaybackType.Image)
+                            {
+                                ImagePlayer.Source = null;
+                            }
+
+                            ImagePlayer.Opacity = 0;
+                            VideoPlayer.Opacity = 1;
+                        }
+                        _currentPlaybackType = PlaybackType.Video;
+                    });
+                }
             }
         }
 
         private void HandleReceiverPlayRequested(PlayToReceiver sender, Object args)
         {
-            Dispatch(() => VideoPlayer.Play());
+            Dispatch(() =>
+            {
+                if (_currentPlaybackType == PlaybackType.Video)
+                {
+                    VideoPlayer.Play();
+                }
+                else if (_currentPlaybackType == PlaybackType.Image)
+                {
+                    ImagePlayer.Source = _imageSource;
+                    _receiver.NotifyPlaying();
+                }
+            });
         }
 
         private void HandleReceiverPauseRequested(PlayToReceiver sender, Object args)
@@ -232,7 +280,17 @@ namespace PlayToExample
 
         private void HandleReceiverStopRequested(PlayToReceiver sender, Object args)
         {
-            Dispatch(() => VideoPlayer.Stop());
+            Dispatch(() =>
+            {
+                if (_currentPlaybackType == PlaybackType.Video)
+                {
+                    VideoPlayer.Stop();
+                }
+                else if (_currentPlaybackType == PlaybackType.Image)
+                {
+                    ImagePlayer.Source = null;
+                }
+            });
         }
 
         private void HandleReceiverPlaybackRateChangeRequested(PlayToReceiver sender, PlaybackRateChangeRequestedEventArgs args)
@@ -245,15 +303,33 @@ namespace PlayToExample
         {
             Dispatch(() =>
                      {
-                         VideoPlayer.Position = args.Time;
-                         _receiver.NotifySeeking();
-                         _isSeeking = true;
+                         if (_currentPlaybackType == PlaybackType.Video)
+                         {
+                             VideoPlayer.Position = args.Time;
+                             _receiver.NotifySeeking();
+                             _isSeeking = true;
+                         }
+                         else if (_currentPlaybackType == PlaybackType.Image)
+                         {
+                             _receiver.NotifySeeking();
+                             _receiver.NotifySeeked();
+                         }
                      });
         }
 
         private void HandleReceiverTimeUpdateRequested(PlayToReceiver sender, Object args)
         {
-            Dispatch(() => _receiver.NotifyTimeUpdate(VideoPlayer.Position));
+            Dispatch(() =>
+            {
+                if (_currentPlaybackType == PlaybackType.Video)
+                {
+                    _receiver.NotifyTimeUpdate(VideoPlayer.Position);
+                }
+                else if (_currentPlaybackType == PlaybackType.Image)
+                {
+                    _receiver.NotifyTimeUpdate(new TimeSpan(0));
+                }
+            });
         }
 
         private void HandleReceiverVolumeChangeRequested(PlayToReceiver sender, VolumeChangeRequestedEventArgs args)
@@ -263,7 +339,17 @@ namespace PlayToExample
 
         private void HandleReceiverMuteChangeRequested(PlayToReceiver sender, MuteChangeRequestedEventArgs args)
         {
-            Dispatch(() => { VideoPlayer.IsMuted = args.Mute; });
+            Dispatch(() =>
+            {
+                if (_currentPlaybackType == PlaybackType.Video)
+                {
+                    VideoPlayer.IsMuted = args.Mute;
+                }
+                else if (_currentPlaybackType == PlaybackType.Image)
+                {
+                    _receiver.NotifyVolumeChange(0, args.Mute);
+                }
+            });
         }
 
         private async void Dispatch(Action dispatchAction)
@@ -276,6 +362,7 @@ namespace PlayToExample
 
 
         #region Video Player Event Handling
+        // Receive the request from the MediaElement and map it to how it should be handled in the source
 
         private void HandleVideoPlayerMediaOpened(Object sender, RoutedEventArgs e)
         {
@@ -348,5 +435,10 @@ namespace PlayToExample
             if (_receiver != null) { _receiver.NotifyError(); }
         } 
         #endregion
+
+        private void HandleImagePlayerImageFailed(object sender, ExceptionRoutedEventArgs e)
+        {
+            if (_receiver != null) { _receiver.NotifyError(); }
+        }
     }
 }
