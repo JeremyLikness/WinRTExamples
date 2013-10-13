@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Windows.Media.PlayTo;
 using Windows.System.Display;
 using Windows.UI.Core;
@@ -83,6 +84,11 @@ namespace PlayToExample
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
+            if (_displayRequest != null)
+            {
+                _displayRequest.RequestRelease();
+                _displayRequest = null;
+            }
             _navigationHelper.OnNavigatedFrom(e);
         }
 
@@ -91,54 +97,61 @@ namespace PlayToExample
 
         private PlayToReceiver _receiver;
         private DisplayRequest _displayRequest;
-        private CoreDispatcher _dispatcher;
         private Boolean _isSeeking = false;
 
         private async void HandleStartReceiverClicked(Object sender, RoutedEventArgs e)
         {
             try
             {
-                _dispatcher = Window.Current.CoreWindow.Dispatcher;
-
                 if (_receiver == null)
                 {
                     _receiver = new PlayToReceiver();
                 }
 
-                // Add Play To Receiver events and properties
-                _receiver.CurrentTimeChangeRequested += HandleReceiverCurrentTimeChangeRequested;
-                _receiver.MuteChangeRequested += HandleReceiverMuteChangeRequested;
-                _receiver.PauseRequested += HandleReceiverPauseRequested;
-                _receiver.PlaybackRateChangeRequested += HandleReceiverPlaybackRateChangeRequested;
-                _receiver.PlayRequested += HandleReceiverPlayRequested;
-                _receiver.SourceChangeRequested += HandleReceiverSourceChangeRequested;
-                _receiver.StopRequested += HandleReceiverStopRequested;
-                _receiver.TimeUpdateRequested += HandleReceiverTimeUpdateRequested;
-                _receiver.VolumeChangeRequested += HandleReceiverVolumeChangeRequested;
-
+                // Set the Properties that describe this receiver device to other systems
                 _receiver.FriendlyName = "Example Play To Receiver";
                 _receiver.SupportsAudio = false;
                 _receiver.SupportsVideo = true;
                 _receiver.SupportsImage = false;
 
-                // Add MediaElement events
-                VideoPlayer.CurrentStateChanged += HandleVideoPlayerCurrentStateChanged;
-                VideoPlayer.MediaEnded += HandleVideoPlayerMediaEnded;
-                VideoPlayer.MediaFailed += HandleVideoPlayerMediaFailed;
+                // Subscribe to Play To Receiver events
+                // Receive the request from the Play To source and map it to how it should be handled in this app
+                // (Marshall the call and tell the MediaElement to respond in-kind.)
+                _receiver.SourceChangeRequested += HandleReceiverSourceChangeRequested; 
+
+                // Playback commands
+                _receiver.PlayRequested += HandleReceiverPlayRequested;
+                _receiver.PauseRequested += HandleReceiverPauseRequested;
+                _receiver.StopRequested += HandleReceiverStopRequested; 
+                _receiver.PlaybackRateChangeRequested += HandleReceiverPlaybackRateChangeRequested;
+
+                // Seek commands
+                _receiver.CurrentTimeChangeRequested += HandleReceiverCurrentTimeChangeRequested;
+                _receiver.TimeUpdateRequested += HandleReceiverTimeUpdateRequested;
+                
+                // Volume commands
+                _receiver.VolumeChangeRequested += HandleReceiverVolumeChangeRequested;
+                _receiver.MuteChangeRequested += HandleReceiverMuteChangeRequested;
+
+                // Subscribe to MediaElement events
+                // Receive the request from the MediaElement and map it to how it should be handled in the source
                 VideoPlayer.MediaOpened += HandleVideoPlayerMediaOpened;
+                VideoPlayer.CurrentStateChanged += HandleVideoPlayerCurrentStateChanged;
                 VideoPlayer.RateChanged += HandleVideoPlayerRateChanged;
                 VideoPlayer.SeekCompleted += HandleVideoPlayerSeekCompleted;
-                VideoPlayer.VolumeChanged += HandleVideoPlayerVolumeChanged;
-
+                VideoPlayer.MediaEnded += HandleVideoPlayerMediaEnded;
+                VideoPlayer.VolumeChanged += HandleVideoPlayerVolumeChanged; 
+                VideoPlayer.MediaFailed += HandleVideoPlayerMediaFailed;
+               
                 // Advertise the receiver on the local network and start receiving commands
                 await _receiver.StartAsync();
 
-                // Prevent the screen from locking
+                // Use the DisplayRequest to prevent power-save from interrupting the playback experience
                 if (_displayRequest == null)
                 {
                     _displayRequest = new DisplayRequest();
+                    _displayRequest.RequestActive();
                 }
-                _displayRequest.RequestActive();
 
                 StatusText.Text = "'" + _receiver.FriendlyName + "' started.";
             }
@@ -158,32 +171,34 @@ namespace PlayToExample
                 {
                     await _receiver.StopAsync();
 
+                    // The DisplayRequest should be released as soon as it is not needed anymore
                     if (_displayRequest != null)
                     {
                         _displayRequest.RequestRelease();
+                        _displayRequest = null;
                     }
 
                     // Remove Play To Receiver events
-                    _receiver.CurrentTimeChangeRequested -= HandleReceiverCurrentTimeChangeRequested;
-                    _receiver.MuteChangeRequested -= HandleReceiverMuteChangeRequested;
-                    _receiver.PauseRequested -= HandleReceiverPauseRequested;
-                    _receiver.PlaybackRateChangeRequested -= HandleReceiverPlaybackRateChangeRequested;
-                    _receiver.PlayRequested -= HandleReceiverPlayRequested;
                     _receiver.SourceChangeRequested -= HandleReceiverSourceChangeRequested;
+                    _receiver.PlayRequested -= HandleReceiverPlayRequested;
+                    _receiver.PauseRequested -= HandleReceiverPauseRequested;
                     _receiver.StopRequested -= HandleReceiverStopRequested;
+                    _receiver.PlaybackRateChangeRequested -= HandleReceiverPlaybackRateChangeRequested; 
+                    _receiver.CurrentTimeChangeRequested -= HandleReceiverCurrentTimeChangeRequested;
                     _receiver.TimeUpdateRequested -= HandleReceiverTimeUpdateRequested;
+                    _receiver.MuteChangeRequested -= HandleReceiverMuteChangeRequested; 
                     _receiver.VolumeChangeRequested -= HandleReceiverVolumeChangeRequested;
 
                     //  Remove MediaElement events
                     VideoPlayer.Pause();
 
-                    VideoPlayer.CurrentStateChanged -= HandleVideoPlayerCurrentStateChanged;
-                    VideoPlayer.MediaEnded -= HandleVideoPlayerMediaEnded;
-                    VideoPlayer.MediaFailed -= HandleVideoPlayerMediaFailed;
                     VideoPlayer.MediaOpened -= HandleVideoPlayerMediaOpened;
+                    VideoPlayer.CurrentStateChanged -= HandleVideoPlayerCurrentStateChanged;
                     VideoPlayer.RateChanged -= HandleVideoPlayerRateChanged;
-                    VideoPlayer.SeekCompleted -= HandleVideoPlayerSeekCompleted;
+                    VideoPlayer.SeekCompleted -= HandleVideoPlayerSeekCompleted; 
+                    VideoPlayer.MediaEnded -= HandleVideoPlayerMediaEnded;
                     VideoPlayer.VolumeChanged -= HandleVideoPlayerVolumeChanged;
+                    VideoPlayer.MediaFailed -= HandleVideoPlayerMediaFailed;
 
                     StatusText.Text = "Stopped '" + _receiver.FriendlyName + "'.";
                 }
@@ -195,95 +210,81 @@ namespace PlayToExample
             }
         }
 
-        private async void HandleReceiverCurrentTimeChangeRequested(PlayToReceiver sender, CurrentTimeChangeRequestedEventArgs args)
-        {
-            await _dispatcher.RunAsync(
-                CoreDispatcherPriority.Normal, () =>
-                {
-                    VideoPlayer.Position = args.Time;
-                    _receiver.NotifySeeking();
-                    _isSeeking = true;
-                });
-        }
+        #region Play To Receiver Event Mappings
 
-        private async void HandleReceiverMuteChangeRequested(PlayToReceiver sender, MuteChangeRequestedEventArgs args)
-        {
-            await _dispatcher.RunAsync(
-                CoreDispatcherPriority.Normal, () =>
-                {
-                    VideoPlayer.IsMuted = args.Mute;
-                });
-        }
-
-        private async void HandleReceiverPauseRequested(PlayToReceiver sender, Object args)
-        {
-            await _dispatcher.RunAsync(
-                CoreDispatcherPriority.Normal, () =>
-                {
-                    VideoPlayer.Pause();
-                });
-        }
-
-        private async void HandleReceiverPlaybackRateChangeRequested(PlayToReceiver sender, PlaybackRateChangeRequestedEventArgs args)
-        {
-            await _dispatcher.RunAsync(
-                CoreDispatcherPriority.Normal, () =>
-                {
-                    VideoPlayer.PlaybackRate = args.Rate;
-                });
-        }
-
-        private async void HandleReceiverPlayRequested(PlayToReceiver sender, Object args)
-        {
-            await _dispatcher.RunAsync(
-                CoreDispatcherPriority.Normal, () =>
-                {
-                    VideoPlayer.Play();
-                });
-        }
-
-        private async void HandleReceiverSourceChangeRequested(PlayToReceiver sender, SourceChangeRequestedEventArgs args)
+        private void HandleReceiverSourceChangeRequested(PlayToReceiver sender, SourceChangeRequestedEventArgs args)
         {
             if (args.Stream != null)
-                await _dispatcher.RunAsync(
-                    CoreDispatcherPriority.Normal, () =>
-                    {
-                        var stream = args.Stream as Windows.Storage.Streams.IRandomAccessStream;
-                        VideoPlayer.SetSource(stream, args.Stream.ContentType);
-                    });
+            {
+                Dispatch(() => VideoPlayer.SetSource(args.Stream, args.Stream.ContentType));
+            }
         }
 
-        private async void HandleReceiverStopRequested(PlayToReceiver sender, Object args)
+        private void HandleReceiverPlayRequested(PlayToReceiver sender, Object args)
         {
-            await _dispatcher.RunAsync(
-                CoreDispatcherPriority.Normal, () =>
-                {
-                    VideoPlayer.Stop();
-                });
+            Dispatch(() => VideoPlayer.Play());
         }
 
-        private async void HandleReceiverTimeUpdateRequested(PlayToReceiver sender, Object args)
+        private void HandleReceiverPauseRequested(PlayToReceiver sender, Object args)
         {
-            await _dispatcher.RunAsync(
-                CoreDispatcherPriority.Normal, () =>
-                {
-                    if (VideoPlayer.Position != null)
-                    {
-                        _receiver.NotifyTimeUpdate(VideoPlayer.Position);
-                    }
-                });
+            Dispatch(() => VideoPlayer.Pause());
         }
 
-        private async void HandleReceiverVolumeChangeRequested(PlayToReceiver sender, VolumeChangeRequestedEventArgs args)
+        private void HandleReceiverStopRequested(PlayToReceiver sender, Object args)
         {
-            await _dispatcher.RunAsync(
-                CoreDispatcherPriority.Normal, () =>
-                {
-                    VideoPlayer.Volume = args.Volume;
-                });
+            Dispatch(() => VideoPlayer.Stop());
+        }
+
+        private void HandleReceiverPlaybackRateChangeRequested(PlayToReceiver sender, PlaybackRateChangeRequestedEventArgs args)
+        {
+            Dispatch(() => { VideoPlayer.PlaybackRate = args.Rate; });
         }
 
 
+        private void HandleReceiverCurrentTimeChangeRequested(PlayToReceiver sender, CurrentTimeChangeRequestedEventArgs args)
+        {
+            Dispatch(() =>
+                     {
+                         VideoPlayer.Position = args.Time;
+                         _receiver.NotifySeeking();
+                         _isSeeking = true;
+                     });
+        }
+
+        private void HandleReceiverTimeUpdateRequested(PlayToReceiver sender, Object args)
+        {
+            Dispatch(() => _receiver.NotifyTimeUpdate(VideoPlayer.Position));
+        }
+
+        private void HandleReceiverVolumeChangeRequested(PlayToReceiver sender, VolumeChangeRequestedEventArgs args)
+        {
+            Dispatch(() => { VideoPlayer.Volume = args.Volume; });
+        }
+
+        private void HandleReceiverMuteChangeRequested(PlayToReceiver sender, MuteChangeRequestedEventArgs args)
+        {
+            Dispatch(() => { VideoPlayer.IsMuted = args.Mute; });
+        }
+
+        private async void Dispatch(Action dispatchAction)
+        {
+            // Utility function to do a standard cross-thread dispatch
+            if (dispatchAction == null) throw new ArgumentNullException("dispatchAction");
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, dispatchAction.Invoke);
+        } 
+        #endregion
+
+
+        #region Video Player Event Handling
+
+        private void HandleVideoPlayerMediaOpened(Object sender, RoutedEventArgs e)
+        {
+            if (_receiver != null)
+            {
+                _receiver.NotifyDurationChange(VideoPlayer.NaturalDuration.TimeSpan);
+                _receiver.NotifyLoadedMetadata();
+            }
+        }
 
         private void HandleVideoPlayerCurrentStateChanged(Object sender, RoutedEventArgs e)
         {
@@ -301,29 +302,6 @@ namespace PlayToExample
                         _receiver.NotifyStopped();
                         break;
                 }
-            }
-        }
-
-        private void HandleVideoPlayerMediaFailed(Object sender, ExceptionRoutedEventArgs e)
-        {
-            if (_receiver != null) { _receiver.NotifyError(); }
-        }
-
-        private void HandleVideoPlayerMediaEnded(Object sender, RoutedEventArgs e)
-        {
-            if (_receiver != null)
-            {
-                _receiver.NotifyEnded();
-                VideoPlayer.Stop();
-            }
-        }
-
-        private void HandleVideoPlayerMediaOpened(Object sender, RoutedEventArgs e)
-        {
-            if (_receiver != null)
-            {
-                _receiver.NotifyDurationChange(VideoPlayer.NaturalDuration.TimeSpan);
-                _receiver.NotifyLoadedMetadata();
             }
         }
 
@@ -348,6 +326,15 @@ namespace PlayToExample
             }
         }
 
+        private void HandleVideoPlayerMediaEnded(Object sender, RoutedEventArgs e)
+        {
+            if (_receiver != null)
+            {
+                _receiver.NotifyEnded();
+                VideoPlayer.Stop();
+            }
+        }
+
         private void HandleVideoPlayerVolumeChanged(Object sender, RoutedEventArgs e)
         {
             if (_receiver != null)
@@ -355,5 +342,11 @@ namespace PlayToExample
                 _receiver.NotifyVolumeChange(VideoPlayer.Volume, VideoPlayer.IsMuted);
             }
         }
+
+        private void HandleVideoPlayerMediaFailed(Object sender, ExceptionRoutedEventArgs e)
+        {
+            if (_receiver != null) { _receiver.NotifyError(); }
+        } 
+        #endregion
     }
 }
