@@ -2,6 +2,7 @@
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.ApplicationSettings;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using ShareTargetExample.Common;
@@ -26,24 +27,31 @@ namespace ShareTargetExample
         protected override void OnWindowCreated(WindowCreatedEventArgs args)
         {
             base.OnWindowCreated(args);
-            SettingsPane.GetForCurrentView().CommandsRequested += OnSettingsCommandsRequested;
+            SettingsPane.GetForCurrentView().CommandsRequested 
+                += OnSettingsCommandsRequested;
         }
 
         private void OnSettingsCommandsRequested(SettingsPane sender, SettingsPaneCommandsRequestedEventArgs args)
         {
-            var settingsCommand = new SettingsCommand("sharingSettings", "Sharing Settings", command =>
-                                                                  {
-                                                                      var flyout = new SharingSettingsFlyout();
-                                                                      flyout.Show();
-                                                                  });
+            var settingsCommand = new SettingsCommand("sharingSettings", 
+                "Sharing Settings", ShowSettingsFlyoutHandler);
             args.Request.ApplicationCommands.Add(settingsCommand);
 
-            var aboutCommand = new SettingsCommand("aboutSettings", "About", command =>
-                                                                             {
-                                                                                 var flyout = new AboutSettingsFlyout();
-                                                                                 flyout.Show();
-                                                                             });
+            var aboutCommand = new SettingsCommand("aboutSettings", 
+                "About", ShowAboutFlyoutHandler);
             args.Request.ApplicationCommands.Add(aboutCommand);
+        }
+
+        private void ShowSettingsFlyoutHandler(IUICommand command)
+        {
+            var flyout = new SharingSettingsFlyout();
+            flyout.Show();
+        }
+
+        private void ShowAboutFlyoutHandler(IUICommand command)
+        {
+            var flyout = new AboutSettingsFlyout();
+            flyout.Show();
         }
 
         /// <summary>
