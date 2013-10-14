@@ -4,7 +4,6 @@ using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using ShareTargetExample.Common;
 
@@ -15,8 +14,7 @@ namespace ShareTargetExample
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private NavigationHelper navigationHelper;
-        private ObservableDictionary defaultViewModel = new ObservableDictionary();
+        private readonly NavigationHelper _navigationHelper;
 
         /// <summary>
         /// NavigationHelper is used on each page to aid in navigation and 
@@ -24,22 +22,14 @@ namespace ShareTargetExample
         /// </summary>
         public NavigationHelper NavigationHelper
         {
-            get { return navigationHelper; }
-        }
-
-        /// <summary>
-        /// This can be changed to a strongly typed view model.
-        /// </summary>
-        public ObservableDictionary DefaultViewModel
-        {
-            get { return defaultViewModel; }
+            get { return _navigationHelper; }
         }
 
         public MainPage()
         {
             InitializeComponent();
-            navigationHelper = new NavigationHelper(this);
-            navigationHelper.LoadState += OnNavigationHelperLoadState;
+            _navigationHelper = new NavigationHelper(this);
+            _navigationHelper.LoadState += OnNavigationHelperLoadState;
         }
 
         /// <summary>
@@ -66,19 +56,19 @@ namespace ShareTargetExample
         /// NavigationHelper to respond to the page's navigation methods.
         /// 
         /// Page specific logic should be placed in event handlers for the  
-        /// <see cref="GridCS.Common.NavigationHelper.LoadState"/>
-        /// and <see cref="GridCS.Common.NavigationHelper.SaveState"/>.
+        /// <see cref="Common.NavigationHelper.LoadState"/>
+        /// and <see cref="Common.NavigationHelper.SaveState"/>.
         /// The navigation parameter is available in the LoadState method 
         /// in addition to page state preserved during an earlier session.
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            navigationHelper.OnNavigatedTo(e);
+            _navigationHelper.OnNavigatedTo(e);
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            navigationHelper.OnNavigatedFrom(e);
+            _navigationHelper.OnNavigatedFrom(e);
         }
 
         #endregion
