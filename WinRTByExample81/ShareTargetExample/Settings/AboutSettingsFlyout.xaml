@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
     mc:Ignorable="d"
-    IconSource="Assets/SmallLogo.png"
+    IconSource="../Assets/SmallLogo.png"
     Title="About"
     d:DesignWidth="346">
 
