@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.DataTransfer;
@@ -22,10 +20,8 @@ namespace ShareTargetExample
     /// <summary>
     /// This page allows other applications to share content through this application.
     /// </summary>
-    public sealed partial class ShareTargetPage : Page
+    public sealed partial class PreferredFormatShareTargetPage : Page
     {
-        private const String CustomPersonSchemaName = "http://schema.org/Person";
-
         /// <summary>
         /// Provides a channel to communicate with Windows about the sharing operation.
         /// </summary>
@@ -40,7 +36,7 @@ namespace ShareTargetExample
             get { return _defaultViewModel; }
         }
 
-        public ShareTargetPage()
+        public PreferredFormatShareTargetPage()
         {
             InitializeComponent();
         }
@@ -138,7 +134,7 @@ namespace ShareTargetExample
             }
         }
 
-        private void ShowSharedContent()
+        private async void ShowSharedContent()
         {
             // Let Windows know that this app is starting to fetch data
             _shareOperation.ReportStarted();
@@ -146,65 +142,45 @@ namespace ShareTargetExample
 
             try
             {
+                var formatOrdering = new AppSettings().OrderedFormats.ToList();
                 var shareData = _shareOperation.Data;
 
-                var showContentTaskList = new List<Task>();
-                if (shareData.Contains(StandardDataFormats.Text))
-                {
-                    var task = ShowSharedText(shareData);
-                    showContentTaskList.Add(task);
-                }
+                var preferredFormat = formatOrdering.FirstOrDefault(x => shareData.Contains(x.DataFormat));
 
-                if (shareData.Contains(StandardDataFormats.Rtf))
+                if (preferredFormat.DataFormat == StandardDataFormats.Text)
                 {
-                    // Not Implemented
-                    //ShowSharedRtf(shareData);
-                }
-
-                if (shareData.Contains(StandardDataFormats.Html))
+                    await ShowSharedText(shareData);
+                } 
+                //else if(preferredFormat.DataFormat == StandardDataFormats.Rtf)
+                //{
+                //    // Not Implemented
+                //    //ShowSharedRtf(shareData);
+                //}
+                else if (preferredFormat.DataFormat == StandardDataFormats.Html)
                 {
-                    var task = ShowSharedHtml(shareData);
-                    showContentTaskList.Add(task);
+                    await ShowSharedHtml(shareData);
                 }
-
-                if (shareData.Contains(StandardDataFormats.Bitmap))
+                else if (preferredFormat.DataFormat == StandardDataFormats.Bitmap)
                 {
-                    var task = ShowSharedBitmap(shareData);
-                    showContentTaskList.Add(task);
+                    await ShowSharedBitmap(shareData);
                 }
-
-                // NOTE - SetUri is effectively Deprecated - see SetApplicationLink and/or SetWebLink instead
-                if (shareData.Contains(StandardDataFormats.ApplicationLink))
+                // NOTE - StandardDataFormats.Uri is effectively Deprecated - see SetApplicationLink and/or SetWebLink instead
+                else if (preferredFormat.DataFormat == StandardDataFormats.ApplicationLink)
                 {
-                    var task = ShowSharedAppLink(shareData);
-                    showContentTaskList.Add(task);
+                    await ShowSharedAppLink(shareData);
                 }
-                if (shareData.Contains(StandardDataFormats.WebLink))
+                else if (preferredFormat.DataFormat == StandardDataFormats.WebLink)
                 {
-                    var task = ShowSharedWebLink(shareData);
-                    showContentTaskList.Add(task);
+                    await ShowSharedWebLink(shareData);
                 }
-
-                if (shareData.Contains(StandardDataFormats.StorageItems))
+                else if (preferredFormat.DataFormat == StandardDataFormats.StorageItems)
                 {
-                    var task = ShowSharedStorageItems(shareData);
-                    showContentTaskList.Add(task);
+                    await ShowSharedStorageItems(shareData);
                 }
-
-                if (shareData.Contains(CustomPersonSchemaName))
+                else if (preferredFormat.DataFormat == AppSettings.CustomPersonSchemaName)
                 {
-                    var task = ShowSharedCustomPerson(shareData);
-                    showContentTaskList.Add(task);
+                    await ShowSharedCustomPerson(shareData);
                 }
-
-                // Admittedly a bit unusual to be doing this "task stuff"; most apps will just bring in their "favorite" data format
-                // and signal Retrieved/Complete right there...since this is more of a "sampler", the Task API is used to wait for 
-                // all of the retrives to finish and then signal that the data txfer is complete, and update the UI elements accordingly.
-                Task.WhenAll(showContentTaskList).ContinueWith(task =>
-                                                                {
-                                                                    _shareOperation.ReportDataRetrieved();
-                                                                    DefaultViewModel["ProcessingSharedData"] = false;
-                                                                });
             }
             catch (Exception e)
             {
@@ -235,9 +211,7 @@ namespace ShareTargetExample
                 // Convert the shared content that contains extra header data into just the working fragment
                 var sharedHtmlFragment = HtmlFormatHelper.GetStaticFragment(sharedHtmlContent);
 
-                // Reconcile any resource-mapped image references by locating the named reference in the HTML
-                // and then replacing the image reference with an inline base-64 encoded image entry that is 
-                // obtained by processing the named entry in the Resource Map.
+                // Reconcile any resource-mapped image references
                 var sharedResourceMap = await shareData.GetResourceMapAsync();
                 foreach (var resource in sharedResourceMap)
                 {
@@ -296,7 +270,7 @@ namespace ShareTargetExample
             DefaultViewModel["IsCustomItemShared"] = true;
             DefaultViewModel["IsCustomItemLoading"] = true;
             var sharedPersonObject 
-                = await shareData.GetDataAsync(CustomPersonSchemaName);
+                = await shareData.GetDataAsync(AppSettings.CustomPersonSchemaName);
             var personJsonObject = JObject.Parse(sharedPersonObject.ToString());
             DefaultViewModel["IsCustomItemLoading"] = false;
             DefaultViewModel["SharedCustomItem"] = personJsonObject.ToString();
@@ -319,21 +293,13 @@ namespace ShareTargetExample
                 if (String.IsNullOrWhiteSpace(quickLinkTag)) return;
 
                 var quickLink = new QuickLink
-                {
-                    SupportedFileTypes = { "*" },
-                    Thumbnail = quickLinkThumbnail,
-                    Title = quickLinkTitle,
-                    Id = quickLinkTag,
-                };
-
-                // Just reuse the current set of data formats, though it could be selective 
-                // based on the context of how the id value will be used.
-                var quickLinkFormats = _shareOperation.Data.AvailableFormats;
-                foreach (var item in quickLinkFormats)
-                {
-                    quickLink.SupportedDataFormats.Add(item);
-                }
-
+                          {
+                              Id = quickLinkTag,
+                              SupportedDataFormats = { StandardDataFormats.Bitmap },
+                              SupportedFileTypes = { "*" },
+                              Thumbnail = quickLinkThumbnail,
+                              Title = quickLinkTitle
+                          };
                 _shareOperation.ReportCompleted(quickLink);
             }
             else
@@ -349,27 +315,13 @@ namespace ShareTargetExample
             if (!String.IsNullOrWhiteSpace(errorMessage))
             {
                 _shareOperation.ReportError(errorMessage);
+                //_shareOperation.DismissUI();
             }
         }
 
         private void OnClickRemoveQuickLink(Object sender, RoutedEventArgs e)
         {
             _shareOperation.RemoveThisQuickLink();
-        }
-    }
-
-    public static partial class Extensions
-    {
-        public static async Task<String> Base64EncodeContent(this RandomAccessStreamReference streamReference)
-        {
-            using (IRandomAccessStreamWithContentType stream = await streamReference.OpenReadAsync())
-            {
-                var readStream = stream.AsStreamForRead();
-                var bytes = new byte[stream.Size];
-                readStream.Read(bytes, 0, (Int32)stream.Size);
-                var result = Convert.ToBase64String(bytes);
-                return result;
-            }
         }
     }
 }

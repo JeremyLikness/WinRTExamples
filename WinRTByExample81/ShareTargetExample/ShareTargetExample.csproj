@@ -109,6 +109,10 @@
     <Compile Include="..\Common\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Settings\AppSettings.cs" />
+    <Compile Include="Settings\AboutSettingsFlyout.xaml.cs">
+      <DependentUpon>AboutSettingsFlyout.xaml</DependentUpon>
+    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
@@ -122,10 +126,17 @@
     <Compile Include="Common\NavigationHelper.cs" />
     <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="Common\ObservableDictionary.cs" />
-    <Compile Include="ShareTargetPage.xaml.cs">
-      <DependentUpon>ShareTargetPage.xaml</DependentUpon>
+    <Compile Include="Sharing\PreferredFormatShareTargetPage.xaml.cs">
+      <DependentUpon>PreferredFormatShareTargetPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ShareFormatOrdering.cs" />
+    <Compile Include="Sharing\AllFormatsShareTargetPage.xaml.cs">
+      <DependentUpon>AllFormatsShareTargetPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Extensions.cs" />
+    <Compile Include="Settings\SharingSettingsFlyout.xaml.cs">
+      <DependentUpon>SharingSettingsFlyout.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -157,11 +168,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Settings\AboutSettingsFlyout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ShareTargetPage.xaml">
+    <Page Include="Sharing\PreferredFormatShareTargetPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Sharing\AllFormatsShareTargetPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\SharingSettingsFlyout.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
