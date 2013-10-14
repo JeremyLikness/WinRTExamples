@@ -1,6 +1,7 @@
 ﻿using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.UI.ApplicationSettings;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using ShareTargetExample.Common;
@@ -18,8 +19,31 @@ namespace ShareTargetExample
         /// </summary>
         public App()
         {
-            this.InitializeComponent();
-            this.Suspending += OnSuspending;
+            InitializeComponent();
+            Suspending += OnSuspending;
+        }
+
+        protected override void OnWindowCreated(WindowCreatedEventArgs args)
+        {
+            base.OnWindowCreated(args);
+            SettingsPane.GetForCurrentView().CommandsRequested += OnSettingsCommandsRequested;
+        }
+
+        private void OnSettingsCommandsRequested(SettingsPane sender, SettingsPaneCommandsRequestedEventArgs args)
+        {
+            var settingsCommand = new SettingsCommand("sharingSettings", "Sharing Settings", command =>
+                                                                  {
+                                                                      var flyout = new SharingSettingsFlyout();
+                                                                      flyout.Show();
+                                                                  });
+            args.Request.ApplicationCommands.Add(settingsCommand);
+
+            var aboutCommand = new SettingsCommand("aboutSettings", "About", command =>
+                                                                             {
+                                                                                 var flyout = new AboutSettingsFlyout();
+                                                                                 flyout.Show();
+                                                                             });
+            args.Request.ApplicationCommands.Add(aboutCommand);
         }
 
         /// <summary>
@@ -39,7 +63,7 @@ namespace ShareTargetExample
             }
 #endif
 
-            Frame rootFrame = Window.Current.Content as Frame;
+            var rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
@@ -102,11 +126,20 @@ namespace ShareTargetExample
         /// Invoked when the application is activated as the target of a sharing operation.
         /// </summary>
         /// <param name="e">Details about the activation request.</param>
-        protected override void OnShareTargetActivated
-            (ShareTargetActivatedEventArgs e)
+        protected override void OnShareTargetActivated(ShareTargetActivatedEventArgs e)
         {
-            var shareTargetPage = new ShareTargetPage();
-            shareTargetPage.Activate(e);
+            // Choose which Sharing panel to bring up based on the user's setting selection
+            var appSettings = new AppSettings();
+            if (appSettings.AcceptAllSetting)
+            {
+                var sharePage = new AllFormatsShareTargetPage();
+                sharePage.Activate(e);
+            }
+            else
+            {
+                var sharePage = new PreferredFormatShareTargetPage();
+                sharePage.Activate(e);
+            }
         }
     }
 }

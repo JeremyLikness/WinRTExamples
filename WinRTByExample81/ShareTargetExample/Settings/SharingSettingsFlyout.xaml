@@ -1,0 +1,58 @@
+﻿<SettingsFlyout
+    x:Class="ShareTargetExample.SharingSettingsFlyout"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    IconSource="Assets/SmallLogo.png"
+    Title="Sharing Settings"
+    d:DesignWidth="346">
+
+    <!-- This StackPanel acts as a root panel for vertical layout of the content sections -->
+    <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" >
+
+        <!-- The StackPanel(s) below define individual content sections -->
+
+        <!-- Content Section 1-->
+        <StackPanel Style="{StaticResource SettingsFlyoutSectionStyle}">
+            <!-- Section 1 header -->
+            <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Display Mode"/>
+
+            <!-- Section 1 body -->
+            <TextBlock Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,25" TextWrapping="Wrap">
+                <TextBlock.Text>
+                    Select 'Accept All' to bring in and display all shared content.  Select 'Preferred' 
+                    to set up a preference list and only bring in the first matching item.
+                </TextBlock.Text>
+            </TextBlock>
+
+            <ToggleSwitch x:Name="AcceptAllSwitch" OffContent="Accept All" OnContent="Preferred" Toggled="HandleAcceptAllSwitchToggled" />
+        </StackPanel>
+
+        <StackPanel Style="{StaticResource SettingsFlyoutSectionStyle}">
+            <!-- Section 2 header -->
+            <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Sharing Preference Order" />
+
+            <!-- Section 2 body -->
+
+            <TextBlock Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,25" TextWrapping="Wrap">
+                <TextBlock.Text>
+                    Drag and drop the formats below to indicate your preferred order for finding a match.
+                </TextBlock.Text>
+            </TextBlock>
+
+            <Border BorderBrush="{ThemeResource ListBoxBorderThemeBrush}" BorderThickness="{ThemeResource ListBoxBorderThemeThickness}">
+                <ListView x:Name="MyTestListView" 
+                          CanDragItems="True" AllowDrop="True" CanReorderItems="True"
+                          HorizontalAlignment="Stretch"
+                          Height="400" Width="250" Margin="0,0,0,25"
+                          DisplayMemberPath="DisplayName" IsEnabled="{Binding IsOn, ElementName=AcceptAllSwitch}" 
+                          />
+            </Border>
+        </StackPanel>
+
+        <!-- Define more Content Sections below as necessary -->
+
+    </StackPanel>
+</SettingsFlyout>

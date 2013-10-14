@@ -1,0 +1,55 @@
+﻿<SettingsFlyout
+    x:Class="ShareTargetExample.AboutSettingsFlyout"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ShareTargetExample"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
+    mc:Ignorable="d"
+    IconSource="Assets/SmallLogo.png"
+    Title="About"
+    d:DesignWidth="346">
+
+    <!-- This StackPanel acts as a root panel for vertical layout of the content sections -->
+    <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" >
+
+        <!-- The StackPanel(s) below define individual content sections -->
+
+        <!-- Content Section 1-->
+        <StackPanel Style="{StaticResource SettingsFlyoutSectionStyle}">
+
+            <!-- Section 1 header -->
+            <TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="WinRT by Example" />
+
+            <!-- Section 1 body -->
+            <Grid Width="250" Margin="0,0,0,25">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.Resources>
+                    <Style TargetType="TextBlock" BasedOn="{StaticResource BodyTextBlockStyle}"></Style>
+                </Grid.Resources>
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Name: "/>
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Name}"/>
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Version: "/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Version}"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Description: "/>
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Description}"/>
+                <!-- TODO - Get content into desc and add wraparound -->
+                <!-- TODO - add link to web site. -->
+            </Grid>
+
+            <HyperlinkButton Content="http://winrtexamples.codeplex.com" NavigateUri="http://winrtexamples.codeplex.com"/>
+        </StackPanel>
+
+        <!-- Define more Content Sections below as necessary -->
+
+    </StackPanel>
+</SettingsFlyout>
