@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.20827.3
+VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorldGridApp", "HelloWorldGridApp\HelloWorldGridApp.csproj", "{B270835A-3249-4284-9399-E885C80229E9}"
 EndProject
@@ -111,6 +111,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIThreadExample", "UIThreadExample\UIThreadExample.csproj", "{8EC977BF-E7F8-430E-B809-7C1D59EC3833}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewModelLocatorExample", "ViewModelLocatorExample\ViewModelLocatorExample.csproj", "{2844B475-EF52-4F7B-A952-BA2CD727E181}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter10", "Chapter10", "{C31D8751-720C-40F8-A39B-2770DAA6E1CF}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
