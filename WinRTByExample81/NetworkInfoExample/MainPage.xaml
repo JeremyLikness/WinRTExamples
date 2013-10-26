@@ -6,11 +6,15 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:common="using:NetworkInfoExample.Common"
+    xmlns:data="using:NetworkInfoExample.Data"
     mc:Ignorable="d">
     <Page.Resources>
         <common:BitsConverter x:Key="ShowBits"/>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.DataContext>
+            <data:ViewModel/>
+        </Grid.DataContext>
         <Grid.ChildrenTransitions>
             <TransitionCollection>
                 <EntranceThemeTransition/>
@@ -33,37 +37,49 @@
                         IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,30,40"/>
         </Grid>
         <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="240"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <ListView Grid.Column="0" x:Name="Connections" DisplayMemberPath="ProfileName">
-            </ListView>
-            <Grid Margin="10" Grid.Column="1" DataContext="{Binding ElementName=Connections, Path=SelectedItem}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Text="{Binding ProfileName, FallbackValue='Design-Time Name'}" Margin="0 0 0 10" Style="{StaticResource SubheaderTextBlockStyle}"/>
-                <StackPanel Orientation="Horizontal" Grid.Row="1">
-                    <ToggleButton IsChecked="{Binding IsWlanConnectionProfile, FallbackValue=True}"/>
-                    <TextBlock Text="WLAN"/>
-                    <ToggleButton IsChecked="{Binding IsWwanConnectionProfile, FallbackValue=False}"/>
-                    <TextBlock Text="WWAN"/>        
-                    <StackPanel Margin="10 0 0 0" DataContext="{Binding NetworkAdapter}" Orientation="Horizontal">
-                        <TextBlock Text="{Binding InboundMaxBitsPerSecond, FallbackValue='? gbps', Converter={StaticResource ShowBits}}"/>
-                        <TextBlock Text="/"/>
-                        <TextBlock Text="{Binding OutboundMaxBitsPerSecond, FallbackValue='? gbps', Converter={StaticResource ShowBits}}"/>
-                        <TextBlock Margin="10 0 0 0" Text="{Binding NetworkAdapterId, FallbackValue='Unknown Adapter'}"/>
-                    </StackPanel>
-                    <StackPanel Margin="10 0 0 0" DataContext="{Binding NetworkSecuritySettings}" Orientation="Horizontal">
-                        <TextBlock Text="Authentication: "/>
-                        <TextBlock Text="{Binding NetworkAuthenticationType, FallbackValue='Unknown'}" Margin="10 0 0 0"/>
-                        <TextBlock Text="Encryption: " Margin="10 0 0 0"/>
-                        <TextBlock Margin="10 0 0 0" Text="{Binding NetworkEncryptionType, FallbackValue='Unknown'}"/>                        
-                    </StackPanel>
-                </StackPanel>
-            </Grid>
+            <ListView Grid.Column="0" 
+                      x:Name="Connections" 
+                      ItemsSource="{Binding Path=ConnectionProfiles}"
+                      SelectedItem="{Binding Path=CurrentConnectionInfo, Mode=TwoWay}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="10" DataContext="{Binding}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Text="{Binding Path=Name}" Margin="0 0 0 10" Style="{StaticResource SubheaderTextBlockStyle}"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="1">
+                                <ToggleButton IsChecked="{Binding IsWlan}"/>
+                                <TextBlock Text="WLAN"/>
+                                <ToggleButton IsChecked="{Binding IsWwan}"/>
+                                <TextBlock Text="WWAN"/>
+                                <StackPanel Margin="10 0 0 0" Orientation="Horizontal">
+                                    <TextBlock Text="{Binding IncomingBitsPerSecond, Converter={StaticResource ShowBits}}"/>
+                                    <TextBlock Text="/"/>
+                                    <TextBlock Text="{Binding OutgoingBitsPerSecond, Converter={StaticResource ShowBits}}"/>
+                                    <TextBlock Margin="10 0 0 0" Text="{Binding NetworkAdapterId, FallbackValue='Unknown Adapter'}"/>
+                                </StackPanel>
+                                <StackPanel Margin="10 0 0 0"  Orientation="Horizontal">
+                                    <TextBlock Text="Authentication: "/>
+                                    <TextBlock Text="{Binding AuthenticationType}" Margin="10 0 0 0"/>
+                                    <TextBlock Text="Encryption: " Margin="10 0 0 0"/>
+                                    <TextBlock Margin="10 0 0 0" Text="{Binding EncryptionType}"/>
+                                </StackPanel>
+                            </StackPanel>
+                            <StackPanel Grid.Row="2" Orientation="Horizontal">
+                                <TextBlock Text="Connection:"/>
+                                <TextBlock Text="{Binding ConnectivityLevel}" Margin="10 0 0 0"/>
+                                <TextBlock Text="Domain:" Margin="10 0 0 0"/>
+                                <TextBlock Text="{Binding DomainConnectivityLevel}" Margin="10 0 0 0"/>
+                                <TextBlock Text="Status Flags:" Margin="10 0 0 0"/>
+                                <TextBlock Text="{Binding Flags}" Margin="10 0 0 0"/>
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>            
         </Grid>        
     </Grid>
 </Page>
