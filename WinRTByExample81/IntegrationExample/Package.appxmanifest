@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
+  <Identity Name="26de89e9-4e05-445a-8b56-30e234c911b2" Publisher="CN=John" Version="1.0.0.0" />
+  <Properties>
+    <DisplayName>Integration Example</DisplayName>
+    <PublisherDisplayName>John</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+  <Prerequisites>
+    <OSMinVersion>6.3.0</OSMinVersion>
+    <OSMaxVersionTested>6.3.0</OSMaxVersionTested>
+  </Prerequisites>
+  <Resources>
+    <Resource Language="x-generate" />
+  </Resources>
+  <Applications>
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="IntegrationExample.App">
+      <m2:VisualElements DisplayName="Integration Example" Square150x150Logo="Assets\Logo.png" Square30x30Logo="Assets\SmallLogo.png" Description="Example that illustrates several different Windows Integration startegies that apps can employ" ForegroundText="light" BackgroundColor="#464646">
+        <m2:DefaultTile ShortName="12 - Integration Example">
+          <m2:ShowNameOnTiles>
+            <m2:ShowOn Tile="square150x150Logo" />
+          </m2:ShowNameOnTiles>
+        </m2:DefaultTile>
+        <m2:SplashScreen Image="Assets\SplashScreen.png" />
+        <m2:InitialRotationPreference>
+          <m2:Rotation Preference="landscape" />
+        </m2:InitialRotationPreference>
+        <m2:ApplicationView MinWidth="width500" />
+      </m2:VisualElements>
+      <Extensions>
+        <Extension Category="windows.fileSavePicker">
+          <FileSavePicker>
+            <SupportedFileTypes>
+              <SupportsAnyFileType />
+            </SupportedFileTypes>
+          </FileSavePicker>
+        </Extension>
+        <Extension Category="windows.fileOpenPicker">
+          <FileOpenPicker>
+            <SupportedFileTypes>
+              <SupportsAnyFileType />
+            </SupportedFileTypes>
+          </FileOpenPicker>
+        </Extension>
+        <Extension Category="windows.contactPicker" />
+        <Extension Category="windows.fileTypeAssociation">
+          <FileTypeAssociation Name="winrtbyexample" m2:DesiredView="default">
+            <DisplayName>WinRT By Example Sample</DisplayName>
+            <InfoTip>Sample file for Integration chapter of WinRT by Example book</InfoTip>
+            <SupportedFileTypes>
+              <FileType>.wrtbe</FileType>
+            </SupportedFileTypes>
+          </FileTypeAssociation>
+        </Extension>
+        <Extension Category="windows.protocol">
+          <Protocol Name="wrtbe-integration">
+            <Logo>Assets\SmallLogo.png</Logo>
+            <DisplayName>WinRT by Example Protocol Activation Integration Example</DisplayName>
+          </Protocol>
+        </Extension>
+        <Extension Category="windows.accountPictureProvider" />
+      </Extensions>
+    </Application>
+  </Applications>
+  <Capabilities>
+    <Capability Name="internetClient" />
+  </Capabilities>
+</Package>

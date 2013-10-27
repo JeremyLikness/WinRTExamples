@@ -1,0 +1,13 @@
+{"Contacts":[
+  {
+    "LastName": "Contact",
+    "FirstName": "Example",
+	"Emails": [ 
+		{"Address": "example@winrtbyexample.com", "Kind": "Personal"},
+	],
+	"PhoneNumbers": [
+		{"Number": "555-555-5555", "Kind" : "Home"},
+	]
+  }
+]
+}

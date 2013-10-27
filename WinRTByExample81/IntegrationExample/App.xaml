@@ -1,0 +1,18 @@
+﻿<Application
+    x:Class="IntegrationExample.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:IntegrationExample"
+    xmlns:localData="using:IntegrationExample.Data"
+    RequestedTheme="Light">
+
+    <Application.Resources>
+
+        <!-- Application-specific resources -->
+
+        <x:String x:Key="AppName">Integration Example</x:String>
+        <localData:ContactEmailSelectionValueConverter x:Key="ContactEmailSelectionValueConverter" PreferredEmailOrder="PersonalWorkOther"/>
+        <localData:ContactPhoneSelectionValueConverter x:Key="ContactPhoneSelectionValueConverter" PreferredPhoneOrder="WorkMobileHomeOther"/>
+        <localData:ThumbnailValueConverter x:Key="ThumbnailValueConverter" ProfileImagePath="ms-appx:///Assets/Profile.png"/>
+    </Application.Resources>
+</Application>

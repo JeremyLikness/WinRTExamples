@@ -25,7 +25,7 @@
         /// <summary>
         /// Gets the Xml
         /// </summary>
-        public string Xml { get; set; }
+        public string Xml { get; private set; }
 
         /// <summary>
         /// Creates a new instance of the toast
@@ -36,7 +36,7 @@
             this.Toast = toast;
             this.Id = toast.TemplateType;
             this.Description = toast.GetDescription();
-            this.Xml = toast.ToString();
+            this.Xml = System.Xml.Linq.XDocument.Parse(toast.ToString()).ToString();
         }
 
         /// <summary>
