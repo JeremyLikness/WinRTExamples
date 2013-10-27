@@ -5,10 +5,7 @@
     RequestedTheme="Light">
 
     <Application.Resources>
-
         <!-- Application-specific resources -->
-
         <x:String x:Key="AppName">Play To Example</x:String>
-
     </Application.Resources>
 </Application>
