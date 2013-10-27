@@ -1,0 +1,30 @@
+{"Contacts":[
+  {
+    "Id": "1",
+    "LastName": "Garland",
+    "FirstName": "John",
+	"Emails": [ 
+		{"Address": "jmg@avidgator.com", "Kind": "Personal"},
+		{"Address": "jgarland@wintellect.com", "Kind": "Work"}
+	],
+	"PhoneNumbers": [
+		{"Number": "603-555-1111", "Kind" : "Home"},
+		{"Number": "603-555-2222", "Kind" : "Work"},
+		{"Number": "603-555-3333", "Kind" : "Mobile"},
+	]
+  },
+    {
+    "Id": "2",
+    "LastName": "Likness",
+    "FirstName": "Jeremy",
+	"Emails": [ 
+		{"Address": "jlikness@wintellect.com", "Kind": "Work"} 
+	],
+	"PhoneNumbers": [
+		{"Number": "407-555-1111", "Kind" : "Home"},
+		{"Number": "407-555-2222", "Kind" : "Work"},
+		{"Number": "407-555-3333", "Kind" : "Mobile"},
+	]
+  }
+]
+}
