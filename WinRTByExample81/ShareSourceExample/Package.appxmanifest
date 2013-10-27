@@ -29,7 +29,7 @@
       </m2:VisualElements>
       <Extensions>
         <Extension Category="windows.protocol">
-          <Protocol Name="winrt-by-example">
+          <Protocol Name="wrtbe-share">
             <Logo>Assets\SmallLogo.png</Logo>
             <DisplayName>WinRT by Example Share Source Example</DisplayName>
           </Protocol>

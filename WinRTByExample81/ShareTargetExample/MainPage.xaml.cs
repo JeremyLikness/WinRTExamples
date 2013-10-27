@@ -93,7 +93,7 @@ namespace ShareTargetExample
             options.UI.PreferredPlacement = Placement.Below;
             options.UI.SelectionRect = rect;
 
-            await Windows.System.Launcher.LaunchUriAsync(new Uri("winrt-by-example:applaunch"), options);
+            await Windows.System.Launcher.LaunchUriAsync(new Uri("wrtbe-share:applaunch"), options);
         }
     }
 
