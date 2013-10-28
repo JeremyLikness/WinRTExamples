@@ -7,10 +7,17 @@
     using System.Runtime.CompilerServices;
 
     using Windows.Networking.Connectivity;
+    using Windows.UI.Core;
+
+    using NetworkInfoExample.Common;
 
     public class ViewModel : INotifyPropertyChanged 
     {
         public List<ConnectionInfo> ConnectionProfiles { get; set; }
+
+        public IDialog Dialog { get; set; }
+
+        private CoreDispatcher Dispatcher { get; set; }
 
         private static readonly NetworkAuthenticationType[] AuthenticationTypes = EnumList<NetworkAuthenticationType>();
 
@@ -36,11 +43,28 @@
                 return;
             }
 
+            Dispatcher = CoreWindow.GetForCurrentThread().Dispatcher; 
+            Dialog = new DialogHandler(Dispatcher);
+
+            NetworkInformation.NetworkStatusChanged += this.NetworkInformationNetworkStatusChanged;
+
+            this.UpdateNetworkInformation();
+        }
+
+        private async void NetworkInformationNetworkStatusChanged(object sender)
+        {
+            await Dialog.ShowMessageAsync("The network status has changed. Network information will be refreshed.");
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, this.UpdateNetworkInformation);
+        }
+
+        private void UpdateNetworkInformation()
+        {
             ConnectionProfiles =
                 NetworkInformation.GetConnectionProfiles().Select(ConnectionInfo.FromConnectionProfile).ToList();
+            PropertyChanged(this, new PropertyChangedEventArgs("ConnectionProfiles"));            
             var internet = NetworkInformation.GetInternetConnectionProfile();
             var profile =
-                ConnectionProfiles.FirstOrDefault(p => p.NetworkAdapterId == internet.NetworkAdapter.NetworkAdapterId);
+                internet == null ? null : ConnectionProfiles.FirstOrDefault(p => p.NetworkAdapterId == internet.NetworkAdapter.NetworkAdapterId);
             if (internet != null && profile == null)
             {
                 var internetInfo = ConnectionInfo.FromConnectionProfile(internet);
@@ -49,6 +73,7 @@
                 return;
             }
             this.CurrentConnectionInfo = profile ?? this.ConnectionProfiles.FirstOrDefault();
+            
         }
 
         public ConnectionInfo CurrentConnectionInfo
@@ -69,26 +94,51 @@
             var random = new Random();
             for (var x = 0; x < 10; x++)
             {
-                var connectionInfo = new ConnectionInfo();
-                connectionInfo.AuthenticationType = RandomItem(AuthenticationTypes, random);
-                connectionInfo.EncryptionType = RandomItem(EncryptionTypes, random);
-                connectionInfo.ConnectivityLevel = RandomItem(ConnectivityLevels, random);
-                connectionInfo.DomainConnectivityLevel = RandomItem(DomainLevels, random);
-                connectionInfo.IncomingBitsPerSecond = random.Next(0, int.MaxValue);
-                connectionInfo.OutgoingBitsPerSecond = random.Next(0, int.MaxValue);
-                connectionInfo.IsWlan = random.Next(0, 1) == 0;
-                connectionInfo.IsWwan = random.Next(0, 1) == 0;
-                connectionInfo.Name = Guid.NewGuid().ToString().Replace('-', ' ');
-                connectionInfo.NetworkAdapterId = Guid.NewGuid();
-                connectionInfo.NetworkType = RandomItem(NetworkTypeList, random);
-                connectionInfo.CostType = RandomItem(CostTypes, random);
-                connectionInfo.Flags =
-                    string.Format(
-                        "{0} {1}",
-                        random.Next(0, 1) == 0
-                            ? (random.Next(0, 1) == 0 ? "Approaching Data Limit" : "Over Data Limit")
-                            : string.Empty,
-                        random.Next(0, 1) == 0 ? "Roaming" : string.Empty).Trim();
+                var connectionInfo = new ConnectionInfo
+                                         {
+                                             AuthenticationType = RandomItem(AuthenticationTypes, random),
+                                             EncryptionType = RandomItem(EncryptionTypes, random),
+                                             ConnectivityLevel = RandomItem(ConnectivityLevels, random),
+                                             DomainConnectivityLevel = RandomItem(DomainLevels, random),
+                                             IncomingBitsPerSecond = random.Next(0, int.MaxValue),
+                                             OutgoingBitsPerSecond = random.Next(0, int.MaxValue),
+                                             IsWlan = random.Next(0, 1) == 0,
+                                             IsWwan = random.Next(0, 1) == 0,
+                                             Name = Guid.NewGuid().ToString().Replace('-', ' '),
+                                             NetworkAdapterId = Guid.NewGuid(),
+                                             NetworkType = RandomItem(NetworkTypeList, random),
+                                             CostType = RandomItem(CostTypes, random),
+                                             SignalBars = (short)random.Next(0, 5),
+                                             Flags =
+                                                 string.Format(
+                                                     "{0} {1}",
+                                                     random.Next(0, 1) == 0
+                                                         ? (random.Next(0, 1) == 0
+                                                                ? "Approaching Data Limit"
+                                                                : "Over Data Limit")
+                                                         : string.Empty,
+                                                     random.Next(0, 1) == 0 ? "Roaming" : string.Empty)
+                                                 .Trim()
+                                         };
+                if (random.Next(0, 1) == 0)
+                {
+                    var dataPlan = new DataPlanInfo
+                                       {
+                                           DataLimitMegabytes = random.Next(0, int.MaxValue),
+                                           InboundBitsPerSecond = (ulong)random.Next(0, int.MaxValue),
+                                           OutboundBitsPerSecond = (ulong)random.Next(0, int.MaxValue)
+                                       };
+                    if (random.Next(0, 1) == 0)
+                    {
+                        dataPlan.NextBillingCycle = DateTime.Now.AddDays(random.Next(1, 30));
+                    }
+                    if (random.Next(0, 1) == 0)
+                    {
+                        dataPlan.MegabytesUsed = random.Next(0, int.MaxValue);
+                        dataPlan.LastSyncTime = DateTime.Now.AddHours(-1 * random.Next(2, 12));
+                    }
+                    connectionInfo.DataPlan = dataPlan; 
+                }
                 ConnectionProfiles.Add(connectionInfo);
             }
             CurrentConnectionInfo = ConnectionProfiles[random.Next(0, ConnectionProfiles.Count)];
