@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Storage;
+using Windows.Storage.Search;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using IntegrationExample.Common;
@@ -108,10 +109,31 @@ namespace IntegrationExample
         {
             await HandleBasicActivation(args);
 
-            foreach (var storageFile in args.Files.OfType<IStorageFile>())
+            if (args.Verb == "ScanWRTBEFiles")
             {
-                // For multiple registrations, examine the file type
-                await SampleData.ProcessActivationFile(storageFile);
+                var rootFolder = args.Files.OfType<StorageFolder>().FirstOrDefault();
+                if (rootFolder != null)
+                {
+                    // Potentially recursively scan through all folders.
+                    // For now just use files at the root.
+                    var queryOptions = new QueryOptions(
+                        CommonFileQuery.DefaultQuery, 
+                        new[] { ".wrtbe" });
+                    var query = rootFolder.CreateFileQueryWithOptions(queryOptions);
+                    var contactFiles = await query.GetFilesAsync();
+                    foreach (var contactFile in contactFiles)
+                    {
+                        await SampleData.ProcessActivationFile(contactFile);
+                    }
+                }
+            }
+            else
+            {
+                foreach (var storageFile in args.Files.OfType<IStorageFile>())
+                {
+                    // For multiple registrations, examine the file type
+                    await SampleData.ProcessActivationFile(storageFile);
+                }
             }
         }
 
@@ -142,7 +164,7 @@ namespace IntegrationExample
             else if (args.Kind == ActivationKind.Protocol)
             {
                 // Extract the arguments and do basic activation
-                var protocolArgs = (ProtocolActivatedEventArgs)args;
+                var protocolArgs = (ProtocolActivatedEventArgs) args;
                 await HandleBasicActivation(protocolArgs);
 
                 var providedUri = protocolArgs.Uri;
@@ -160,7 +182,7 @@ namespace IntegrationExample
                     }
                 }
                 
-                // Here you would do app-specific logic so that the user receives account picture selection UX.
+                    // Here you would do app-specific logic so that the user receives account picture selection UX.
                 else if (providedUri.Scheme == "ms-accountpictureprovider")
                 {
                     // The app was activated as an Account Picture Provider from PC Settings, Accounts, Your Account, Create an account picture.
@@ -168,6 +190,12 @@ namespace IntegrationExample
                     // In this app, the picture can simply be set by choosing an image attached to one of the tracked contacts.
                 }
             }
+            //else if (args.Kind == ActivationKind.Device)
+            //{
+            //    var deviceArgs = (DeviceActivatedEventArgs) args;
+            //    var deviceInformationId = deviceArgs.DeviceInformationId;
+            //    var verb = deviceArgs.Verb;
+            //}
             else
             {
                 base.OnActivated(args);
