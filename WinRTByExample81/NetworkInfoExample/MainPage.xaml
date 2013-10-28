@@ -10,6 +10,8 @@
     mc:Ignorable="d">
     <Page.Resources>
         <common:BitsConverter x:Key="ShowBits"/>
+        <common:SignalConverter x:Key="ShowSignal"/>
+        <common:BooleanVisibilityConverter x:Key="ShowVisible"/>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.DataContext>
@@ -48,33 +50,58 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <TextBlock Grid.Row="0" Text="{Binding Path=Name}" Margin="0 0 0 10" Style="{StaticResource SubheaderTextBlockStyle}"/>
-                            <StackPanel Orientation="Horizontal" Grid.Row="1">
-                                <ToggleButton IsChecked="{Binding IsWlan}"/>
-                                <TextBlock Text="WLAN"/>
-                                <ToggleButton IsChecked="{Binding IsWwan}"/>
-                                <TextBlock Text="WWAN"/>
-                                <StackPanel Margin="10 0 0 0" Orientation="Horizontal">
-                                    <TextBlock Text="{Binding IncomingBitsPerSecond, Converter={StaticResource ShowBits}}"/>
-                                    <TextBlock Text="/"/>
-                                    <TextBlock Text="{Binding OutgoingBitsPerSecond, Converter={StaticResource ShowBits}}"/>
-                                    <TextBlock Margin="10 0 0 0" Text="{Binding NetworkAdapterId, FallbackValue='Unknown Adapter'}"/>
-                                </StackPanel>
-                                <StackPanel Margin="10 0 0 0"  Orientation="Horizontal">
-                                    <TextBlock Text="Authentication: "/>
-                                    <TextBlock Text="{Binding AuthenticationType}" Margin="10 0 0 0"/>
-                                    <TextBlock Text="Encryption: " Margin="10 0 0 0"/>
-                                    <TextBlock Margin="10 0 0 0" Text="{Binding EncryptionType}"/>
-                                </StackPanel>
+                            <ContentControl Grid.Row="0" VerticalAlignment="Center" Content="{Binding Path=SignalBars, Converter={StaticResource ShowSignal}}"/>
+                            <StackPanel Grid.Row="0" Margin="30 0 0 0">
+                                <TextBlock Text="{Binding Path=Name}" Style="{StaticResource SubheaderTextBlockStyle}"/>
+                                <TextBlock Text="{Binding Path=NetworkAdapterId}"/>
                             </StackPanel>
-                            <StackPanel Grid.Row="2" Orientation="Horizontal">
+                            <StackPanel Orientation="Horizontal" Grid.Row="1">
+                                <TextBlock Text="WLAN" Visibility="{Binding IsWlan, Converter={StaticResource ShowVisible}}"/>
+                                <TextBlock Text="WWAN" Margin="10 0 0 0" Visibility="{Binding IsWwan, Converter={StaticResource ShowVisible}}"/>
+                                <TextBlock Text="{Binding IncomingBitsPerSecond, Converter={StaticResource ShowBits}}" Margin="10 0 0 0"/>
+                                <TextBlock Text="/"/>
+                                <TextBlock Text="{Binding OutgoingBitsPerSecond, Converter={StaticResource ShowBits}}"/>                                
+                            </StackPanel>
+                           <StackPanel Orientation="Horizontal" Grid.Row="2">
+                               <SymbolIcon Symbol="Permissions"/> 
+                               <TextBlock Text="Authentication: "/>
+                                <TextBlock Text="{Binding AuthenticationType}" Margin="10 0 0 0"/>
+                                <SymbolIcon Symbol="ProtectedDocument" Margin="10 0 0 0"/>
+                                <TextBlock Text="Encryption: "/>
+                                <TextBlock Margin="10 0 0 0" Text="{Binding EncryptionType}"/>                                
+                            </StackPanel>
+                            <StackPanel Grid.Row="3" Orientation="Horizontal">
                                 <TextBlock Text="Connection:"/>
                                 <TextBlock Text="{Binding ConnectivityLevel}" Margin="10 0 0 0"/>
                                 <TextBlock Text="Domain:" Margin="10 0 0 0"/>
                                 <TextBlock Text="{Binding DomainConnectivityLevel}" Margin="10 0 0 0"/>
                                 <TextBlock Text="Status Flags:" Margin="10 0 0 0"/>
                                 <TextBlock Text="{Binding Flags}" Margin="10 0 0 0"/>
+                            </StackPanel>
+                            <StackPanel Grid.Row="4" Orientation="Vertical" Visibility="{Binding HasDataPlan, Converter={StaticResource ShowVisible}}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Data Plan: Usage (Megabytes)"/>
+                                    <TextBlock Text="{Binding DataPlan.MegabytesUsed}" Margin="10 0 0 0"/>
+                                    <StackPanel Orientation="Horizontal" Visibility="{Binding DataPlan.LastSyncTime.HasValue, Converter={StaticResource ShowVisible}}">
+                                        <TextBlock Text="Last Sync:" Margin="10 0 0 0"/>
+                                        <TextBlock Text="{Binding DataPlan.LastSyncTime}" Margin="10 0 0 0"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="30 0 0 0">
+                                    <TextBlock Text="Speed:"/>
+                                    <TextBlock Text="{Binding DataPlan.InboundBitsPerSecond, Converter={StaticResource ShowBits}}" Margin="10 0 0 0"/>
+                                    <TextBlock Text="/"/>
+                                    <TextBlock Text="{Binding DataPlan.OutboundBitsPerSecond, Converter={StaticResource ShowBits}}"/>
+                                    <TextBlock Text="Limit (Magabytes):" Margin="10 0 0 0"/>
+                                    <TextBlock Text="{Binding DataPlan.DataLimitMegabytes}" Margin="10 0 0 0"/>
+                                    <StackPanel Orientation="Horizontal" Visibility="{Binding DataPlan.NextBillingCycle.HasValue, Converter={StaticResource ShowVisible}}">
+                                        <TextBlock Text="Next Bill:" Margin="10 0 0 0"/>
+                                        <TextBlock Text="{Binding DataPlan.NextBillingCycle}" Margin="10 0 0 0"/>
+                                    </StackPanel>
+                                </StackPanel>
                             </StackPanel>
                         </Grid>
                     </DataTemplate>

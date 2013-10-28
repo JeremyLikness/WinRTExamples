@@ -19,6 +19,16 @@
         public string Flags { get; set; }
         public Guid NetworkAdapterId { get; set; }
         public string NetworkType { get; set; }
+        public short? SignalBars { get; set; }
+        public DataPlanInfo DataPlan { get; set; }
+
+        public bool HasDataPlan
+        {
+            get
+            {
+                return DataPlan != null;
+            }
+        }
 
         public static ConnectionInfo FromConnectionProfile(ConnectionProfile profile)
         {
@@ -26,11 +36,12 @@
                                      {
                                          Name = profile.ProfileName,
                                          IsWlan = profile.IsWlanConnectionProfile,
-                                         IsWwan = profile.IsWwanConnectionProfile
+                                         IsWwan = profile.IsWwanConnectionProfile,
+                                         ConnectivityLevel =
+                                             profile.GetNetworkConnectivityLevel().ToString(),
+                                         DomainConnectivityLevel =
+                                             profile.GetDomainConnectivityLevel().ToString()
                                      };
-
-            connectionInfo.ConnectivityLevel = profile.GetNetworkConnectivityLevel().ToString();
-            connectionInfo.DomainConnectivityLevel = profile.GetDomainConnectivityLevel().ToString();
 
             var costType = profile.GetConnectionCost();
             connectionInfo.CostType = costType.NetworkCostType.ToString();
@@ -53,6 +64,10 @@
                 connectionInfo.AuthenticationType = profile.NetworkSecuritySettings.NetworkAuthenticationType.ToString();
                 connectionInfo.EncryptionType = profile.NetworkSecuritySettings.NetworkEncryptionType.ToString();
             }
+
+            connectionInfo.SignalBars = profile.GetSignalBars();
+
+            connectionInfo.DataPlan = DataPlanInfo.FromProfile(profile);
 
             return connectionInfo;
         }

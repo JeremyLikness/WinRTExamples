@@ -128,7 +128,12 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\BitsConverter.cs" />
+    <Compile Include="Common\BooleanVisibilityConverter.cs" />
+    <Compile Include="Common\DialogHandler.cs" />
+    <Compile Include="Common\IDialog.cs" />
+    <Compile Include="Common\SignalConverter.cs" />
     <Compile Include="Data\ConnectionInfo.cs" />
+    <Compile Include="Data\DataPlanInfo.cs" />
     <Compile Include="Data\ViewModel.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
