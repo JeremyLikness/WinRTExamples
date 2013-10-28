@@ -59,10 +59,16 @@
           </Protocol>
         </Extension>
         <Extension Category="windows.accountPictureProvider" />
+        <Extension Category="windows.autoPlayContent">
+          <AutoPlayContent>
+            <LaunchAction Verb="ScanWRTBEFiles" ActionDisplayName="Scan for Contacts" ContentEvent="WindowsRuntimeByExampleAutoPlay" />
+          </AutoPlayContent>
+        </Extension>
       </Extensions>
     </Application>
   </Applications>
   <Capabilities>
     <Capability Name="internetClient" />
+    <Capability Name="removableStorage" />
   </Capabilities>
 </Package>
