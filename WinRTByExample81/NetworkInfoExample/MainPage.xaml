@@ -10,13 +10,11 @@
     mc:Ignorable="d">
     <Page.Resources>
         <common:BitsConverter x:Key="ShowBits"/>
+        <common:BytesConverter x:Key="ShowBytes"/>
         <common:SignalConverter x:Key="ShowSignal"/>
         <common:BooleanVisibilityConverter x:Key="ShowVisible"/>
     </Page.Resources>
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Grid.DataContext>
-            <data:ViewModel/>
-        </Grid.DataContext>
+    <Grid x:Name="RootGrid" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" d:DataContext="{d:DesignInstance Type=data:ViewModel, IsDesignTimeCreatable=True}">
         <Grid.ChildrenTransitions>
             <TransitionCollection>
                 <EntranceThemeTransition/>
@@ -61,9 +59,15 @@
                             <StackPanel Orientation="Horizontal" Grid.Row="1">
                                 <TextBlock Text="WLAN" Visibility="{Binding IsWlan, Converter={StaticResource ShowVisible}}"/>
                                 <TextBlock Text="WWAN" Margin="10 0 0 0" Visibility="{Binding IsWwan, Converter={StaticResource ShowVisible}}"/>
+                                <TextBlock Text="Max Rates:" Margin="10 0 0 0"/>
                                 <TextBlock Text="{Binding IncomingBitsPerSecond, Converter={StaticResource ShowBits}}" Margin="10 0 0 0"/>
                                 <TextBlock Text="/"/>
                                 <TextBlock Text="{Binding OutgoingBitsPerSecond, Converter={StaticResource ShowBits}}"/>                                
+                                <TextBlock Text="24 Hour Usage (sent/received):" Margin="10 0 0 0"/>
+                                <TextBlock Text="{Binding BytesSentLastDay, Converter={StaticResource ShowBytes}}" Margin="10 0 0 0"/>
+                                <TextBlock Text="/"/>
+                                <TextBlock Text="{Binding BytesReceivedLastDay, Converter={StaticResource ShowBytes}}"/>
+
                             </StackPanel>
                            <StackPanel Orientation="Horizontal" Grid.Row="2">
                                <SymbolIcon Symbol="Permissions"/> 

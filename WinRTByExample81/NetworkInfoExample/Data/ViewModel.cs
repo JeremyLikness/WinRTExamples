@@ -5,6 +5,7 @@
     using System.ComponentModel;
     using System.Linq;
     using System.Runtime.CompilerServices;
+    using System.Threading.Tasks;
 
     using Windows.Networking.Connectivity;
     using Windows.UI.Core;
@@ -47,27 +48,34 @@
             Dialog = new DialogHandler(Dispatcher);
 
             NetworkInformation.NetworkStatusChanged += this.NetworkInformationNetworkStatusChanged;
+        }
 
-            this.UpdateNetworkInformation();
+        public async Task Initialize()
+        {
+            await this.UpdateNetworkInformation();
         }
 
         private async void NetworkInformationNetworkStatusChanged(object sender)
         {
             await Dialog.ShowMessageAsync("The network status has changed. Network information will be refreshed.");
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, this.UpdateNetworkInformation);
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () => await this.UpdateNetworkInformation());
         }
 
-        private void UpdateNetworkInformation()
+        private async Task UpdateNetworkInformation()
         {
-            ConnectionProfiles =
-                NetworkInformation.GetConnectionProfiles().Select(ConnectionInfo.FromConnectionProfile).ToList();
+            var profiles = NetworkInformation.GetConnectionProfiles();
+            ConnectionProfiles = new List<ConnectionInfo>();
+            foreach (var connectionProfile in profiles)
+            {
+                ConnectionProfiles.Add(await ConnectionInfo.FromConnectionProfile(connectionProfile));
+            }
             PropertyChanged(this, new PropertyChangedEventArgs("ConnectionProfiles"));            
             var internet = NetworkInformation.GetInternetConnectionProfile();
             var profile =
                 internet == null ? null : ConnectionProfiles.FirstOrDefault(p => p.NetworkAdapterId == internet.NetworkAdapter.NetworkAdapterId);
             if (internet != null && profile == null)
             {
-                var internetInfo = ConnectionInfo.FromConnectionProfile(internet);
+                var internetInfo = await ConnectionInfo.FromConnectionProfile(internet);
                 ConnectionProfiles.Add(internetInfo);
                 CurrentConnectionInfo = internetInfo;
                 return;
@@ -139,6 +147,8 @@
                     }
                     connectionInfo.DataPlan = dataPlan; 
                 }
+                connectionInfo.BytesReceivedLastDay = (ulong)random.Next(0, int.MaxValue);
+                connectionInfo.BytesSentLastDay = (ulong)random.Next(0, int.MaxValue);
                 ConnectionProfiles.Add(connectionInfo);
             }
             CurrentConnectionInfo = ConnectionProfiles[random.Next(0, ConnectionProfiles.Count)];
