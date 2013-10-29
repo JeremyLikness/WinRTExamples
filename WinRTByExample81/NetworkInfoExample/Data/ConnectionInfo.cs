@@ -1,6 +1,7 @@
 ﻿namespace NetworkInfoExample.Data
 {
     using System;
+    using System.Threading.Tasks;
 
     using Windows.Networking.Connectivity;
 
@@ -17,6 +18,8 @@
         public string EncryptionType { get; set; }
         public string CostType { get; set; }
         public string Flags { get; set; }
+        public ulong BytesSentLastDay { get; set; }
+        public ulong BytesReceivedLastDay { get; set; }
         public Guid NetworkAdapterId { get; set; }
         public string NetworkType { get; set; }
         public short? SignalBars { get; set; }
@@ -30,7 +33,7 @@
             }
         }
 
-        public static ConnectionInfo FromConnectionProfile(ConnectionProfile profile)
+        public static async Task<ConnectionInfo> FromConnectionProfile(ConnectionProfile profile)
         {
             var connectionInfo = new ConnectionInfo
                                      {
@@ -69,6 +72,20 @@
 
             connectionInfo.DataPlan = DataPlanInfo.FromProfile(profile);
 
+            var usage =
+                await
+                profile.GetNetworkUsageAsync(
+                    DateTimeOffset.Now.AddDays(-1),
+                    DateTimeOffset.Now,
+                    DataUsageGranularity.Total,
+                    new NetworkUsageStates { Roaming = TriStates.DoNotCare, Shared = TriStates.DoNotCare });
+            
+            if (usage != null && usage.Count > 0)
+            {
+                connectionInfo.BytesReceivedLastDay = usage[0].BytesReceived;
+                connectionInfo.BytesSentLastDay = usage[0].BytesSent;
+            }
+            
             return connectionInfo;
         }
     }

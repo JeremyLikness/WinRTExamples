@@ -129,6 +129,7 @@
     </Compile>
     <Compile Include="Common\BitsConverter.cs" />
     <Compile Include="Common\BooleanVisibilityConverter.cs" />
+    <Compile Include="Common\BytesConverter.cs" />
     <Compile Include="Common\DialogHandler.cs" />
     <Compile Include="Common\IDialog.cs" />
     <Compile Include="Common\SignalConverter.cs" />
