@@ -72,7 +72,7 @@
             PropertyChanged(this, new PropertyChangedEventArgs("ConnectionProfiles"));            
             var internet = NetworkInformation.GetInternetConnectionProfile();
             var profile =
-                internet == null ? null : ConnectionProfiles.FirstOrDefault(p => p.NetworkAdapterId == internet.NetworkAdapter.NetworkAdapterId);
+                internet == null ? null : ConnectionProfiles.FirstOrDefault(p => p.Name == internet.ProfileName);
             if (internet != null && profile == null)
             {
                 var internetInfo = await ConnectionInfo.FromConnectionProfile(internet);

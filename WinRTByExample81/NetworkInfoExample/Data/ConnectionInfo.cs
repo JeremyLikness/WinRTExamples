@@ -20,7 +20,7 @@
         public string Flags { get; set; }
         public ulong BytesSentLastDay { get; set; }
         public ulong BytesReceivedLastDay { get; set; }
-        public Guid NetworkAdapterId { get; set; }
+        public Guid? NetworkAdapterId { get; set; }
         public string NetworkType { get; set; }
         public short? SignalBars { get; set; }
         public DataPlanInfo DataPlan { get; set; }
@@ -54,11 +54,12 @@
                 costType.OverDataLimit ? "Over Data Limit" : string.Empty,
                 costType.Roaming ? "Roaming" : string.Empty).Trim();
 
+            connectionInfo.NetworkAdapterId = profile.ServiceProviderGuid;
+
             if (profile.NetworkAdapter != null)
             {
                 connectionInfo.IncomingBitsPerSecond = (long)profile.NetworkAdapter.InboundMaxBitsPerSecond;
                 connectionInfo.OutgoingBitsPerSecond = (long)profile.NetworkAdapter.OutboundMaxBitsPerSecond;
-                connectionInfo.NetworkAdapterId = profile.NetworkAdapter.NetworkAdapterId;
                 connectionInfo.NetworkType = profile.NetworkAdapter.NetworkItem.GetNetworkTypes().ToString();               
             }
 
@@ -71,7 +72,7 @@
             connectionInfo.SignalBars = profile.GetSignalBars();
 
             connectionInfo.DataPlan = DataPlanInfo.FromProfile(profile);
-
+            
             var usage =
                 await
                 profile.GetNetworkUsageAsync(
