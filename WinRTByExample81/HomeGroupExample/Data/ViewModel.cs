@@ -81,7 +81,7 @@
             }
         }
 
-        private bool IsValidUser(object user)
+        private static bool IsValidUser(object user)
         {
             var homeGroupUser = user as HomeGroupUser;
             return homeGroupUser != null && homeGroupUser.IsHomeGroupUser;
