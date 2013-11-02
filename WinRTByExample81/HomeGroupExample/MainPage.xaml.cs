@@ -12,9 +12,7 @@
             this.InitializeComponent();
             Loaded += async (sender, args) =>
                 {
-                    var vm = new ViewModel();
-                    this.DataContext = vm;
-                    await vm.Initialize();
+                    await ((ViewModel)(Resources["ViewModel"])).Initialize();
                 };
         }
     }

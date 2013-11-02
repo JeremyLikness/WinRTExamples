@@ -6,10 +6,11 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:data="using:HomeGroupExample.Data"
-    d:DataContext="{d:DesignInstance Type=data:ViewModel, IsDesignTimeCreatable=True}"
     mc:Ignorable="d">
-
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
+        <data:ViewModel x:Key="ViewModel"/>
+    </Page.Resources>
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" DataContext="{StaticResource ViewModel}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -22,9 +23,20 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Button Content="{Binding UserName}"/>
+                    <Button Content="{Binding UserName}" Command="{Binding Source={StaticResource ViewModel}, Path=PickUser}" CommandParameter="{Binding}"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
+        <GridView Grid.Row="1" ItemsSource="{Binding Images}">
+            <GridView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Width="200" Height="200">
+                        <Image Source="{Binding Image}" Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Rectangle Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Fill="White" Opacity="0.2"></Rectangle>
+                        <TextBlock Text="{Binding Name}" VerticalAlignment="Bottom" HorizontalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" Margin="3"/>
+                    </Grid>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
     </Grid>
 </Page>
