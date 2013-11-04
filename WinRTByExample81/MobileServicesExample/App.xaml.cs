@@ -3,6 +3,7 @@ using System.Diagnostics;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.ApplicationSettings;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Microsoft.WindowsAzure.MobileServices;
@@ -14,6 +15,7 @@ namespace MobileServicesExample
     /// </summary>
     sealed partial class App : Application
     {
+        // TODO - Update the values below with your Mobile Services URL and Application Key values
         // http://go.microsoft.com/fwlink/?LinkId=290986&clcid=0x409
         public static MobileServiceClient WinRTByExampleBookClient =
             new MobileServiceClient(
@@ -65,12 +67,24 @@ namespace MobileServicesExample
 
             if (rootFrame.Content == null)
             {
-                // When the navigation stack isn't restored navigate to the first page,
-                // configuring the new page by passing required information as a navigation
-                // parameter
-                if (!rootFrame.Navigate(typeof(SubscribersPage), e.Arguments))
+                // Check to be sure a "real" Mobile Service URI has been provided
+                var mobileServicesClientUri = WinRTByExampleBookClient.ApplicationUri;
+                if ("MOBILESERVICENAME.azure-mobile.net".Equals(mobileServicesClientUri.Host, StringComparison.OrdinalIgnoreCase))
                 {
-                    throw new Exception("Failed to create initial page");
+                    const String message = "This sample app will not run until it actual Mobile Services URL and App Key values are provided.  "
+                                           + "Please update the WinRTByExampleBookClient value in the app.xaml.cs file, then rebuild and rerun the app.";
+                    var dialog = new MessageDialog(message, "Launch Error");
+                    dialog.ShowAsync();
+                }
+                else
+                {
+                    // When the navigation stack isn't restored navigate to the first page,
+                    // configuring the new page by passing required information as a navigation
+                    // parameter
+                    if (!rootFrame.Navigate(typeof (SubscribersPage), e.Arguments))
+                    {
+                        throw new Exception("Failed to create initial page");
+                    }
                 }
             }
             // Ensure the current window is active
