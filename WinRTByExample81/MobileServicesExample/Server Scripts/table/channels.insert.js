@@ -5,9 +5,11 @@ function insert(item, user, request) {
     /// <param name="item" type="Object"></param>
     /// <param name="user" type="User"></param>
     /// <param name="request" type="Request"></param>
-    
+
+    // Include the userId for the authenticated user
+    item.ownerId = user.userId;
+
     // The following code manages channels and should be retained in this script
-    // var ct = tables.getTable("channels");
     var ct = tables.current;
     ct.where({ userId: user.userId, installationId: item.installationId }).read({
         success: function(results) {
