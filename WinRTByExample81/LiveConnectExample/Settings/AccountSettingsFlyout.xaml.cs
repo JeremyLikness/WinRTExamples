@@ -19,13 +19,13 @@ namespace LiveConnectExample
             
             if (!Windows.ApplicationModel.DesignMode.DesignModeEnabled)
             {
-                UpdateLoginStatus(false);
+                UpdateLoginStatus();
             }
         }
 
-        private async void UpdateLoginStatus(Boolean loginIfDisconnected)
+        private async void UpdateLoginStatus()
         {
-            var connectionResult = await _liveConnectWrapper.UpdateConnectionAsync(loginIfDisconnected);
+            var connectionResult = await _liveConnectWrapper.UpdateConnectionAsync();
             await UpdateControls(connectionResult.SessionStatus, connectionResult.CanLogout);
         }
 
@@ -57,11 +57,13 @@ namespace LiveConnectExample
             SignInText.Text = String.Format("Logged in as {0}", profile.name);
         }
 
-        private void SignInClick(Object sender, RoutedEventArgs e)
+        private async void SignInClick(Object sender, RoutedEventArgs e)
         {
             try
             {
-                UpdateLoginStatus(true);
+                // Show the visual signin
+                var connectionResult = await _liveConnectWrapper.ShowLogin();
+                await UpdateControls(connectionResult.SessionStatus, connectionResult.CanLogout);
             }
             catch (InvalidOperationException ex)
             {

@@ -92,7 +92,7 @@ namespace LiveConnectExample
 
             base.OnNavigatedTo(e);
             _liveConnectWrapper.SessionChanged += OnLiveConnectWrapperSessionChanged;
-            await _liveConnectWrapper.UpdateConnectionAsync(false);
+            await _liveConnectWrapper.UpdateConnectionAsync();
             await UpdateContent();
         }
 
