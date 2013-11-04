@@ -13,15 +13,14 @@ function update(item, user, request) {
         subscriberTable.where({
             id: item.id
         }).read({
-            success: function(items) {
+            success: function (items) {
                 if (items.length === 0) {
                     request.respond(statusCodes.NOT_FOUND, { error: 'No matching item found to update.' });
                 } else {
                     request.execute({
-                        success: function() {
+                        success: function () {
                             if (items[0].ownerId != user.userId) {
-                                notifyOwnerOfChanges(items[0]);
-                                //console.log("Sending a push for item id " + items[0].id + ' and owner ' + items[0].ownerId);
+                                notifyOwner(items[0]);
                             }
                             request.respond();
                         }
@@ -32,14 +31,14 @@ function update(item, user, request) {
     }
 }
 
-function notifyOwnerOfChanges(changedItem) {
+function notifyOwner(changedItem) {
     var channelTable = tables.getTable("channels");
     channelTable.where({ userId: changedItem.ownerId }).read({
         success: function (results) {
             if (results.length > 0) {
                 for (var i = 0; i < results.length; i++) {
-                    var matchingNotificationChannel = results[i];
-                    sendNotifications(matchingNotificationChannel.channelUri, changedItem);
+                    var result = results[i];
+                    sendNotifications(result.channelUri, changedItem);
                 }
             }
         }
@@ -47,12 +46,13 @@ function notifyOwnerOfChanges(changedItem) {
 }
 
 function sendNotifications(uri, changedItem) {
-    console.log("Uri: ", uri);
+    //console.log("Uri: ", uri);
     push.wns.sendToastText01(uri, {
         text1: 'One of your records - ' + changedItem.FirstName + ' ' + changedItem.LastName + ' - has been edited by another user.'
-    }, {
-        success: function (pushResponse) {
-            console.log("Sent push:", pushResponse);
-        }
     });
 }
+
+//, {
+//success: function (pushResponse) {
+//    //console.log("Sent push:", pushResponse);
+//}
