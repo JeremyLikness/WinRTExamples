@@ -7,31 +7,37 @@ namespace LiveConnectExample
 {
     public class LiveConnectWrapper
     {
-        private readonly List<String> _scopes = new List<String> {BasicScope, CalendarsScope, SkydriveScope};
+        private readonly List<String> _scopes = new List<String> { SingleSignonScope, BasicScope, CalendarsScope, SkydriveScope };
 
+        // Basic / Core Scopes
+        private const String SingleSignonScope = "wl.signin";
         private const String BasicScope = "wl.basic";
         //private const String OfflineAccessScope = "wl.offline_access";
-        //private const String SingleSignonScope = "wl.signin";
 
+        // Additional Personal Information
         private const String BirthdayScope = "wl.birthday";
         private const String WorkProfileScope = "wl.work_profile";
         private const String EmailScope = "wl.emails";
         private const String PostalAddressScope = "wl.postal_addresses";
         private const String PhoneNumberScope = "wl.phone_numbers";
 
+        // Additional Contact Content Access
         private const String ContactsBirthday = "wl.contacts_birthday";  //Implies wl.birthday
         private const String ContactsCalendar = "wl.contacts_calendars"; // Implies wl.calendars
         private const String ContactsPhotos = "wl.contacts_photos"; // Implies wl.photos
         private const String ContactsSkydrive = "wl.contacts_skydrive"; // Implies wl.skydrive
 
+        // Calendar Access
         private const String CalendarsScope = "wl.calendars";
         private const String CalendarsUpdateScope = "wl.calendars_update"; // Implies wl.calendars
         private const String CalendarsCreateScope = "wl.events_create";
 
+        // Skydrive Access
         private const String SkydriveScope = "wl.skydrive";
         private const String SkydriveUpdateScope = "wl.skydrive_update"; // Implies wl.skydrive
         private const String SkydrivePhotosScope = "wl.photos";
 
+        // Other
         private const String ShareStatusScope = "wl.share";
         private const String ImapScope = "wl.imap";
 
@@ -66,7 +72,46 @@ namespace LiveConnectExample
             }
         }
 
-        public async Task<ConnectionResult> UpdateConnectionAsync(Boolean loginIfDisconnected)
+        public async Task<ConnectionResult> UpdateConnectionAsync()
+        {
+            var authClient = new LiveAuthClient();
+            var sessionStatus = LiveConnectSessionStatus.Unknown;
+            LiveConnectSession session = null;
+            try
+            {
+                // IMPORTANT!  The app MUST be associated with the store, or a (otherwise unhelpful) NullReferenceException 
+                // will be raised when calling the AuthClient methods.
+                var loginResult = await authClient.InitializeAsync(_scopes);
+                sessionStatus = loginResult.Status;
+                session = loginResult.Session;
+            }
+            catch (NullReferenceException)
+            {
+                // This is basically for the sake of example only, since an actual app obtained through the store will not have
+                // the problem of not having been associated with the Windows Store.
+                AppNotAssociatedWithStoreError(this, EventArgs.Empty);
+                return new ConnectionResult {SessionStatus = LiveConnectSessionStatus.NotConnected, CanLogout = false};
+            }
+            catch (LiveAuthException ex)
+            {
+                // TODO - handle notification/display of error information
+                //throw new InvalidOperationException("An error occurred during initialization.", ex);
+            }
+
+            // Set the current instance session based on the login
+            var currentSession = sessionStatus == LiveConnectSessionStatus.Connected ? session : null;
+            UpdateSession(currentSession);
+
+            var result = new ConnectionResult
+                         {
+                             SessionStatus = sessionStatus,
+                             CanLogout = authClient.CanLogout,
+                         };
+
+            return result;
+        }
+
+        public async Task<ConnectionResult> ShowLogin()
         {
             var authClient = new LiveAuthClient();
             LiveLoginResult loginResult;
@@ -74,10 +119,12 @@ namespace LiveConnectExample
             {
                 // IMPORTANT!  The app MUST be associated with the store, or a (otherwise unhelpful) NullReferenceException 
                 // will be raised when calling the AuthClient methods.
-                loginResult = await authClient.InitializeAsync(_scopes);
+                loginResult = await authClient.LoginAsync(_scopes);
             }
             catch (NullReferenceException)
             {
+                // This is basically for the sake of example only, since an actual app obtained through the store will not have
+                // the probnlem of not having been associated with the Windows Store.
                 AppNotAssociatedWithStoreError(this, EventArgs.Empty);
                 return new ConnectionResult {SessionStatus = LiveConnectSessionStatus.NotConnected, CanLogout = false};
             }
@@ -85,12 +132,7 @@ namespace LiveConnectExample
             {
                 throw new InvalidOperationException("An error occurred during initialization.", ex);
             }
-            var sessionStatus = loginResult.Status;
-            if (sessionStatus != LiveConnectSessionStatus.Connected && loginIfDisconnected)
-            {
-                loginResult = await authClient.LoginAsync(_scopes);
-            }
-            
+
             // Set the current instance session based on the login
             var currentSession = loginResult.Status == LiveConnectSessionStatus.Connected ? loginResult.Session : null;
             UpdateSession(currentSession);
