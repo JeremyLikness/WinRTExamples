@@ -130,12 +130,9 @@ namespace LiveConnectExample
                 var profileItemsList = profileItems.FlattenDynamicItems(String.Empty);
                 DefaultViewModel["AdditionalDetails"] = profileItemsList.Select(x => new { x.Key, x.Value }).ToList();
 
-                _contacts.Clear();
-                _skydriveItems.Clear();
-                _calendars.Clear();
-
                 var myContacts = await _liveConnectWrapper.GetMyContactsAsync();
                 var orderedContacts = myContacts.OrderBy(x => x.last_name).ThenBy(x => x.first_name);
+                _contacts.Clear();
                 foreach (var contact in orderedContacts)
                 {
                     _contacts.Add(contact);
@@ -145,6 +142,7 @@ namespace LiveConnectExample
 
                 var mySkyDriveContents = await _liveConnectWrapper.GetMySkyDriveContentsAsync();
                 var orderedSkyDriveContents = mySkyDriveContents.OrderBy(x => LiveConnectWrapper.SkyDriveItemTypeOrder(x.type)).ThenBy(x => x.name);
+                _skydriveItems.Clear();
                 foreach (var item in orderedSkyDriveContents)
                 {
                     _skydriveItems.Add(item);
@@ -152,6 +150,7 @@ namespace LiveConnectExample
 
                 var myCalendars = await _liveConnectWrapper.GetMyCalendarsAsync();
                 var orderedCalendars = myCalendars.OrderBy(x => x.name);
+                _calendars.Clear(); 
                 foreach (var item in orderedCalendars)
                 {
                     _calendars.Add(item);
