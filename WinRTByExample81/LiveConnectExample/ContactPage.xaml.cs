@@ -141,13 +141,11 @@ namespace LiveConnectExample
                     var pictureUrl = await _liveConnectWrapper.GetUserProfilePictureUrlAsync(contact.user_id, LiveConnectWrapper.PictureSize.Medium);
                     DefaultViewModel["ImageSource"] = pictureUrl;
 
-                    _skydriveItems.Clear();
-                    _calendars.Clear();
-
                     try
                     {
                         var skyDriveContents = await _liveConnectWrapper.GetUserSkyDriveContentsAsync(contact.user_id);
                         var orderedSkyDriveContents = new List<dynamic>(skyDriveContents).OrderBy(x => LiveConnectWrapper.SkyDriveItemTypeOrder(x.type)).ThenBy(x => x.name);
+                        _skydriveItems.Clear(); 
                         foreach (var item in orderedSkyDriveContents)
                         {
                             _skydriveItems.Add(item);
@@ -163,6 +161,7 @@ namespace LiveConnectExample
                     {
                         var calendars = await _liveConnectWrapper.GetUserCalendarsAsync(contact.user_id);
                         var orderedCalendars = new List<dynamic>(calendars).OrderBy(x => x.name);
+                        _calendars.Clear();
                         foreach (var item in orderedCalendars)
                         {
                             _calendars.Add(item);

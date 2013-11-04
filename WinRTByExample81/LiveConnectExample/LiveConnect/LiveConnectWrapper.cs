@@ -20,12 +20,13 @@ namespace LiveConnectExample
         private const String EmailScope = "wl.emails";
         private const String PostalAddressScope = "wl.postal_addresses";
         private const String PhoneNumberScope = "wl.phone_numbers";
+        private const String PhotosScope = "wl.photos";
 
         // Additional Contact Content Access
-        private const String ContactsBirthday = "wl.contacts_birthday";  //Implies wl.birthday
-        private const String ContactsCalendar = "wl.contacts_calendars"; // Implies wl.calendars
-        private const String ContactsPhotos = "wl.contacts_photos"; // Implies wl.photos
-        private const String ContactsSkydrive = "wl.contacts_skydrive"; // Implies wl.skydrive
+        private const String ContactsBirthdayScope = "wl.contacts_birthday";  //Implies wl.birthday
+        private const String ContactsCalendarScope = "wl.contacts_calendars"; // Implies wl.calendars
+        private const String ContactsPhotosScope = "wl.contacts_photos"; // Implies wl.photos
+        private const String ContactsSkydriveScope = "wl.contacts_skydrive"; // Implies wl.skydrive
 
         // Calendar Access
         private const String CalendarsScope = "wl.calendars";
@@ -35,7 +36,6 @@ namespace LiveConnectExample
         // Skydrive Access
         private const String SkydriveScope = "wl.skydrive";
         private const String SkydriveUpdateScope = "wl.skydrive_update"; // Implies wl.skydrive
-        private const String SkydrivePhotosScope = "wl.photos";
 
         // Other
         private const String ShareStatusScope = "wl.share";
@@ -50,10 +50,11 @@ namespace LiveConnectExample
             _scopes.Add(EmailScope);
             _scopes.Add(PostalAddressScope);
             _scopes.Add(PhoneNumberScope);
+            _scopes.Add(PhotosScope);
 
-            _scopes.Add(ContactsBirthday);
-            _scopes.Add(ContactsSkydrive);
-            _scopes.Add(ContactsCalendar);
+            _scopes.Add(ContactsBirthdayScope);
+            _scopes.Add(ContactsSkydriveScope);
+            _scopes.Add(ContactsCalendarScope);
         }
         
         public event EventHandler SessionChanged = delegate { };
@@ -217,7 +218,7 @@ namespace LiveConnectExample
         {
             // requires wl.basic scope
             var client = new LiveConnectClient(_session);
-            var operationResult = await client.GetAsync("/me/contacts");
+            var operationResult = await client.GetAsync("me/contacts");
             dynamic result = operationResult.Result;
             var resultList = new List<dynamic>(result.data);
             return resultList;
@@ -233,7 +234,7 @@ namespace LiveConnectExample
         {
             // requires wl.contacts_skydrive scope
             var client = new LiveConnectClient(_session);
-            var path = String.Format("/{0}/skydrive/files", userIdentifier);
+            var path = String.Format("{0}/skydrive/files", userIdentifier);
             var operationResult = await client.GetAsync(path);
             dynamic result = operationResult.Result;
             var resultList = new List<dynamic>(result.data);
@@ -251,7 +252,7 @@ namespace LiveConnectExample
         {
             // requires wl.contacts_calendars scope
             var client = new LiveConnectClient(_session);
-            var path = String.Format("/{0}/calendars", userIdentifier);
+            var path = String.Format("{0}/calendars", userIdentifier);
             var operationResult = await client.GetAsync(path);
             dynamic result = operationResult.Result;
             var resultList = new List<dynamic>(result.data);
@@ -262,7 +263,7 @@ namespace LiveConnectExample
         {
             // requires wl.basic scope
             var client = new LiveConnectClient(_session);
-            var path = String.Format("/{0}", contactId);
+            var path = String.Format("{0}", contactId);
             var operationResult = await client.GetAsync(path);
             dynamic result = operationResult.Result;
             return result;
