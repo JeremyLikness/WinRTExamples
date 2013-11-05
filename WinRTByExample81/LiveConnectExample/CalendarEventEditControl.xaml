@@ -1,0 +1,43 @@
+﻿<UserControl
+    x:Class="LiveConnectExample.CalendarEventEditControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="180"
+    d:DesignWidth="400"
+    >
+
+    <Grid>
+        <Grid.Resources>
+            <Style TargetType="TextBlock" BasedOn="{StaticResource BodyTextBlockStyle}">
+                <Setter Property="Margin" Value="0, 0, 10, 0"></Setter>
+            </Style>
+            <Style TargetType="TextBox">
+                <Setter Property="Margin" Value="0, 0, 10, 10"></Setter>
+            </Style>
+            <Style TargetType="RadioButton">
+                <Setter Property="Margin" Value="0, 0, 10, 10"></Setter>
+            </Style>
+        </Grid.Resources>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Name: " />
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}"/>
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Start: " />
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding StartTime, Mode=TwoWay}"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="End: " />
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding EndTime, Mode=TwoWay}"/>
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Location: " />
+        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Location, Mode=TwoWay}"/>
+    </Grid>
+</UserControl>

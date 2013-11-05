@@ -23,7 +23,6 @@ namespace LiveConnectExample
 
         private String _contactId;
         private readonly ObservableCollection<dynamic> _skydriveItems = new ObservableCollection<dynamic>();
-        private readonly ObservableCollection<dynamic> _calendars = new ObservableCollection<dynamic>();
 
         /// <summary>
         /// This can be changed to a strongly typed view model.
@@ -46,6 +45,8 @@ namespace LiveConnectExample
         public ContactPage()
         {
             InitializeComponent();
+
+            DefaultViewModel["RefreshCommand"] = new RelayCommand(Refresh);
 
             _liveConnectWrapper = ((App)Application.Current).LiveConnectWrapper;
 
@@ -100,7 +101,6 @@ namespace LiveConnectExample
             DefaultViewModel["IsConnected"] = _liveConnectWrapper.IsSessionAvailable;
             DefaultViewModel["ImageSource"] = new Uri("ms-appx:///Assets/Profile.png");
             DefaultViewModel["SkydriveItems"] = _skydriveItems;
-            DefaultViewModel["Calendars"] = _calendars;
 
             _liveConnectWrapper.SessionChanged += OnLiveConnectWrapperSessionChanged;
             await UpdateContent();
@@ -156,24 +156,15 @@ namespace LiveConnectExample
                     {
                         // TODO - Display error information in the UI (likely a scopes issue)
                     }
-
-                    try
-                    {
-                        var calendars = await _liveConnectWrapper.GetUserCalendarsAsync(contact.user_id);
-                        var orderedCalendars = new List<dynamic>(calendars).OrderBy(x => x.name);
-                        _calendars.Clear();
-                        foreach (var item in orderedCalendars)
-                        {
-                            _calendars.Add(item);
-                        }
-
-                    }
-                    catch (LiveConnectException)
-                    {
-                        // TODO - Display error information in the UI (likely a scopes issue)
-                    }
                 }
             }
         }
+
+        private async void Refresh()
+        {
+            await UpdateContent();
+        }
+
+
     }
 }

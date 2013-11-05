@@ -146,8 +146,8 @@
                             <DataTemplate>
                                 <Grid Margin="6">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="60"/>
+                                        <ColumnDefinition Width="190"/>
                                     </Grid.ColumnDefinitions>
                                     <Border Background="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}" Width="60" Height="60">
                                         <Image Source="{Binding Converter={StaticResource SkyDriveItemToIconUriConverter}}" Stretch="UniformToFill" AutomationProperties.Name="{Binding Title}"/>
@@ -181,7 +181,9 @@
                               AutomationProperties.Name="Items"
                               TabIndex="1"
                               SelectionMode="None"
-                              IsSwipeEnabled="false">
+                              IsSwipeEnabled="false"
+                              IsItemClickEnabled="True"
+                              ItemClick="HandleCalendarClicked">
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <WrapGrid Orientation="Horizontal" MaximumRowsOrColumns="3" ItemHeight="250" ItemWidth="250"/>
@@ -213,4 +215,27 @@
             </HubSection>
         </Hub>
     </Grid>
+
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton Icon="Refresh" Label="Refresh" Command="{Binding RefreshItemsCommand}"/>
+            <AppBarSeparator/>
+            <AppBarButton Icon ="AddFriend" Label="Add Contact" Command="{Binding AddContactCommand}">
+                <AppBarButton.Flyout>
+                    <Flyout>
+                        <Grid Width="320" Margin="20,10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <liveConnectExample:ContactEditControl Grid.Row="0" DataContext="{Binding ContactBeingEdited}" />
+                            <Grid Grid.Row="1">
+                                <Button Content="Save" HorizontalAlignment="Center" Command="{Binding SaveContactBeingAddedCommand}"/>
+                            </Grid>
+                        </Grid>
+                    </Flyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
+        </CommandBar>
+    </Page.BottomAppBar>
 </Page>

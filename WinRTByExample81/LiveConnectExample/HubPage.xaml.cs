@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.UI.Popups;
 using LiveConnectExample.Common;
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-
-// The Hub Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=321224
+using Microsoft.Live;
 
 namespace LiveConnectExample
 {
@@ -47,6 +47,10 @@ namespace LiveConnectExample
         public HubPage()
         {
             InitializeComponent();
+
+            DefaultViewModel["RefreshItemsCommand"] = new RelayCommand(RefreshItems);
+            DefaultViewModel["AddContactCommand"]= new RelayCommand(AddContact);
+            DefaultViewModel["SaveContactBeingAddedCommand"] = new RelayCommand(SaveContactBeingEdited);
 
             _liveConnectWrapper = ((App) Application.Current).LiveConnectWrapper;
 
@@ -165,6 +169,59 @@ namespace LiveConnectExample
             var contactId = ((dynamic)e.ClickedItem).id;
             Frame.Navigate(typeof(ContactPage), contactId);
         }
+
+        private void HandleCalendarClicked(Object sender, ItemClickEventArgs e)
+        {
+            // Navigate to the appropriate destination page, configuring the new page
+            // by passing required information as a navigation parameter
+            var calendarId = ((dynamic)e.ClickedItem).id;
+            Frame.Navigate(typeof(CalendarPage), calendarId);
+        }
+        
+        private async void RefreshItems()
+        {
+            await UpdateContent();
+        }
+
+        private void AddContact()
+        {
+            DefaultViewModel["ContactBeingEdited"] = new Contact();
+        }
+
+        private async void SaveContactBeingEdited()
+        {
+            var editedContact = (Contact)DefaultViewModel["ContactBeingEdited"];
+
+            var newContact = new Dictionary<String, Object>
+                                 {
+                                     {"first_name", editedContact.FirstName},
+                                     {"last_name",  editedContact.LastName},
+                                     {"emails", new Dictionary<String, Object>
+                                              {
+                                                  {"preferred", editedContact.PreferredEmail}
+                                              }}
+                                 };
+            try
+            {
+                var savedContact = await _liveConnectWrapper.AddContactAsync(newContact);
+                if (savedContact != null)
+                {
+                    _contacts.Add(savedContact);
+                }
+            }
+            catch (LiveConnectException ex)
+            {
+                var dialog = new MessageDialog(ex.Message, "Save Contact Error");
+                dialog.ShowAsync();
+            }
+        }
+    }
+
+    internal class Contact
+    {
+        public String FirstName { get; set; }
+        public String LastName { get; set; }
+        public String PreferredEmail { get; set; }
     }
 
     public static partial class Extensions
