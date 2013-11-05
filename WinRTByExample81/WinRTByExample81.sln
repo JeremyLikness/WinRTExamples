@@ -130,9 +130,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveConnectExample", "LiveC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MobileServicesExample", "MobileServicesExample\MobileServicesExample.csproj", "{01F40C2E-F5CE-4C56-8827-C430890CF5DC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvancedHttpExample", "AdvancedHttpExample\AdvancedHttpExample.csproj", "{F7BF9D10-E670-4A8F-8C0E-BCE9B36A58BE}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 47
+		SccNumberOfProjects = 48
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs04
 		SccLocalPath0 = .
@@ -320,6 +322,10 @@ Global
 		SccProjectTopLevelParentUniqueName46 = WinRTByExample81.sln
 		SccProjectName46 = MobileServicesExample
 		SccLocalPath46 = MobileServicesExample
+		SccProjectUniqueName47 = AdvancedHttpExample\\AdvancedHttpExample.csproj
+		SccProjectTopLevelParentUniqueName47 = WinRTByExample81.sln
+		SccProjectName47 = AdvancedHttpExample
+		SccLocalPath47 = AdvancedHttpExample
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1366,6 +1372,30 @@ Global
 		{01F40C2E-F5CE-4C56-8827-C430890CF5DC}.Release|x86.ActiveCfg = Release|x86
 		{01F40C2E-F5CE-4C56-8827-C430890CF5DC}.Release|x86.Build.0 = Release|x86
 		{01F40C2E-F5CE-4C56-8827-C430890CF5DC}.Release|x86.Deploy.0 = Release|x86
+		{F7BF9D10-E670-4A8F-8C0E-BCE9B36A58BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7BF9D10-E670-4A8F-8C0E-BCE9B36A58BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7BF9D10-E670-4A8F-8C0E-BCE9B36A58BE}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{F7BF9D10-E670-4A8F-8C0E-BCE9B36A58BE}.Debug|ARM.ActiveCfg = Debug|ARM
+		{F7BF9D10-E670-4A8F-8C0E-BCE9B36A58BE}.Debug|ARM.Build.0 = Debug|ARM
+		{F7BF9D10-E670-4A8F-8C0E-BCE9B36A58BE}.Debug|ARM.Deploy.0 = Debug|ARM
+		{F7BF9D10-E670-4A8F-8C0E-BCE9B36A58BE}.Debug|x64.ActiveCfg = Debug|x64
+		{F7BF9D10-E670-4A8F-8C0E-BCE9B36A58BE}.Debug|x64.Build.0 = Debug|x64
+		{F7BF9D10-E670-4A8F-8C0E-BCE9B36A58BE}.Debug|x64.Deploy.0 = Debug|x64
+		{F7BF9D10-E670-4A8F-8C0E-BCE9B36A58BE}.Debug|x86.ActiveCfg = Debug|x86
+		{F7BF9D10-E670-4A8F-8C0E-BCE9B36A58BE}.Debug|x86.Build.0 = Debug|x86
+		{F7BF9D10-E670-4A8F-8C0E-BCE9B36A58BE}.Debug|x86.Deploy.0 = Debug|x86
+		{F7BF9D10-E670-4A8F-8C0E-BCE9B36A58BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7BF9D10-E670-4A8F-8C0E-BCE9B36A58BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7BF9D10-E670-4A8F-8C0E-BCE9B36A58BE}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{F7BF9D10-E670-4A8F-8C0E-BCE9B36A58BE}.Release|ARM.ActiveCfg = Release|ARM
+		{F7BF9D10-E670-4A8F-8C0E-BCE9B36A58BE}.Release|ARM.Build.0 = Release|ARM
+		{F7BF9D10-E670-4A8F-8C0E-BCE9B36A58BE}.Release|ARM.Deploy.0 = Release|ARM
+		{F7BF9D10-E670-4A8F-8C0E-BCE9B36A58BE}.Release|x64.ActiveCfg = Release|x64
+		{F7BF9D10-E670-4A8F-8C0E-BCE9B36A58BE}.Release|x64.Build.0 = Release|x64
+		{F7BF9D10-E670-4A8F-8C0E-BCE9B36A58BE}.Release|x64.Deploy.0 = Release|x64
+		{F7BF9D10-E670-4A8F-8C0E-BCE9B36A58BE}.Release|x86.ActiveCfg = Release|x86
+		{F7BF9D10-E670-4A8F-8C0E-BCE9B36A58BE}.Release|x86.Build.0 = Release|x86
+		{F7BF9D10-E670-4A8F-8C0E-BCE9B36A58BE}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1413,6 +1443,7 @@ Global
 		{2844B475-EF52-4F7B-A952-BA2CD727E181} = {09F7AC30-5A77-4CCC-90F4-D80FCDCA9467}
 		{CF5F85D6-E97D-4F6A-A2F4-37B96F8A1534} = {C31D8751-720C-40F8-A39B-2770DAA6E1CF}
 		{A3D54F08-9918-41AA-9731-472D21E58333} = {C31D8751-720C-40F8-A39B-2770DAA6E1CF}
+		{F7BF9D10-E670-4A8F-8C0E-BCE9B36A58BE} = {C31D8751-720C-40F8-A39B-2770DAA6E1CF}
 		{78B3DBEA-C3D8-420F-B6F2-C1A37912B350} = {9942C54A-55BA-4C46-80AB-1BBF4A3ED08A}
 		{39D24AC7-36D0-4E14-A104-0C4BF44EEC8A} = {9942C54A-55BA-4C46-80AB-1BBF4A3ED08A}
 		{37DD3DDA-D4B8-4957-ACA6-1EAA57CCD183} = {D55B3603-79FD-4C48-B0FE-D8303B66D1E8}
