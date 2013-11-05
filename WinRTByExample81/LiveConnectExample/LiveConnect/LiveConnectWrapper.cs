@@ -27,11 +27,12 @@ namespace LiveConnectExample
         private const String ContactsCalendarScope = "wl.contacts_calendars"; // Implies wl.calendars
         private const String ContactsPhotosScope = "wl.contacts_photos"; // Implies wl.photos
         private const String ContactsSkydriveScope = "wl.contacts_skydrive"; // Implies wl.skydrive
+        private const String ContactsCreateScope = "wl.contacts_create"; // Implies wl.skydrive
 
         // Calendar Access
         private const String CalendarsScope = "wl.calendars";
         private const String CalendarsUpdateScope = "wl.calendars_update"; // Implies wl.calendars
-        private const String CalendarsCreateScope = "wl.events_create";
+        private const String CalendarsEventCreateScope = "wl.events_create";
 
         // Skydrive Access
         private const String SkydriveScope = "wl.skydrive";
@@ -55,6 +56,10 @@ namespace LiveConnectExample
             _scopes.Add(ContactsBirthdayScope);
             _scopes.Add(ContactsSkydriveScope);
             _scopes.Add(ContactsCalendarScope);
+            _scopes.Add(ContactsCreateScope);
+
+            _scopes.Add(CalendarsUpdateScope);
+            _scopes.Add(CalendarsEventCreateScope);
         }
         
         public event EventHandler SessionChanged = delegate { };
@@ -267,6 +272,64 @@ namespace LiveConnectExample
             var operationResult = await client.GetAsync(path);
             dynamic result = operationResult.Result;
             return result;
+        }
+
+        public async Task<dynamic> AddContactAsync(IDictionary<String, Object> newContact)
+        {
+            // requires wl.contacts_create scope
+            if (newContact == null) throw new ArgumentNullException("newContact");
+            var client = new LiveConnectClient(_session);
+            var operationResult = await client.PostAsync("me/contacts", newContact);
+            dynamic result = operationResult.Result;
+            return result;
+        }
+
+        public async Task<dynamic> GetCalendarAsync(String calendarId)
+        {
+            // requires wl.calendars scope
+            var client = new LiveConnectClient(_session);
+            var path = String.Format("{0}", calendarId);
+            var operationResult = await client.GetAsync(path);
+            dynamic result = operationResult.Result;
+            return result;
+        }
+
+        public async Task<IEnumerable<dynamic>> GetCalendarEventsAsync(String calendarId)
+        {
+            // requires wl.contacts_calendars scope
+            var client = new LiveConnectClient(_session);
+            var path = String.Format("{0}/events", calendarId);
+            var operationResult = await client.GetAsync(path);
+            dynamic result = operationResult.Result;
+            var resultList = new List<dynamic>(result.data);
+            return resultList;
+        }
+
+        public async Task<dynamic> AddCalendarEventAsync(Dictionary<String, Object> newEvent)
+        {
+            // requires wl.calendars_update and wl.events_create scopes
+            if (newEvent == null) throw new ArgumentNullException("newEvent");
+            var client = new LiveConnectClient(_session);
+            var operationResult = await client.PostAsync("me/events", newEvent);
+            dynamic result = operationResult.Result;
+            return result;
+        }
+
+        public async Task<dynamic> UpdateCalendarEventAsync(String eventId, Dictionary<String, Object> updatedValues)
+        {
+            // requires wl.calendars_update 
+            if (updatedValues == null) throw new ArgumentNullException("updatedValues");
+            var client = new LiveConnectClient(_session);
+            var operationResult = await client.PutAsync(eventId, updatedValues);
+            dynamic result = operationResult.Result;
+            return result;
+        }
+
+        public async Task DeleteCalendarEventAsync(String eventId)
+        {
+            // requires wl.calendars_update 
+            var client = new LiveConnectClient(_session);
+            await client.DeleteAsync(eventId);
         }
 
         public static Int32 SkyDriveItemTypeOrder(String itemType)
