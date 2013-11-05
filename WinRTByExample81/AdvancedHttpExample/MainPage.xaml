@@ -1,0 +1,38 @@
+﻿<Page
+    x:Class="AdvancedHttpExample.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AdvancedHttpExample"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:data="using:AdvancedHttpExample.Data"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.DataContext>
+            <data:ViewModel/>
+        </Grid.DataContext>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="URL:" Style="{StaticResource BaseTextBlockStyle}"/>
+            <TextBox Text="{Binding Url, Mode=TwoWay}" Width="400" Margin="10 0 0 0"/>
+            <Button Command="{Binding LoadUrlCommand}" Content="GO"/>
+            <Button Command="{Binding CancelUrlCommand}" Content="Cancel"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="1">
+            <TextBlock Text="Sent:" Style="{StaticResource BaseTextBlockStyle}"/>
+            <TextBlock Text="{Binding BytesSent}" Style="{StaticResource BaseTextBlockStyle}" Margin="10 0 0 0"/>
+            <TextBlock Text="/" Style="{StaticResource BaseTextBlockStyle}"/>
+            <TextBlock Text="{Binding BytesToSend}" Style="{StaticResource BaseTextBlockStyle}"/>
+            <TextBlock Text="Received:" Style="{StaticResource BaseTextBlockStyle}" Margin="20 0 0 0"/>
+            <TextBlock Text="{Binding BytesReceived}" Style="{StaticResource BaseTextBlockStyle}" Margin="10 0 0 0"/>
+            <TextBlock Text="/" Style="{StaticResource BaseTextBlockStyle}"/>
+            <TextBlock Text="{Binding BytesToReceive}" Style="{StaticResource BaseTextBlockStyle}"/>
+        </StackPanel>
+        <TextBlock Text="{Binding Content}" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2" Margin="0 20 0 0"/>
+    </Grid>
+</Page>
