@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -145,7 +144,7 @@ namespace LiveConnectExample
                 //var users = _contacts.Where(x => x.user_id != null).ToList();
 
                 var mySkyDriveContents = await _liveConnectWrapper.GetMySkyDriveContentsAsync();
-                var orderedSkyDriveContents = mySkyDriveContents.OrderBy(x => LiveConnectWrapper.SkyDriveItemTypeOrder(x.type)).ThenBy(x => x.name);
+                var orderedSkyDriveContents = mySkyDriveContents.OrderBy(x => ((String)x.type).GetSkyDriveItemTypeOrder()).ThenBy(x => x.name);
                 _skydriveItems.Clear();
                 foreach (var item in orderedSkyDriveContents)
                 {
@@ -222,49 +221,5 @@ namespace LiveConnectExample
         public String FirstName { get; set; }
         public String LastName { get; set; }
         public String PreferredEmail { get; set; }
-    }
-
-    public static partial class Extensions
-    {
-        public static IEnumerable<KeyValuePair<String, String>> FlattenDynamicItems(this IDictionary<String, Object> profileItems, String valuePreamble)
-        {
-            if (profileItems == null) throw new ArgumentNullException("profileItems");
-
-            var profileItemsList = new List<KeyValuePair<String, String>>();
-            foreach (var profileItem in profileItems)
-            {
-                var key = String.IsNullOrWhiteSpace(valuePreamble) ? profileItem.Key : String.Format("{0} - {1}", valuePreamble, profileItem.Key);
-
-                if (profileItem.Value is IDictionary<String, Object>)
-                {
-                    var innerProfileItems = new Dictionary<String, Object>(profileItem.Value as IDictionary<String, Object>);
-                    var innerItems = FlattenDynamicItems(innerProfileItems, key);
-                    profileItemsList.AddRange(innerItems);
-                }
-                else if (profileItem.Value is IEnumerable && !(profileItem.Value is String))
-                {
-                    var enumerableProfileItemValue = profileItem.Value as IEnumerable;
-                    foreach (var innerItem in enumerableProfileItemValue)
-                    {
-                        if (innerItem is IDictionary<String, Object>)
-                        {
-                            var innerProfileItems = new Dictionary<String, Object>(innerItem as IDictionary<String, Object>);
-                            var innerItems = FlattenDynamicItems(innerProfileItems, key);
-                            profileItemsList.AddRange(innerItems);
-                        }
-                        else
-                        {
-                            profileItemsList.Add(new KeyValuePair<String, String>(key,
-                                (innerItem ?? "null").ToString()));
-                        }
-                    }
-                }
-                else
-                {
-                    profileItemsList.Add(new KeyValuePair<String, String>(key, (profileItem.Value ?? "null").ToString()));
-                }
-            }
-            return profileItemsList;
-        }
     }
 }

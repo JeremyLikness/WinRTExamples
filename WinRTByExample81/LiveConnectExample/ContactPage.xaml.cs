@@ -41,7 +41,9 @@ namespace LiveConnectExample
             get { return _navigationHelper; }
         }
 
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ContactPage"/> class.
+        /// </summary>
         public ContactPage()
         {
             InitializeComponent();
@@ -144,7 +146,7 @@ namespace LiveConnectExample
                     try
                     {
                         var skyDriveContents = await _liveConnectWrapper.GetUserSkyDriveContentsAsync(contact.user_id);
-                        var orderedSkyDriveContents = new List<dynamic>(skyDriveContents).OrderBy(x => LiveConnectWrapper.SkyDriveItemTypeOrder(x.type)).ThenBy(x => x.name);
+                        var orderedSkyDriveContents = new List<dynamic>(skyDriveContents).OrderBy(x => ((String)x.type).GetSkyDriveItemTypeOrder()).ThenBy(x => x.name);
                         _skydriveItems.Clear(); 
                         foreach (var item in orderedSkyDriveContents)
                         {
@@ -164,7 +166,5 @@ namespace LiveConnectExample
         {
             await UpdateContent();
         }
-
-
     }
 }
