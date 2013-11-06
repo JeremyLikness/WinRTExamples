@@ -8,6 +8,30 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Grid.Row="0">
+            <TextBlock Text="Enter Message:" Style="{StaticResource BaseTextBlockStyle}"/>
+            <TextBox x:Name="Text" VerticalAlignment="Top" Width="400" Margin="10 0 0 0"/>
+            <Button Content="SEND" VerticalAlignment="Top" Click="ButtonBase_OnClick" Margin="10 0 0 0"/>            
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="1">
+            <TextBlock Text="Status:" Style="{StaticResource BaseTextBlockStyle}"/>
+            <TextBlock x:Name="Status" Style="{StaticResource BaseTextBlockStyle}" FontWeight="Bold" Margin="10 0 0 0"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="2">
+            <TextBlock Text="Response:" Style="{StaticResource BaseTextBlockStyle}"/>
+            <TextBlock x:Name="Response" Style="{StaticResource BaseTextBlockStyle}" FontWeight="Bold" Margin="10 0 0 0"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="3">
+            <Button Content="Start" Click="Start_OnClick" x:Name="Start"/>
+            <Button Content="Stop" Click="End_OnClick" x:Name="End" IsEnabled="False"/>
+        </StackPanel>
+        <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="Primes" Grid.Row="4" TextWrapping="Wrap"/>
     </Grid>
 </Page>
