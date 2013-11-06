@@ -23,7 +23,7 @@ namespace LiveConnectExample
         private readonly LiveConnectWrapper _liveConnectWrapper;
 
         private String _calendarId;
-        private Boolean _isDefaultCalendar;
+        private Boolean _canUpdateCalendarEvents;
         private readonly ObservableCollection<dynamic> _eventItems = new ObservableCollection<dynamic>();
 
         /// <summary>
@@ -138,8 +138,9 @@ namespace LiveConnectExample
                 var calendar = await _liveConnectWrapper.GetCalendarAsync(_calendarId);
                 DefaultViewModel["Calendar"] = calendar;
 
-                        
-                _isDefaultCalendar = calendar.is_default;
+                var eventInteractionPermissions = new List<String> {"read_write", "co_owner", "owner"};
+                var calendarPermissions = calendar.permissions.ToString();
+                _canUpdateCalendarEvents = eventInteractionPermissions.Contains(calendarPermissions);
 
                 var contactItems = new Dictionary<String, Object>(calendar as IDictionary<String, Object>);
                 contactItems.Remove("id");
@@ -148,7 +149,7 @@ namespace LiveConnectExample
                 var profileItemsList = contactItems.FlattenDynamicItems(String.Empty);
                 DefaultViewModel["AdditionalDetails"] = profileItemsList.Select(x => new { x.Key, x.Value }).ToList();
 
-                var calendarEvents = await _liveConnectWrapper.GetCalendarEventsAsync(_calendarId);
+                var calendarEvents = await _liveConnectWrapper.GetCalendarEventsAsync(_calendarId, DateTimeOffset.Now, DateTimeOffset.Now + TimeSpan.FromDays(60));
                 var orderedCalendarEvents = new List<dynamic>(calendarEvents).OrderBy(x => x.start_time);
                 _eventItems.Clear();
                 foreach (var item in orderedCalendarEvents)
@@ -165,7 +166,7 @@ namespace LiveConnectExample
 
         private Boolean CanRemove()
         {
-            return _isDefaultCalendar && DefaultViewModel["SelectedEventItem"] != null;
+            return _canUpdateCalendarEvents && DefaultViewModel["SelectedEventItem"] != null;
         }
 
         private async void Remove()
@@ -196,7 +197,7 @@ namespace LiveConnectExample
 
         private Boolean CanEdit()
         {
-            return _isDefaultCalendar && DefaultViewModel["SelectedEventItem"] != null;
+            return _canUpdateCalendarEvents && DefaultViewModel["SelectedEventItem"] != null;
         }
 
         private void Edit()
@@ -220,8 +221,8 @@ namespace LiveConnectExample
             dynamic itemToUpdate = DefaultViewModel["SelectedEventItem"];
             var editedEvent = (CalendarEvent)DefaultViewModel["EventBeingEdited"];
 
-            var startTimeDate = DateTimeOffset.Parse(editedEvent.StartTime).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'sszzz");
-            var endTimeDate = DateTimeOffset.Parse(editedEvent.EndTime).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'sszzz");
+            var startTimeDate = DateTimeOffset.Parse(editedEvent.StartTime).ToString(LiveConnectWrapper.DateTimeFormatString);
+            var endTimeDate = DateTimeOffset.Parse(editedEvent.EndTime).ToString(LiveConnectWrapper.DateTimeFormatString);
 
             var updatedValues = new Dictionary<String, Object>
                                  {
@@ -247,7 +248,7 @@ namespace LiveConnectExample
 
         private Boolean CanAdd()
         {
-            return _isDefaultCalendar;
+            return _canUpdateCalendarEvents;
         }
 
         private void Add()
@@ -265,8 +266,8 @@ namespace LiveConnectExample
         {
             var addedEvent = (CalendarEvent)DefaultViewModel["EventBeingAdded"];
 
-            var startTimeDate = DateTimeOffset.Parse(addedEvent.StartTime).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'sszzz");
-            var endTimeDate = DateTimeOffset.Parse(addedEvent.EndTime).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'sszzz");
+            var startTimeDate = DateTimeOffset.Parse(addedEvent.StartTime).ToString(LiveConnectWrapper.DateTimeFormatString);
+            var endTimeDate = DateTimeOffset.Parse(addedEvent.EndTime).ToString(LiveConnectWrapper.DateTimeFormatString);
 
             var updatedValues = new Dictionary<String, Object>
                                 {
@@ -282,7 +283,7 @@ namespace LiveConnectExample
             
             try
             {
-                var savedEvent = await _liveConnectWrapper.AddCalendarEventAsync(updatedValues);
+                var savedEvent = await _liveConnectWrapper.AddCalendarEventAsync(_calendarId, updatedValues);
                 if (savedEvent != null)
                 {
                     _eventItems.Add(savedEvent);

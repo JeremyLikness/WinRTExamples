@@ -128,6 +128,39 @@
                 </DataTemplate>
             </HubSection>
 
+            <HubSection Header="Calendars" Visibility="{Binding IsConnected, Converter={StaticResource IfTrueThenVisible}}">
+                <DataTemplate>
+                    <ListView x:Name="CalendarListing"
+                              ItemsSource="{Binding ElementName=PageRoot, Path=DataContext.Calendars}"
+                              AutomationProperties.AutomationId="CalendarListing"
+                              AutomationProperties.Name="Items"
+                              TabIndex="1"
+                              SelectionMode="None"
+                              IsSwipeEnabled="false"
+                              IsItemClickEnabled="True"
+                              ItemClick="HandleCalendarClicked">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapGrid Orientation="Horizontal" MaximumRowsOrColumns="3" ItemHeight="250" ItemWidth="250"/>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid HorizontalAlignment="Left" Width="250" Height="250">
+                                    <Border Background="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}">
+                                        <Image Stretch="UniformToFill" AutomationProperties.Name="{Binding name}" Source="Assets/Calendar.png"/>
+                                    </Border>
+                                    <StackPanel VerticalAlignment="Bottom" Background="{ThemeResource ListViewItemOverlayBackgroundThemeBrush}">
+                                        <TextBlock Text="{Binding name}" Foreground="{ThemeResource ListViewItemOverlayForegroundThemeBrush}" Style="{StaticResource BaseTextBlockStyle}" Height="60" Margin="15,0,15,0" FontWeight="SemiBold"/>
+                                        <TextBlock Text="{Binding id}" Foreground="{ThemeResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="NoWrap" Margin="15,0,15,10" FontSize="12"/>
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </DataTemplate>
+            </HubSection>
+            
             <HubSection Header="Skydrive" Visibility="{Binding IsConnected, Converter={StaticResource IfTrueThenVisible}}">
                 <DataTemplate>
                     <ListView x:Name="SkydriveListing"
@@ -173,42 +206,9 @@
                 </DataTemplate>
             </HubSection>
 
-            <HubSection Header="Calendars" Visibility="{Binding IsConnected, Converter={StaticResource IfTrueThenVisible}}">
+            <HubSection Visibility="{Binding IsConnected, Converter={StaticResource IfFalseThenVisible}}" MaxWidth="600">
                 <DataTemplate>
-                    <ListView x:Name="CalendarListing"
-                              ItemsSource="{Binding ElementName=PageRoot, Path=DataContext.Calendars}"
-                              AutomationProperties.AutomationId="CalendarListing"
-                              AutomationProperties.Name="Items"
-                              TabIndex="1"
-                              SelectionMode="None"
-                              IsSwipeEnabled="false"
-                              IsItemClickEnabled="True"
-                              ItemClick="HandleCalendarClicked">
-                        <ListView.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapGrid Orientation="Horizontal" MaximumRowsOrColumns="3" ItemHeight="250" ItemWidth="250"/>
-                            </ItemsPanelTemplate>
-                        </ListView.ItemsPanel>
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <Grid HorizontalAlignment="Left" Width="250" Height="250">
-                                    <Border Background="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}">
-                                        <Image Stretch="UniformToFill" AutomationProperties.Name="{Binding name}" Source="Assets/Calendar.png"/>
-                                    </Border>
-                                    <StackPanel VerticalAlignment="Bottom" Background="{ThemeResource ListViewItemOverlayBackgroundThemeBrush}">
-                                        <TextBlock Text="{Binding name}" Foreground="{ThemeResource ListViewItemOverlayForegroundThemeBrush}" Style="{StaticResource BaseTextBlockStyle}" Height="60" Margin="15,0,15,0" FontWeight="SemiBold"/>
-                                        <TextBlock Text="{Binding id}" Foreground="{ThemeResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="NoWrap" Margin="15,0,15,10" FontSize="12"/>
-                                    </StackPanel>
-                                </Grid>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </DataTemplate>
-            </HubSection>
-
-            <HubSection Visibility="{Binding IsConnected, Converter={StaticResource IfFalseThenVisible}}">
-                <DataTemplate>
-                    <TextBlock>
+                    <TextBlock TextWrapping="Wrap">
                         The current user is not currenlty signed in to use Live from within this application.  It could also be the case that Scopes were changed so a new sign in and permission approval needs to occur.  To sign in, select Accounts from Settings.
                     </TextBlock>
                 </DataTemplate>
