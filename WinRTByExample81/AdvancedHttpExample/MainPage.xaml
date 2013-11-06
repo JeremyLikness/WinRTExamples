@@ -24,15 +24,12 @@
             <Button Command="{Binding CancelUrlCommand}" Content="Cancel"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal" Grid.Row="1">
-            <TextBlock Text="Sent:" Style="{StaticResource BaseTextBlockStyle}"/>
-            <TextBlock Text="{Binding BytesSent}" Style="{StaticResource BaseTextBlockStyle}" Margin="10 0 0 0"/>
-            <TextBlock Text="/" Style="{StaticResource BaseTextBlockStyle}"/>
-            <TextBlock Text="{Binding BytesToSend}" Style="{StaticResource BaseTextBlockStyle}"/>
-            <TextBlock Text="Received:" Style="{StaticResource BaseTextBlockStyle}" Margin="20 0 0 0"/>
-            <TextBlock Text="{Binding BytesReceived}" Style="{StaticResource BaseTextBlockStyle}" Margin="10 0 0 0"/>
-            <TextBlock Text="/" Style="{StaticResource BaseTextBlockStyle}"/>
-            <TextBlock Text="{Binding BytesToReceive}" Style="{StaticResource BaseTextBlockStyle}"/>
+            <TextBlock Text="Received:" Style="{StaticResource BaseTextBlockStyle}"/>
+            <TextBlock Text="{Binding BytesReceived}" Style="{StaticResource BaseTextBlockStyle}" Margin="10 0 0 0"/>            
         </StackPanel>
-        <TextBlock Text="{Binding Content}" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2" Margin="0 20 0 0"/>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0 20 0 0" Grid.Row="2">
+            <TextBlock Text="{Binding Content}" TextWrapping="Wrap" Width="800" VerticalAlignment="Stretch"/>
+        </ScrollViewer>
+        
     </Grid>
 </Page>
