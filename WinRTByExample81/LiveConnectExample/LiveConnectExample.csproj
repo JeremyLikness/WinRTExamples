@@ -177,6 +177,7 @@
     <Content Include="Assets\Mobile-Phone-Music.png" />
     <Content Include="Assets\OneNote.png" />
     <Content Include="Assets\Profile.png" />
+    <Content Include="Assets\SkyDriveIconWhite.png" />
     <Content Include="Assets\Video-Camera.png" />
     <Content Include="Common\ReadMe.txt" />
     <Content Include="Fonts\LiveSymbol.ttf" />

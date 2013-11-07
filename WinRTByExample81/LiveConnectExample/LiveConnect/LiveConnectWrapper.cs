@@ -242,19 +242,19 @@ namespace LiveConnectExample
             return result;
         }
 
-        public enum PictureSize
+        public enum ProfilePictureSize
         {
             Small, // 96x96
             Medium, // 180x180
             Large // 360x360
         }
 
-        public async Task<Uri> GetMyProfilePictureUrlAsync(PictureSize pictureSize)
+        public async Task<Uri> GetMyProfilePictureUrlAsync(ProfilePictureSize pictureSize)
         {
             return await GetUserProfilePictureUrlAsync(Me, pictureSize);
         }
 
-        public async Task<Uri> GetUserProfilePictureUrlAsync(String userIdentifier, PictureSize pictureSize)
+        public async Task<Uri> GetUserProfilePictureUrlAsync(String userIdentifier, ProfilePictureSize pictureSize)
         {
             var client = new LiveConnectClient(_session);
             var path = String.Format("{0}/picture?type={1}", userIdentifier, pictureSize.ToString().ToLowerInvariant());
@@ -461,7 +461,71 @@ namespace LiveConnectExample
             return resultList;
         }
 
+        public async Task<dynamic> GetSkyDriveItemAsync(String skyDriveContainerItemId)
+        {
+            // requires wl.basic scope
+            var client = new LiveConnectClient(_session);
+            var path = String.Format("{0}", skyDriveContainerItemId);
+            var operationResult = await client.GetAsync(path);
+            dynamic result = operationResult.Result;
+            return result;
+        }
+
+        public async Task<IEnumerable<dynamic>> GetSkydriveItemContentsAsync(String skyDriveContainerItemId)
+        {
+            // requires wl.skydrive scope
+            var client = new LiveConnectClient(_session);
+            var path = String.Format("{0}/files", skyDriveContainerItemId);
+            var operationResult = await client.GetAsync(path);
+            dynamic result = operationResult.Result;
+            var resultList = new List<dynamic>(result.data);
+            return resultList;
+        }
+
+        public async Task<Uri> GetAlbumPictureUrlAsync(String skyDriveAlbumItemId)
+        {
+            // requires wl.skydrive scope
+            var client = new LiveConnectClient(_session);
+            var path = String.Format("{0}/picture", skyDriveAlbumItemId);
+            var operationResult = await client.GetAsync(path);
+            dynamic result = operationResult.Result;
+            var imageUrl = new Uri(result.location.ToString());
+            return imageUrl;
+        }
+
         #endregion
+
+
+        public enum PictureSize
+        {
+            Thumbnail,
+            Small,
+            Album,
+            Normal,
+            Full
+        }
+
+        public async Task<Uri> GetSkydriveItemPictureAsync(String skyDriveItemId, PictureSize pictureSize)
+        {
+            // requires wl.skydrive scope
+            var client = new LiveConnectClient(_session);
+            var path = String.Format("{0}/picture?type={1}", skyDriveItemId, pictureSize.ToString().ToLowerInvariant());
+            var operationResult = await client.GetAsync(path);
+            dynamic result = operationResult.Result;
+            var imageUrl = new Uri(result.location.ToString());
+            return imageUrl;
+        }
+
+        public async Task<Uri> GetSkydriveItemLinkUrlAsync(String skyDriveItemId)
+        {
+            // requires wl.skydrive scope
+            var client = new LiveConnectClient(_session);
+            var path = String.Format("{0}/shared_read_link", skyDriveItemId);
+            var operationResult = await client.GetAsync(path);
+            dynamic result = operationResult.Result;
+            var linkUrl = new Uri(result.link.ToString());
+            return linkUrl;
+        }
     }
 
     public class ConnectionResult

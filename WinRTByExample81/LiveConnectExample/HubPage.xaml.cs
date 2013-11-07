@@ -121,7 +121,7 @@ namespace LiveConnectExample
                 var myProfile = await _liveConnectWrapper.GetMyProfileAsync();
                 DefaultViewModel["Me"] = myProfile;
                 DefaultViewModel["ImageSource"] =
-                    await _liveConnectWrapper.GetMyProfilePictureUrlAsync(LiveConnectWrapper.PictureSize.Medium);
+                    await _liveConnectWrapper.GetMyProfilePictureUrlAsync(LiveConnectWrapper.ProfilePictureSize.Medium);
 
                 var profileItems = new Dictionary<String, Object>(myProfile as IDictionary<String, Object>);
                 profileItems.Remove("id");

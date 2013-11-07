@@ -102,7 +102,9 @@
                               AutomationProperties.Name="Items"
                               TabIndex="1"
                               SelectionMode="None"
-                              IsSwipeEnabled="false">
+                              IsSwipeEnabled="false"
+                              IsItemClickEnabled="True"
+                              ItemClick="HandleSkyDriveItemClicked">
                         <GridView.ItemTemplate>
                             <DataTemplate>
                                 <Grid Margin="6">
