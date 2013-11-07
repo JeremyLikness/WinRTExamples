@@ -28,14 +28,14 @@ namespace LiveConnectExample
             _liveConnectWrapper.AppNotAssociatedWithStoreError += LiveConnectWrapperOnAppNotAssociatedWithStoreError;
         }
 
-        private void LiveConnectWrapperOnAppNotAssociatedWithStoreError(Object sender, EventArgs eventArgs)
+        private async void LiveConnectWrapperOnAppNotAssociatedWithStoreError(Object sender, EventArgs eventArgs)
         {
             const String message =
                 "The app has not been associated with the Windows Store, therefore it cannot be run.  "
                 + "Please associate the app with the store and rebuild.";
 
             var messageDialog = new MessageDialog(message, "Live Connect Error");
-            messageDialog.ShowAsync();
+            await messageDialog.ShowAsync();
         }
 
         public LiveConnectWrapper LiveConnectWrapper

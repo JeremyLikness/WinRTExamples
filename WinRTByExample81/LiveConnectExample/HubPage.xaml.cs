@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.UI.Popups;
 using LiveConnectExample.Common;
 using System;
 using Windows.UI.Xaml;
@@ -18,6 +17,7 @@ namespace LiveConnectExample
     public sealed partial class HubPage : Page
     {
         private readonly NavigationHelper _navigationHelper;
+        private readonly IDialogService _dialogService = new DialogService();
         private readonly ObservableDictionary _defaultViewModel = new ObservableDictionary();
 
         private readonly LiveConnectWrapper _liveConnectWrapper;
@@ -176,6 +176,23 @@ namespace LiveConnectExample
             var calendarId = ((dynamic)e.ClickedItem).id;
             Frame.Navigate(typeof(CalendarPage), calendarId);
         }
+
+        private void HandleSkyDriveItemClicked(Object sender, ItemClickEventArgs e)
+        {
+            // Navigate to the appropriate destination page, configuring the new page
+            // by passing required information as a navigation parameter
+            var skydriveItem = ((dynamic)e.ClickedItem);
+            String itemType = skydriveItem.type.ToString().ToLowerInvariant();
+            if ("album".Equals(itemType) || "folder".Equals(itemType))
+            {
+                String containerId = skydriveItem.id;
+                Frame.Navigate(typeof (SkyDriveItemsPage), containerId);
+            }
+            else
+            {
+                _dialogService.ShowError("Only folders and albums can show content.");
+            }
+        }
         
         private async void RefreshItems()
         {
@@ -210,16 +227,8 @@ namespace LiveConnectExample
             }
             catch (LiveConnectException ex)
             {
-                var dialog = new MessageDialog(ex.Message, "Save Contact Error");
-                dialog.ShowAsync();
+                _dialogService.ShowError(ex.Message);
             }
         }
-    }
-
-    internal class Contact
-    {
-        public String FirstName { get; set; }
-        public String LastName { get; set; }
-        public String PreferredEmail { get; set; }
     }
 }

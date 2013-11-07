@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Microsoft.Live;
@@ -10,6 +9,7 @@ namespace LiveConnectExample
     public sealed partial class AccountSettingsFlyout : SettingsFlyout
     {
         private readonly LiveConnectWrapper _liveConnectWrapper;
+        private readonly IDialogService _dialogService = new DialogService();
 
         public AccountSettingsFlyout()
         {
@@ -67,8 +67,7 @@ namespace LiveConnectExample
             }
             catch (InvalidOperationException ex)
             {
-                var messageDialog = new MessageDialog("An error occurred during login - " + ex.Message, "Login Error");
-                messageDialog.ShowAsync();
+                _dialogService.ShowError("An error occurred during login - " + ex.Message);
             }
         }
 
