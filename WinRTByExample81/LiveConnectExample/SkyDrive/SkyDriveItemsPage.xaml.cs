@@ -100,7 +100,7 @@ namespace LiveConnectExample
 
             _skyDriveItemId = e.Parameter as String;
             DefaultViewModel["IsConnected"] = _liveConnectWrapper.IsSessionAvailable;
-            DefaultViewModel["ProfileImageSource"] = new Uri("ms-appx:///Assets/Profile.png");
+            DefaultViewModel["ProfileImageSource"] = new Uri("ms-appx:///Assets/SkyDriveIconWhite.png");
             DefaultViewModel["SkyDriveItem"] = null;
             DefaultViewModel["SkyDriveItems"] = _skydriveItems;
 
