@@ -18,7 +18,6 @@ namespace LiveConnectExample
     {
         private readonly NavigationHelper _navigationHelper;
         private readonly ObservableDictionary _defaultViewModel = new ObservableDictionary();
-
         private readonly LiveConnectWrapper _liveConnectWrapper;
 
         private String _contactId;
@@ -140,7 +139,7 @@ namespace LiveConnectExample
 
                 if (contact.user_id != null)
                 {
-                    var pictureUrl = await _liveConnectWrapper.GetUserProfilePictureUrlAsync(contact.user_id, LiveConnectWrapper.PictureSize.Medium);
+                    var pictureUrl = await _liveConnectWrapper.GetUserProfilePictureUrlAsync(contact.user_id, LiveConnectWrapper.ProfilePictureSize.Medium);
                     DefaultViewModel["ImageSource"] = pictureUrl;
 
                     try
@@ -165,6 +164,15 @@ namespace LiveConnectExample
         private async void Refresh()
         {
             await UpdateContent();
+        }
+
+        private void HandleSkyDriveItemClicked(Object sender, ItemClickEventArgs e)
+        {
+            // Navigate to the appropriate destination page, configuring the new page
+            // by passing required information as a navigation parameter
+            var skydriveItem = ((dynamic) e.ClickedItem);
+            String skydriveItemId = skydriveItem.id;
+            Frame.Navigate(typeof (SkyDriveItemsPage), skydriveItemId);
         }
     }
 }
