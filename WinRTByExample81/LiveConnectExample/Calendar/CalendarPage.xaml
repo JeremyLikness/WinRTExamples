@@ -113,7 +113,7 @@
                                         <ColumnDefinition Width="320"/>
                                     </Grid.ColumnDefinitions>
                                     <Border Background="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}" Width="80" Height="80">
-                                        <Image Stretch="UniformToFill" AutomationProperties.Name="{Binding Title}" Source="Assets/Calendar.png"/>
+                                        <Image Stretch="UniformToFill" AutomationProperties.Name="{Binding Title}" Source="ms-appx:///Assets/Calendar.png"/>
                                     </Border>
                                     <Grid Grid.Column="1" Margin="10,0,0,0">
                                         <Grid.RowDefinitions>
