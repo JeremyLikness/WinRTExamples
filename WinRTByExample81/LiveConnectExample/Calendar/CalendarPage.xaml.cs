@@ -18,6 +18,7 @@ namespace LiveConnectExample
     public sealed partial class CalendarPage : Page
     {
         private readonly NavigationHelper _navigationHelper;
+        private readonly IDialogService _dialogService = new DialogService();
         private readonly ObservableDictionary _defaultViewModel = new ObservableDictionary();
 
         private readonly LiveConnectWrapper _liveConnectWrapper;
@@ -175,13 +176,12 @@ namespace LiveConnectExample
             if (itemToRemove == null) return;
 
             var itemName = itemToRemove.name;
-            var confirmDialog = new MessageDialog("Are you sure you want to remove event " + itemName, "Remove Event?");
+
             var removeCommand = new UICommand("Remove");
             var cancelCommand = new UICommand("Cancel");
-            confirmDialog.Commands.Add(removeCommand);
-            confirmDialog.Commands.Add(cancelCommand);
-            confirmDialog.DefaultCommandIndex = 1;
-            if (await confirmDialog.ShowAsync() != removeCommand) return;
+            var commands = new[] {removeCommand, cancelCommand};
+            var result = await _dialogService.ShowMessageBoxAsync("Are you sure you want to remove event " + itemName, "Remove Event?", commands, 1);
+            if (result != removeCommand) return;
             
             try
             {
@@ -190,8 +190,7 @@ namespace LiveConnectExample
             }
             catch (LiveConnectException ex)
             {
-                var dialog = new MessageDialog(ex.Message, "Delete Contact Error");
-                dialog.ShowAsync();
+                _dialogService.ShowError(ex.Message);
             }
         }
 
@@ -241,8 +240,7 @@ namespace LiveConnectExample
             }
             catch (LiveConnectException ex)
             {
-                var dialog = new MessageDialog(ex.Message, "Save Contact Error");
-                dialog.ShowAsync();
+                _dialogService.ShowError(ex.Message);
             }
         }
 
@@ -291,8 +289,7 @@ namespace LiveConnectExample
             }
             catch (LiveConnectException ex)
             {
-                var dialog = new MessageDialog(ex.Message, "Save Event Error");
-                dialog.ShowAsync();
+                _dialogService.ShowError(ex.Message);
             }
         }
 

@@ -161,7 +161,7 @@
                 </DataTemplate>
             </HubSection>
             
-            <HubSection Header="Skydrive" Visibility="{Binding IsConnected, Converter={StaticResource IfTrueThenVisible}}">
+            <HubSection Header="SkyDrive" Visibility="{Binding IsConnected, Converter={StaticResource IfTrueThenVisible}}">
                 <DataTemplate>
                     <ListView x:Name="SkydriveListing"
                               ItemsSource="{Binding ElementName=PageRoot, Path=DataContext.SkydriveItems}"
@@ -169,7 +169,9 @@
                               AutomationProperties.Name="Items"
                               TabIndex="1"
                               SelectionMode="None"
-                              IsSwipeEnabled="false">
+                              IsSwipeEnabled="false"
+                              IsItemClickEnabled="True"
+                              ItemClick="HandleSkyDriveItemClicked">
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <WrapGrid Orientation="Horizontal" MaximumRowsOrColumns="2" ItemWidth="250"/>

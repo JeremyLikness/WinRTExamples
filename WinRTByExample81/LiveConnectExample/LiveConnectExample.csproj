@@ -125,22 +125,35 @@
     <Compile Include="..\Common\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Calendar\CalendarEventEditControl.xaml.cs">
+      <DependentUpon>CalendarEventEditControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Calendar\CalendarPage.xaml.cs">
+      <DependentUpon>CalendarPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Common\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Common\DateTimeFormatValueConverter.cs" />
     <Compile Include="Common\NavigationHelper.cs" />
     <Compile Include="Common\ObservableDictionary.cs" />
     <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
-    <Compile Include="ContactPage.xaml.cs">
+    <Compile Include="Contacts\Contact.cs" />
+    <Compile Include="Contacts\ContactEditControl.xaml.cs">
+      <DependentUpon>ContactEditControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Contacts\ContactPage.xaml.cs">
       <DependentUpon>ContactPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Extensions.cs" />
     <Compile Include="HubPage.xaml.cs">
       <DependentUpon>HubPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ItemDetailPage1.xaml.cs">
-      <DependentUpon>ItemDetailPage1.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="IDialogService.cs" />
     <Compile Include="LiveConnect\LiveConnectWrapper.cs" />
-    <Compile Include="LiveConnect\SkyDriveItemToIconUriConverter.cs" />
+    <Compile Include="SkyDrive\SkyDriveItemsPage.xaml.cs">
+      <DependentUpon>SkyDriveItemsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SkyDrive\SkyDriveItemToIconUriConverter.cs" />
     <Compile Include="Settings\AccountSettingsFlyout.xaml.cs">
       <DependentUpon>AccountSettingsFlyout.xaml</DependentUpon>
     </Compile>
@@ -175,15 +188,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="ContactPage.xaml">
+    <Page Include="Calendar\CalendarEventEditControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Calendar\CalendarPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Contacts\ContactEditControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Contacts\ContactPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="HubPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ItemDetailPage1.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -195,12 +216,17 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="SkyDrive\SkyDriveItemsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Live">
       <HintPath>..\packages\LiveSDK.5.5\WindowsXAML\Microsoft.Live.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>
   </PropertyGroup>
