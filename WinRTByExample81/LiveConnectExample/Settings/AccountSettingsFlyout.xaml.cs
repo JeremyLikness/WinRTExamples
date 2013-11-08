@@ -9,12 +9,13 @@ namespace LiveConnectExample
     public sealed partial class AccountSettingsFlyout : SettingsFlyout
     {
         private readonly LiveConnectWrapper _liveConnectWrapper;
-        private readonly IDialogService _dialogService = new DialogService();
+        private readonly IDialogService _dialogService;
 
         public AccountSettingsFlyout()
         {
             InitializeComponent();
             
+             _dialogService = new DialogService(Dispatcher);
             _liveConnectWrapper = ((App)Application.Current).LiveConnectWrapper;
             
             if (!Windows.ApplicationModel.DesignMode.DesignModeEnabled)

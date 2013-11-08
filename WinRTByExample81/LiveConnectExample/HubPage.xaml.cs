@@ -17,7 +17,7 @@ namespace LiveConnectExample
     public sealed partial class HubPage : Page
     {
         private readonly NavigationHelper _navigationHelper;
-        private readonly IDialogService _dialogService = new DialogService();
+        private readonly IDialogService _dialogService;
         private readonly ObservableDictionary _defaultViewModel = new ObservableDictionary();
 
         private readonly LiveConnectWrapper _liveConnectWrapper;
@@ -47,11 +47,12 @@ namespace LiveConnectExample
         {
             InitializeComponent();
 
+            _dialogService = new DialogService(Dispatcher);
+            _liveConnectWrapper = ((App)Application.Current).LiveConnectWrapper;
+
             DefaultViewModel["RefreshItemsCommand"] = new RelayCommand(RefreshItems);
             DefaultViewModel["AddContactCommand"]= new RelayCommand(AddContact);
             DefaultViewModel["SaveContactBeingAddedCommand"] = new RelayCommand(SaveContactBeingEdited);
-
-            _liveConnectWrapper = ((App) Application.Current).LiveConnectWrapper;
 
             _navigationHelper = new NavigationHelper(this);
             _navigationHelper.LoadState += navigationHelper_LoadState;

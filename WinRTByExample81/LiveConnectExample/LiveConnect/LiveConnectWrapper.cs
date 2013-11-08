@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
+using Windows.Storage;
 using Microsoft.Live;
 
 namespace LiveConnectExample
@@ -82,7 +84,9 @@ namespace LiveConnectExample
                           ContactsCreateScope,
 
                           CalendarsUpdateScope,
-                          CalendarsEventCreateScope
+                          CalendarsEventCreateScope,
+
+                          SkydriveUpdateScope
                       };
         } 
 
@@ -263,7 +267,8 @@ namespace LiveConnectExample
             dynamic result = operationResult.Result;
             var imageUrl = new Uri(result.location.ToString());
             return imageUrl;
-        } 
+        }
+
         #endregion
 
         #region Contacts
@@ -493,9 +498,6 @@ namespace LiveConnectExample
             return imageUrl;
         }
 
-        #endregion
-
-
         public enum PictureSize
         {
             Thumbnail,
@@ -526,6 +528,74 @@ namespace LiveConnectExample
             var linkUrl = new Uri(result.link.ToString());
             return linkUrl;
         }
+
+        public const String DefaultNewFolderName = "New Folder";
+        public async Task<dynamic> CreateSkyDriveFolderAsync(String skyDriveItemId, String folderName)
+        {
+            // requires wl.skydrive_update scope
+            var client = new LiveConnectClient(_session);
+            var folderData = new Dictionary<String, Object> {{"name", folderName}};
+            var operationResult = await client.PostAsync(skyDriveItemId, folderData);
+            dynamic result = operationResult.Result;
+            return result;
+        }
+
+        public async Task<dynamic> RenameSkyDriveItemAsync(String skyDriveItemId, String itemNewName)
+        {
+            // requires wl.skydrive_update scope
+            var client = new LiveConnectClient(_session);
+            var folderData = new Dictionary<String, Object> { { "name", itemNewName } };
+            var operationResult = await client.PutAsync(skyDriveItemId, folderData);
+            dynamic result = operationResult.Result;
+            return result;
+        }
+
+        public async Task DeleteSkyDriveItemAsync(String skyDriveItemId)
+        {
+            // requires wl.skydrive_update scope
+            var client = new LiveConnectClient(_session);
+            await client.DeleteAsync(skyDriveItemId);
+        }
+
+        public async Task StartBackgroundDownloadAsync(String skyDriveItemId, StorageFile file, CancellationToken cancellationToken, IProgress<LiveOperationProgress> progressHandler)
+        {
+            // requires wl.skydrive scope
+            var client = new LiveConnectClient(_session);
+            var path = String.Format("{0}/content", skyDriveItemId);
+            await client.BackgroundDownloadAsync(path, file, cancellationToken, progressHandler);
+        }
+
+        public async Task<dynamic> StartBackgroundUploadAsync(String skyDriveItemId, String uploadFileName, StorageFile fileToUpload, CancellationToken cancellationToken, Progress<LiveOperationProgress> progressHandler)
+        {
+            // requires wl.skydrive_update scope
+            var client = new LiveConnectClient(_session);
+            var result = await client.BackgroundUploadAsync(skyDriveItemId, uploadFileName, fileToUpload, OverwriteOption.Rename, cancellationToken, progressHandler);
+            return result.Result;
+        }
+
+        public class SkyDriveQuota
+        {
+            public Int64 Quota { get; set; }
+            public Int64 Available{ get; set; }
+
+        }
+        public async Task<SkyDriveQuota> GetUserSkyDriveQuotaAsync()
+        {
+            var client = new LiveConnectClient(_session);
+            var path = String.Format("{0}/skydrive/quota", Me);
+            var operationResult = await client.GetAsync(path);
+            //var operationResult = await client.GetAsync("me/picture?type=large");
+            dynamic result = operationResult.Result;
+            var quota = new SkyDriveQuota
+                        {
+                            Quota = result.quota,
+                            Available = result.available
+                        };
+            return quota;
+        }
+
+        #endregion
+
     }
 
     public class ConnectionResult
