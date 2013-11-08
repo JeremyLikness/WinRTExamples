@@ -18,7 +18,7 @@ namespace LiveConnectExample
     public sealed partial class CalendarPage : Page
     {
         private readonly NavigationHelper _navigationHelper;
-        private readonly IDialogService _dialogService = new DialogService();
+        private readonly IDialogService _dialogService;
         private readonly ObservableDictionary _defaultViewModel = new ObservableDictionary();
 
         private readonly LiveConnectWrapper _liveConnectWrapper;
@@ -49,15 +49,15 @@ namespace LiveConnectExample
         {
             InitializeComponent();
 
+            _dialogService = new DialogService(Dispatcher);
+            _liveConnectWrapper = ((App)Application.Current).LiveConnectWrapper;
+
             DefaultViewModel["RefreshCommand"] = new RelayCommand(Refresh);
             DefaultViewModel["RemoveCommand"] = new RelayCommand(Remove, CanRemove);
             DefaultViewModel["EditCommand"] = new RelayCommand(Edit, CanEdit);
             DefaultViewModel["SaveEditedCommand"] = new RelayCommand(SaveEdited);
             DefaultViewModel["AddCommand"] = new RelayCommand(Add, CanAdd);
             DefaultViewModel["SaveAddedCommand"] = new RelayCommand(SaveAdded);
-
-
-            _liveConnectWrapper = ((App)Application.Current).LiveConnectWrapper;
 
             _navigationHelper = new NavigationHelper(this);
             _navigationHelper.LoadState += navigationHelper_LoadState;
@@ -170,19 +170,21 @@ namespace LiveConnectExample
             return _canUpdateCalendarEvents && DefaultViewModel["SelectedEventItem"] != null;
         }
 
-        private async void Remove()
+        private void Remove()
         {
             dynamic itemToRemove = DefaultViewModel["SelectedEventItem"];
             if (itemToRemove == null) return;
 
             var itemName = itemToRemove.name;
 
-            var removeCommand = new UICommand("Remove");
+            var removeCommand = new UICommand("Remove", command => HandleRemoveItem(itemToRemove));
             var cancelCommand = new UICommand("Cancel");
             var commands = new[] {removeCommand, cancelCommand};
-            var result = await _dialogService.ShowMessageBoxAsync("Are you sure you want to remove event " + itemName, "Remove Event?", commands, 1);
-            if (result != removeCommand) return;
-            
+            _dialogService.ShowMessageBoxAsync("Are you sure you want to remove event " + itemName, "Remove Event?", commands, 1);
+        }
+
+        private async void HandleRemoveItem(dynamic itemToRemove)
+        {
             try
             {
                 await _liveConnectWrapper.DeleteCalendarEventAsync(itemToRemove.id);

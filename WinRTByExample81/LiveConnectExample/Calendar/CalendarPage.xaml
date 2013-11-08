@@ -18,46 +18,6 @@
         <common:DateTimeFormatValueConverter x:Key="GeneralDateFormatConverter" FormatString="g"/>
     </Page.Resources>
 
-    <Page.BottomAppBar>
-        <CommandBar>
-            <AppBarButton Icon="Refresh" Label="Refresh" Command="{Binding RefreshCommand}"/>
-            <AppBarSeparator/>
-            <AppBarButton Icon ="Clear" Label="Remove" Command="{Binding RemoveCommand}"/>
-            <AppBarButton Icon ="Edit" Label="Edit" Command="{Binding EditCommand}">
-                <AppBarButton.Flyout>
-                    <Flyout>
-                        <Grid Width="320" Margin="20,10">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <local:CalendarEventEditControl Grid.Row="0" DataContext="{Binding EventBeingEdited}" />
-                            <Grid Grid.Row="1">
-                                <Button Content="Save" HorizontalAlignment="Center" Command="{Binding SaveEditedCommand}"/>
-                            </Grid>
-                        </Grid>
-                    </Flyout>
-                </AppBarButton.Flyout>
-            </AppBarButton>
-            <AppBarButton Icon ="Add" Label="Add Event" Command="{Binding AddCommand}">
-                <AppBarButton.Flyout>
-                    <Flyout>
-                        <Grid Width="320" Margin="20,10">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <local:CalendarEventEditControl Grid.Row="0" DataContext="{Binding EventBeingAdded}" />
-                            <Grid Grid.Row="1">
-                                <Button Content="Save" HorizontalAlignment="Center" Command="{Binding SaveAddedCommand}"/>
-                            </Grid>
-                        </Grid>
-                    </Flyout>
-                </AppBarButton.Flyout>
-            </AppBarButton>
-        </CommandBar>
-    </Page.BottomAppBar>
-
     <!--
         This grid acts as a root panel for the page.
     -->
@@ -191,10 +151,10 @@
 								</Grid>
 							</DataTemplate>
 						</GridView.ItemTemplate>
-						<Interactivity:Interaction.Behaviors>
-							<local:AppBarDisplayOnItemSelectionBehavior DisplayOnSelectionAction="Bottom"/>
-						</Interactivity:Interaction.Behaviors>
-					</GridView>
+                        <Interactivity:Interaction.Behaviors>
+                            <local:AppBarDisplayOnItemSelectionBehavior DisplayOnSelectionAction="Bottom"/>
+                        </Interactivity:Interaction.Behaviors>
+                    </GridView>
 				</DataTemplate>
 			</HubSection>
 
@@ -207,4 +167,44 @@
 			</HubSection>
 		</Hub>
 	</Grid>
+
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton Icon="Refresh" Label="Refresh" Command="{Binding RefreshCommand}"/>
+            <AppBarSeparator/>
+            <AppBarButton Icon ="Clear" Label="Remove" Command="{Binding RemoveCommand}"/>
+            <AppBarButton Icon ="Edit" Label="Edit" Command="{Binding EditCommand}">
+                <AppBarButton.Flyout>
+                    <Flyout>
+                        <Grid Width="320" Margin="20,10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <local:CalendarEventEditControl Grid.Row="0" DataContext="{Binding EventBeingEdited}" />
+                            <Grid Grid.Row="1">
+                                <Button Content="Save" HorizontalAlignment="Center" Command="{Binding SaveEditedCommand}"/>
+                            </Grid>
+                        </Grid>
+                    </Flyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
+            <AppBarButton Icon ="Add" Label="Add Event" Command="{Binding AddCommand}">
+                <AppBarButton.Flyout>
+                    <Flyout>
+                        <Grid Width="320" Margin="20,10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <local:CalendarEventEditControl Grid.Row="0" DataContext="{Binding EventBeingAdded}" />
+                            <Grid Grid.Row="1">
+                                <Button Content="Save" HorizontalAlignment="Center" Command="{Binding SaveAddedCommand}"/>
+                            </Grid>
+                        </Grid>
+                    </Flyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
+        </CommandBar>
+    </Page.BottomAppBar>
 </Page>

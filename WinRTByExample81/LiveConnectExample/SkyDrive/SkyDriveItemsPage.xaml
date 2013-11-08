@@ -61,7 +61,7 @@
                 </Grid.Resources>
                 <Image Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="99" Source="{Binding ProfileImageSource}" Width="180" Height="180"/>
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Id: "/>
-                <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Contact.id}"/>
+                <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding SkyDriveItem.id}"/>
 
                 <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="99" Text="Additional Values:"/>
                 <ScrollViewer Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="99" VerticalScrollBarVisibility="Auto" Margin="5">
@@ -82,14 +82,15 @@
                 <Grid.Resources>
                     <DataTemplate x:Key="SkyDriveFolderItemTemplate">
                         <GridView x:Name="SkydriveListing"
-                              ItemsSource="{Binding ElementName=PageRoot, Path=DataContext.SkyDriveItems}"
-                              AutomationProperties.AutomationId="SkydriveListing"
-                              AutomationProperties.Name="Items"
-                              TabIndex="1"
-                              SelectionMode="None"
-                              IsSwipeEnabled="false"
-                              IsItemClickEnabled="True"
-                              ItemClick="HandleSkyDriveItemClicked">
+                                  ItemsSource="{Binding ElementName=PageRoot, Path=DataContext.SkyDriveItems}"
+                                  AutomationProperties.AutomationId="SkydriveListing"
+                                  AutomationProperties.Name="Items"
+                                  TabIndex="1"
+                                  SelectionMode="Single"
+                                  IsSwipeEnabled="True"
+                                  IsItemClickEnabled="True"
+                                  ItemClick="HandleSkyDriveItemClicked"
+                                  SelectionChanged="HandleSkyDriveItemSelectionChanged">
                             <GridView.ItemTemplate>
                                 <DataTemplate>
                                     <Grid Margin="6">
@@ -155,12 +156,42 @@
     <Page.BottomAppBar>
         <CommandBar>
             <AppBarButton Icon="Refresh" Label="Refresh" Command="{Binding RefreshCommand}"/>
-            <AppBarSeparator/>
-            <AppBarButton Icon ="NewFolder" Label="New folder" Command="{Binding NewFolderCommand}"/>
-            <AppBarButton Icon ="Upload" Label="Upload file" Command="{Binding UploadCommand}"/>
+            <AppBarSeparator Visibility="{Binding IsFolderOrAlbum, Converter={StaticResource IfTrueThenVisible}}"/>
+            <AppBarButton Icon ="NewFolder" Label="New folder" Command="{Binding OpenCreateFolderCommand}" Visibility="{Binding IsFolderOrAlbum, Converter={StaticResource IfTrueThenVisible}}">
+                <AppBarButton.Flyout>
+                    <Flyout>
+                        <Grid Width="320" Margin="20,10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBox Grid.Row="0" Text="{Binding FolderName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Grid Grid.Row="1">
+                                <Button Content="Create" HorizontalAlignment="Right" Command="{Binding CreateFolderCommand}"/>
+                            </Grid>
+                        </Grid>
+                    </Flyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
+            <AppBarButton Icon ="Upload" Label="Upload file" Command="{Binding UploadCommand}" Visibility="{Binding IsFolderOrAlbum, Converter={StaticResource IfTrueThenVisible}}"/>
             <CommandBar.SecondaryCommands>
-                <AppBarButton Icon ="Delete" Label="Delete" Command="{Binding DeleteCommand}"/>
-                <AppBarButton Icon ="Edit" Label="Rename" Command="{Binding RenameCommand}"/>
+                <AppBarButton Icon ="Delete" Label="Delete" Command="{Binding DeleteItemCommand}" Visibility="{Binding IsFolderOrAlbum, Converter={StaticResource IfTrueThenVisible}}"/>
+                <AppBarButton Icon ="Edit" Label="Rename" Command="{Binding OpenRenameCommand}" Visibility="{Binding IsFolderOrAlbum, Converter={StaticResource IfTrueThenVisible}}">
+                    <AppBarButton.Flyout>
+                        <Flyout>
+                            <Grid Width="320" Margin="20,10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <TextBox Grid.Row="0" Text="{Binding ItemNewName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                <Grid Grid.Row="1">
+                                    <Button Content="Rename" HorizontalAlignment="Right" Command="{Binding RenameItemCommand}"/>
+                                </Grid>
+                            </Grid>
+                        </Flyout>
+                    </AppBarButton.Flyout>
+                </AppBarButton>
                 <AppBarButton Icon ="Download" Label="Download" Command="{Binding DownloadCommand}"/>
             </CommandBar.SecondaryCommands>
         </CommandBar>
