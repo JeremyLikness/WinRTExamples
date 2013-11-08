@@ -42,7 +42,9 @@ namespace LiveConnectExample
             get { return _navigationHelper; }
         }
 
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SkyDriveItemsPage"/> class.
+        /// </summary>
         public SkyDriveItemsPage()
         {
             InitializeComponent();
