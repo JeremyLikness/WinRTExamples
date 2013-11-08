@@ -28,10 +28,11 @@
             <TextBlock Text="Response:" Style="{StaticResource BaseTextBlockStyle}"/>
             <TextBlock x:Name="Response" Style="{StaticResource BaseTextBlockStyle}" FontWeight="Bold" Margin="10 0 0 0"/>
         </StackPanel>
-        <StackPanel Orientation="Horizontal" Grid.Row="3">
-            <Button Content="Start" Click="Start_OnClick" x:Name="Start"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="3" Margin="0 20 0 0">
+            <TextBlock Text="Continuous Stream:" Style="{StaticResource BaseTextBlockStyle}"/>
+            <Button Content="Start" Click="Start_OnClick" x:Name="Start" Margin="10 0 0 0"/>
             <Button Content="Stop" Click="End_OnClick" x:Name="End" IsEnabled="False"/>
         </StackPanel>
-        <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="Primes" Grid.Row="4" TextWrapping="Wrap"/>
+        <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="Primes" Grid.Row="4" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="Wrap"/>
     </Grid>
 </Page>
