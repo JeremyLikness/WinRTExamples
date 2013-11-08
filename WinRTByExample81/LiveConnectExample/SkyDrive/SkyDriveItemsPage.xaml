@@ -8,6 +8,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:liveConnectExample="using:LiveConnectExample"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -106,6 +107,9 @@
                                     </Grid>
                                 </DataTemplate>
                             </GridView.ItemTemplate>
+                            <interactivity:Interaction.Behaviors>
+                                <liveConnectExample:AppBarDisplayOnItemSelectionBehavior DisplayOnSelectionAction="Bottom"/>
+                            </interactivity:Interaction.Behaviors>
                         </GridView>
                     </DataTemplate>
                     <DataTemplate x:Key="SkyDrivePhotoItemTemplate">
@@ -151,6 +155,14 @@
     <Page.BottomAppBar>
         <CommandBar>
             <AppBarButton Icon="Refresh" Label="Refresh" Command="{Binding RefreshCommand}"/>
+            <AppBarSeparator/>
+            <AppBarButton Icon ="NewFolder" Label="New folder" Command="{Binding NewFolderCommand}"/>
+            <AppBarButton Icon ="Upload" Label="Upload file" Command="{Binding UploadCommand}"/>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Icon ="Delete" Label="Delete" Command="{Binding DeleteCommand}"/>
+                <AppBarButton Icon ="Edit" Label="Rename" Command="{Binding RenameCommand}"/>
+                <AppBarButton Icon ="Download" Label="Download" Command="{Binding DownloadCommand}"/>
+            </CommandBar.SecondaryCommands>
         </CommandBar>
     </Page.BottomAppBar>
 
