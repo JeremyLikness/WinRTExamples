@@ -174,7 +174,7 @@ namespace LiveConnectExample
             get { return _navigationHelper; }
         }
 
-        #region Content Loading
+        #region Load Content
 
         private async void OnLiveConnectWrapperSessionChanged(Object sender, EventArgs eventArgs)
         {
@@ -188,17 +188,17 @@ namespace LiveConnectExample
 
         private async Task UpdateContent()
         {
-            DefaultViewModel["IsConnected"] = _liveConnectWrapper.IsSessionAvailable;
+            var isConnected = _liveConnectWrapper.IsSessionAvailable;
+            DefaultViewModel["IsConnected"] = isConnected;
 
-            if (_liveConnectWrapper.IsSessionAvailable)
+            if (isConnected)
             {
                 var skyDriveItem = await _liveConnectWrapper.GetSkyDriveItemAsync(_skyDriveItemId);
                 DefaultViewModel["SkyDriveItem"] = skyDriveItem;
                 DefaultViewModel["SelectedItem"] = null;
                 DefaultViewModel["IsFolderOrAlbum"] = skyDriveItem.type.ToString().Equals("folder") || skyDriveItem.type.ToString().Equals("album");
 
-                var skyDriveItemValues =
-                    new Dictionary<String, Object>(skyDriveItem as IDictionary<String, Object>);
+                var skyDriveItemValues = new Dictionary<String, Object>(skyDriveItem as IDictionary<String, Object>);
                 skyDriveItemValues.Remove("id");
                 skyDriveItemValues.Remove("name");
 
@@ -242,9 +242,9 @@ namespace LiveConnectExample
                     _skydriveItems.Add(item);
                 }
             }
-            catch (LiveConnectException)
+            catch (LiveConnectException ex)
             {
-                // TODO - Display error information in the UI (likely a scopes issue)
+                _dialogService.ShowError(ex.Message);
             }
 
             if (skyDriveItem.type.ToString().Equals("album"))
@@ -256,17 +256,31 @@ namespace LiveConnectExample
 
         private async void LoadPhotoContent()
         {
-            var profileImageUrl = await _liveConnectWrapper.GetSkydriveItemPictureAsync(_skyDriveItemId, LiveConnectWrapper.PictureSize.Small);
-            DefaultViewModel["ProfileImageSource"] = profileImageUrl;
+            try
+            {
+                var profileImageUrl = await _liveConnectWrapper.GetSkydriveItemPictureAsync(_skyDriveItemId, LiveConnectWrapper.PictureSize.Small);
+                DefaultViewModel["ProfileImageSource"] = profileImageUrl;
 
-            var itemPictureUrl = await _liveConnectWrapper.GetSkydriveItemPictureAsync(_skyDriveItemId, LiveConnectWrapper.PictureSize.Full);
-            DefaultViewModel["SkyDrivePhotoUrl"] = itemPictureUrl;
+                var itemPictureUrl = await _liveConnectWrapper.GetSkydriveItemPictureAsync(_skyDriveItemId, LiveConnectWrapper.PictureSize.Full);
+                DefaultViewModel["SkyDrivePhotoUrl"] = itemPictureUrl;
+            }
+            catch (LiveConnectException ex)
+            {
+                _dialogService.ShowError(ex.Message);
+            }
         }
 
         private async void LoadMediaContent(dynamic skyDriveItem)
         {
-            var itemPictureUrl = await _liveConnectWrapper.GetSkydriveItemPictureAsync(_skyDriveItemId, LiveConnectWrapper.PictureSize.Small);
-            DefaultViewModel["ProfileImageSource"] = itemPictureUrl;
+            try
+            {
+                var itemPictureUrl = await _liveConnectWrapper.GetSkydriveItemPictureAsync(_skyDriveItemId, LiveConnectWrapper.PictureSize.Small);
+                DefaultViewModel["ProfileImageSource"] = itemPictureUrl;
+            }
+            catch (LiveConnectException ex)
+            {
+                _dialogService.ShowError(ex.Message);
+            }
 
             var mediaUri = new Uri(skyDriveItem.source);
             DefaultViewModel["SkyDriveMediaUrl"] = mediaUri;
@@ -274,12 +288,20 @@ namespace LiveConnectExample
 
         private async void LoadFileContent(dynamic skyDriveItem)
         {
-            if (skyDriveItem.is_embeddable)
+            // Only load content that is "embeddable"
+            if (!skyDriveItem.is_embeddable) return;
+
+            try
             {
                 var fileUrl = await _liveConnectWrapper.GetSkydriveItemLinkUrlAsync(_skyDriveItemId);
                 DefaultViewModel["SkyDriveEmbeddableItemUrl"] = fileUrl;
+
             }
-        } 
+            catch (LiveConnectException ex)
+            {
+                _dialogService.ShowError(ex.Message);
+            }
+        }
 
         #endregion
 
@@ -356,8 +378,16 @@ namespace LiveConnectExample
 
         private async void AddUploadedItemToList(String uploadedItemId)
         {
-            dynamic addedItem = await _liveConnectWrapper.GetSkyDriveItemAsync(uploadedItemId);
-            _skydriveItems.Add(addedItem);
+            try
+            {
+                dynamic addedItem = await _liveConnectWrapper.GetSkyDriveItemAsync(uploadedItemId);
+                _skydriveItems.Add(addedItem);
+
+            }
+            catch (LiveConnectException ex)
+            {
+                _dialogService.ShowError(ex.Message);
+            }
         }
 
         private void DeleteItem()
@@ -505,38 +535,6 @@ namespace LiveConnectExample
             _downloadCommand.RaiseCanExecuteChanged();
             _openRenameCommand.RaiseCanExecuteChanged();
             _deleteItemCommand.RaiseCanExecuteChanged();
-        }
-    }
-
-    public class SkyDriveContentTemplateSelector : DataTemplateSelector
-    {
-        public DataTemplate FolderOrAlbumTemplate { get; set; }
-
-        public DataTemplate AudioVideoTemplate { get; set; }
-
-        public DataTemplate PhotoTemplate { get; set; }
-
-        public DataTemplate EmbeddableFileTemplate { get; set; }
-
-        protected override DataTemplate SelectTemplateCore(Object item, DependencyObject container)
-        {
-            var skyDriveItem = (dynamic) item;
-            String itemType = item == null ? String.Empty : skyDriveItem.type.ToString();
-            switch (itemType)
-            {
-                case "folder":
-                case "album":
-                    return FolderOrAlbumTemplate;
-                case "photo":
-                    return PhotoTemplate;
-                case "video":
-                case "audio":
-                    return AudioVideoTemplate;
-                case "file":
-                    return EmbeddableFileTemplate;
-                default:
-                    return base.SelectTemplateCore(item, container);
-            }
         }
     }
 }
