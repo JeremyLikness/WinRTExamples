@@ -59,9 +59,10 @@
                         <Setter Property="Margin" Value="5"/>
                     </Style>
                 </Grid.Resources>
-                <Image Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="99" Source="{Binding ProfileImageSource}" Width="180" Height="180"/>
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="Id: "/>
-                <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding SkyDriveItem.id}"/>
+                <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="99" Text="{Binding SkyDriveItem.name}" Style="{StaticResource SubheaderTextBlockStyle}"/>
+                <Image Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="99" Source="{Binding ProfileImageSource}" Width="180" Height="180"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Id: "/>
+                <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding SkyDriveItem.id}"/>
 
                 <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="99" Text="Additional Values:"/>
                 <ScrollViewer Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="99" VerticalScrollBarVisibility="Auto" Margin="5">

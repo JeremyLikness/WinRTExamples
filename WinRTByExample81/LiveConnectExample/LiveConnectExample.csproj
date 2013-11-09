@@ -151,6 +151,7 @@
     <Compile Include="IDialogService.cs" />
     <Compile Include="LiveConnect\LiveConnectWrapper.cs" />
     <Compile Include="Common\AppBarDisplayOnItemSelectionBehavior.cs" />
+    <Compile Include="SkyDrive\SkyDriveContentTemplateSelector.cs" />
     <Compile Include="SkyDrive\SkyDriveItemsPage.xaml.cs">
       <DependentUpon>SkyDriveItemsPage.xaml</DependentUpon>
     </Compile>
