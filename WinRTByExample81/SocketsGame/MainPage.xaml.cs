@@ -66,7 +66,7 @@
                 clientWriter = new DataWriter(this.clientSocket.OutputStream);
                 clientReader = new DataReader(this.clientSocket.InputStream);
                 this.SafeAddText(s => GameText.Text += s, "Connected to server!");
-                var discardedTask = Task.Factory.StartNew(ClientListener, null, TaskCreationOptions.LongRunning);
+                var longRunningTask = Task.Factory.StartNew(ClientListener, null, TaskCreationOptions.LongRunning);
                 await SendString(clientWriter, "look");                
             }
             catch (Exception ex)
