@@ -59,8 +59,8 @@
                         <Setter Property="Margin" Value="5"/>
                     </Style>
                 </Grid.Resources>
-                <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="99" Text="{Binding SkyDriveItem.name}" Style="{StaticResource SubheaderTextBlockStyle}"/>
-                <Image Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="99" Source="{Binding ProfileImageSource}" Width="180" Height="180"/>
+                <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="99" Text="{Binding SkyDriveItem.name}" Style="{StaticResource SubheaderTextBlockStyle}" FontWeight="SemiBold"/>
+                <Image Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="99" Source="{Binding ProfileImageSource}" Width="180" Height="180" Margin="0,20,0,20" />
                 <TextBlock Grid.Row="2" Grid.Column="0" Text="Id: "/>
                 <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding SkyDriveItem.id}"/>
 
@@ -156,6 +156,17 @@
 
     <Page.BottomAppBar>
         <CommandBar>
+            <AppBarButton Icon="Home" Label="Go To Start" Command="{Binding GoToStartCommand}"/>
+            <AppBarButton Icon="Folder" Label="Special Folders">
+                <AppBarButton.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Text="Camera Roll" Command="{Binding GoToSpecialFolderCommand}" CommandParameter="CameraRoll"/>
+                        <MenuFlyoutItem Text="Documents" Command="{Binding GoToSpecialFolderCommand}" CommandParameter="Documents"/>
+                        <MenuFlyoutItem Text="Pictures" Command="{Binding GoToSpecialFolderCommand}" CommandParameter="MyPhotos"/>
+                        <MenuFlyoutItem Text="Public" Command="{Binding GoToSpecialFolderCommand}" CommandParameter="Public"/>
+                    </MenuFlyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
             <AppBarButton Icon="Refresh" Label="Refresh" Command="{Binding RefreshCommand}"/>
             <AppBarSeparator Visibility="{Binding IsFolderOrAlbum, Converter={StaticResource IfTrueThenVisible}}"/>
             <AppBarButton Icon ="NewFolder" Label="New folder" Command="{Binding OpenCreateFolderCommand}" Visibility="{Binding IsFolderOrAlbum, Converter={StaticResource IfTrueThenVisible}}">

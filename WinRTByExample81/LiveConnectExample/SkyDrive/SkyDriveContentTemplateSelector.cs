@@ -37,6 +37,7 @@ namespace LiveConnectExample
                 case "audio":
                     return AudioVideoTemplate;
                 case "file":
+                case "notebook":
                     return EmbeddableFileTemplate;
                 default:
                     return base.SelectTemplateCore(item, container);
