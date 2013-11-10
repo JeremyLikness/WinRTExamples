@@ -72,7 +72,7 @@
                                 <Setter Property="Margin" Value="5"/>
                             </Style>
                         </Grid.Resources>
-                        <Image Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="99" Source="{Binding ImageSource}" Width="180" Height="180"/>
+                        <Image Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="99" Source="{Binding ImageSource}" Width="180" Height="180" Margin="0,20,0,20" />
                         <TextBlock Grid.Row="1" Grid.Column="0" Text="Id: "/>
                         <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Contact.id}"/>
 

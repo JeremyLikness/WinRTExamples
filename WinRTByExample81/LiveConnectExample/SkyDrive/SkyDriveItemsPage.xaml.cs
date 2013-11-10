@@ -31,6 +31,9 @@ namespace LiveConnectExample
         private String _skyDriveItemId;
         private readonly ObservableCollection<dynamic> _skydriveItems = new ObservableCollection<dynamic>();
 
+        
+        private readonly RelayCommand _goToStartCommand;
+        private readonly RelayCommand<String> _goToSpecialFolderCommand;
         private readonly RelayCommand _refreshCommand;
         private readonly RelayCommand _openCreateFolderCommand;
         private readonly RelayCommand _createFolderCommand;
@@ -56,6 +59,8 @@ namespace LiveConnectExample
             _dialogService = new DialogService(Dispatcher);
             _liveConnectWrapper = ((App)Application.Current).LiveConnectWrapper;
 
+            _goToStartCommand = new RelayCommand(GoHome);
+            _goToSpecialFolderCommand = new RelayCommand<String>(GoToSpecialFolder);
             _refreshCommand = new RelayCommand(Refresh);
             _openCreateFolderCommand = new RelayCommand(OpenCreateFolder);
             _createFolderCommand = new RelayCommand(CreateFolder, CanCreateFolder);
@@ -120,13 +125,14 @@ namespace LiveConnectExample
         {
             _navigationHelper.OnNavigatedTo(e);
 
-            _skyDriveItemId = e.Parameter as String;
             DefaultViewModel["IsConnected"] = _liveConnectWrapper.IsSessionAvailable;
             DefaultViewModel["ProfileImageSource"] = new Uri("ms-appx:///Assets/SkyDriveIconWhite.png");
             DefaultViewModel["SkyDriveItem"] = null;
             DefaultViewModel["SkyDriveItems"] = _skydriveItems;
             DefaultViewModel["SelectedItem"] = null;
 
+            DefaultViewModel["GoToStartCommand"] = _goToStartCommand;
+            DefaultViewModel["GoToSpecialFolderCommand"] = _goToSpecialFolderCommand;
             DefaultViewModel["RefreshCommand"] = _refreshCommand;
             DefaultViewModel["OpenCreateFolderCommand"] = _openCreateFolderCommand;
             DefaultViewModel["CreateFolderCommand"] = _createFolderCommand;
@@ -145,7 +151,17 @@ namespace LiveConnectExample
                                            };
 
             _liveConnectWrapper.SessionChanged += OnLiveConnectWrapperSessionChanged;
-            await UpdateContent();
+
+            var paramText = e.Parameter as String ?? String.Empty;
+            LiveConnectWrapper.SpecialFolder folder;
+            if (Enum.TryParse(paramText, true, out folder))
+            {
+                await LoadSpecialFolderContent(folder);    
+            }
+            else
+            {
+                await LoadContentById(paramText);    
+            }            
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -178,61 +194,101 @@ namespace LiveConnectExample
 
         private async void OnLiveConnectWrapperSessionChanged(Object sender, EventArgs eventArgs)
         {
-            await UpdateContent();
+            await LoadContentById(_skyDriveItemId);
         }
 
-        private async void Refresh()
+        private async Task LoadSpecialFolderContent(LiveConnectWrapper.SpecialFolder folder)
         {
-            await UpdateContent();
+            var isConnected = _liveConnectWrapper.IsSessionAvailable;
+            DefaultViewModel["IsConnected"] = isConnected;
+            if (isConnected)
+            {
+                try
+                {
+                    var skyDriveItem = await _liveConnectWrapper.GetMySkyDriveSpecialFolderAsync(folder);
+                    await LoadContentFromItem(skyDriveItem);
+
+                }
+                catch (LiveConnectException ex)
+                {
+                    _dialogService.ShowError(ex.Message);
+                }
+            }
         }
 
-        private async Task UpdateContent()
+        private async Task LoadContentById(String skyDriveItemId)
         {
             var isConnected = _liveConnectWrapper.IsSessionAvailable;
             DefaultViewModel["IsConnected"] = isConnected;
 
             if (isConnected)
             {
-                var skyDriveItem = await _liveConnectWrapper.GetSkyDriveItemAsync(_skyDriveItemId);
-                DefaultViewModel["SkyDriveItem"] = skyDriveItem;
-                DefaultViewModel["SelectedItem"] = null;
-                DefaultViewModel["IsFolderOrAlbum"] = skyDriveItem.type.ToString().Equals("folder") || skyDriveItem.type.ToString().Equals("album");
-
-                var skyDriveItemValues = new Dictionary<String, Object>(skyDriveItem as IDictionary<String, Object>);
-                skyDriveItemValues.Remove("id");
-                skyDriveItemValues.Remove("name");
-
-                var profileItemsList = skyDriveItemValues.FlattenDynamicItems(String.Empty);
-                DefaultViewModel["AdditionalDetails"] = profileItemsList.Select(x => new { x.Key, x.Value }).ToList();
-
-                String itemType = skyDriveItem.type.ToString();
-                switch (itemType)
+                try
                 {
-                    case "folder":
-                    case "album":
-                        LoadFolderOrAlbumContent(skyDriveItem);
-                        break;
-                    case "photo":
-                        LoadPhotoContent();
-                        break;
-                    case "audio":
-                    case "video":
-                        LoadMediaContent(skyDriveItem);
-                        break;
-                    case "file":
-                    case "notebook":
-                        LoadFileContent(skyDriveItem);
-                        break;
+                    var skyDriveItem = await _liveConnectWrapper.GetSkyDriveItemAsync(skyDriveItemId);
+                    await LoadContentFromItem(skyDriveItem);
+                }
+                catch (LiveConnectException ex)
+                {
+                    _dialogService.ShowError(ex.Message);
                 }
             }
         }
 
-        private async void LoadFolderOrAlbumContent(dynamic skyDriveItem)
+        private async Task LoadContentFromItem(dynamic skyDriveItem)
+        {
+            _skyDriveItemId = skyDriveItem.id;
+
+            DefaultViewModel["SkyDriveItem"] = skyDriveItem;
+            DefaultViewModel["SelectedItem"] = null;
+            DefaultViewModel["IsFolderOrAlbum"] = skyDriveItem.type.ToString().Equals("folder") || skyDriveItem.type.ToString().Equals("album");
+
+            var skyDriveItemValues = new Dictionary<String, Object>(skyDriveItem as IDictionary<String, Object>);
+            skyDriveItemValues.Remove("id");
+            skyDriveItemValues.Remove("name");
+
+            var profileItemsList = skyDriveItemValues.FlattenDynamicItems(String.Empty);
+            DefaultViewModel["AdditionalDetails"] = profileItemsList.Select(x => new { x.Key, x.Value }).ToList();
+
+            String itemType = skyDriveItem.type.ToString();
+            switch (itemType)
+            {
+                case "folder":
+                case "album":
+                    LoadFolderOrAlbumContent();
+                    break;
+                case "photo":
+                    LoadPhotoContent();
+                    break;
+                case "audio":
+                case "video":
+                    LoadMediaContent(skyDriveItem);
+                    break;
+                case "file":
+                case "notebook":
+                    LoadFileContent(skyDriveItem);
+                    break;
+            }
+
+            try
+            {
+                var profileImageUrl = await _liveConnectWrapper.GetSkydriveItemPictureAsync(_skyDriveItemId, LiveConnectWrapper.PictureSize.Small);
+                DefaultViewModel["ProfileImageSource"] = profileImageUrl;
+            }
+            catch (LiveConnectException ex)
+            {
+                // If the thumbnail image cannot be found, just show the default icon
+                //_dialogService.ShowError(ex.Message);
+                DefaultViewModel["ProfileImageSource"] = SkyDriveItemToIconUriConverter.GetItemTypeIcon(skyDriveItem.type);
+            }
+        }
+
+        private async void LoadFolderOrAlbumContent()
         {
             try
             {
                 var skyDriveItemContents =
-                    await _liveConnectWrapper.GetSkydriveItemContentsAsync(_skyDriveItemId);
+                    await _liveConnectWrapper.GetSkydriveContentsAsync(_skyDriveItemId);
                 var orderedSkyDriveContents =
                     new List<dynamic>(skyDriveItemContents).OrderBy(
                         x => ((String)x.type).GetSkyDriveItemTypeOrder()).ThenBy(x => x.name);
@@ -246,21 +302,12 @@ namespace LiveConnectExample
             {
                 _dialogService.ShowError(ex.Message);
             }
-
-            if (skyDriveItem.type.ToString().Equals("album"))
-            {
-                var albumImageUrl = await _liveConnectWrapper.GetAlbumPictureUrlAsync(_skyDriveItemId);
-                DefaultViewModel["ProfileImageSource"] = albumImageUrl;
-            }
         }
 
         private async void LoadPhotoContent()
         {
             try
             {
-                var profileImageUrl = await _liveConnectWrapper.GetSkydriveItemPictureAsync(_skyDriveItemId, LiveConnectWrapper.PictureSize.Small);
-                DefaultViewModel["ProfileImageSource"] = profileImageUrl;
-
                 var itemPictureUrl = await _liveConnectWrapper.GetSkydriveItemPictureAsync(_skyDriveItemId, LiveConnectWrapper.PictureSize.Full);
                 DefaultViewModel["SkyDrivePhotoUrl"] = itemPictureUrl;
             }
@@ -270,18 +317,8 @@ namespace LiveConnectExample
             }
         }
 
-        private async void LoadMediaContent(dynamic skyDriveItem)
+        private void LoadMediaContent(dynamic skyDriveItem)
         {
-            try
-            {
-                var itemPictureUrl = await _liveConnectWrapper.GetSkydriveItemPictureAsync(_skyDriveItemId, LiveConnectWrapper.PictureSize.Small);
-                DefaultViewModel["ProfileImageSource"] = itemPictureUrl;
-            }
-            catch (LiveConnectException ex)
-            {
-                _dialogService.ShowError(ex.Message);
-            }
-
             var mediaUri = new Uri(skyDriveItem.source);
             DefaultViewModel["SkyDriveMediaUrl"] = mediaUri;
         }
@@ -293,7 +330,7 @@ namespace LiveConnectExample
 
             try
             {
-                var fileUrl = await _liveConnectWrapper.GetSkydriveItemLinkUrlAsync(_skyDriveItemId);
+                var fileUrl = await _liveConnectWrapper.GetSkydriveItemShareLinkUrlAsync(_skyDriveItemId, true);
                 DefaultViewModel["SkyDriveEmbeddableItemUrl"] = fileUrl;
 
             }
@@ -306,6 +343,28 @@ namespace LiveConnectExample
         #endregion
 
         #region Command Support
+
+        private void GoHome()
+        {
+            while (Frame.CanGoBack)
+            {
+                Frame.GoBack();
+            }
+        }
+
+        private void GoToSpecialFolder(String folderValue)
+        {
+            LiveConnectWrapper.SpecialFolder folder;
+            if (Enum.TryParse(folderValue, true, out folder))
+            {
+                Frame.Navigate(typeof(SkyDriveItemsPage), folder.ToString());
+            }
+        }
+
+        private async void Refresh()
+        {
+            await LoadContentById(_skyDriveItemId);
+        }
 
         private void OpenCreateFolder()
         {
@@ -344,7 +403,7 @@ namespace LiveConnectExample
 
             var currentQuota = await _liveConnectWrapper.GetUserSkyDriveQuotaAsync();
             var fileInfo = await fileToUpload.GetBasicPropertiesAsync();
-            if (currentQuota.Available < 0 || (UInt64) currentQuota.Available < fileInfo.Size)
+            if ((UInt64) currentQuota.Available < fileInfo.Size)
             {
                 _dialogService.ShowError("There is not enough space available in the SkyDrive account to store the file.");
                 return;
@@ -512,6 +571,13 @@ namespace LiveConnectExample
                 if (currentItem.type != "folder" && currentItem.type != "album")
                 {
                     downloadItem = currentItem;
+                }
+            }
+            else
+            {
+                if (downloadItem.type == "folder" || downloadItem.type == "album")
+                {
+                    downloadItem = null;
                 }
             }
             return downloadItem != null;

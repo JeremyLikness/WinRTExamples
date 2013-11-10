@@ -19,6 +19,27 @@ namespace LiveConnectExample
         {
             var skydriveItem = (dynamic) value;
             String itemType = skydriveItem.type.ToString();
+            return GetItemTypeIcon(itemType);
+        }
+
+        /// <summary>
+        /// Modifies the target data before passing it to the source object. This method is called only in TwoWay bindings.
+        /// </summary>
+        /// <param name="value">The target data being passed to the source.</param>
+        /// <param name="targetType">The type of the target property, specified by a helper structure that wraps the type name.</param>
+        /// <param name="parameter">An optional parameter to be used in the converter logic.</param>
+        /// <param name="language">The language of the conversion.</param>
+        /// <returns>
+        /// The value to be passed to the source object.
+        /// </returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public Object ConvertBack(Object value, Type targetType, Object parameter, String language)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Uri GetItemTypeIcon(String itemType)
+        {
             switch (itemType.ToLowerInvariant())
             {
                 case "audio":
@@ -38,22 +59,6 @@ namespace LiveConnectExample
                 default:
                     return new Uri("ms-appx:///Assets/Folder-Open.png");
             }
-        }
-
-        /// <summary>
-        /// Modifies the target data before passing it to the source object. This method is called only in TwoWay bindings.
-        /// </summary>
-        /// <param name="value">The target data being passed to the source.</param>
-        /// <param name="targetType">The type of the target property, specified by a helper structure that wraps the type name.</param>
-        /// <param name="parameter">An optional parameter to be used in the converter logic.</param>
-        /// <param name="language">The language of the conversion.</param>
-        /// <returns>
-        /// The value to be passed to the source object.
-        /// </returns>
-        /// <exception cref="System.NotImplementedException"></exception>
-        public Object ConvertBack(Object value, Type targetType, Object parameter, String language)
-        {
-            throw new NotImplementedException();
         }
     }
 }
