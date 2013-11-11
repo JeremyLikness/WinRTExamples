@@ -29,16 +29,6 @@ namespace PushNotificationExample
     public class SendNotificationHelper
     {
         /// <summary>
-        /// Package security identifier
-        /// </summary>
-        private const String PackageSecurityIdentifier = "YOUR_PACKAGE_SID_HERE";
-
-        /// <summary>
-        /// Client secret
-        /// </summary>
-        private const String ClientSecret = "YOUR_CLIENT_SECRET_HERE";
-
-        /// <summary>
         /// Request string to get the token
         /// </summary>
         private const String TokenRequest =
@@ -141,8 +131,8 @@ namespace PushNotificationExample
         {
             var requestBody = String.Format(
                 TokenRequest,
-                WebUtility.UrlEncode(PackageSecurityIdentifier),
-                WebUtility.UrlEncode(ClientSecret));
+                WebUtility.UrlEncode(NotificationConstants.PackageSecurityIdentifier),
+                WebUtility.UrlEncode(NotificationConstants.ClientSecret));
 
             var httpBody = new StringContent(
                 requestBody,
