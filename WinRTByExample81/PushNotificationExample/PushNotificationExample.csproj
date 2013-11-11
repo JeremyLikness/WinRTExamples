@@ -135,6 +135,7 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PushNotificationHelpers\NotificationConstants.cs" />
     <Compile Include="PushNotificationHelpers\NotificationRegistrationHelper.cs" />
     <Compile Include="PushNotificationHelpers\SendNotificationHelper.cs" />
   </ItemGroup>
