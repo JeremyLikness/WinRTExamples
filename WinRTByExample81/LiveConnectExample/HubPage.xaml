@@ -14,6 +14,7 @@
         <x:String x:Key="ChevronGlyph">&#xE26B;</x:String>
         <common:BooleanToVisibilityConverter x:Key="IfTrueThenVisible" TrueValue="Visible"/>
         <common:BooleanToVisibilityConverter x:Key="IfFalseThenVisible" TrueValue="Collapsed"/>
+        <common:NullToVisibilityConverter x:Key="IfNullThenNotVisible" NullValue="Collapsed"/>
         <liveConnectExample:SkyDriveItemToIconUriConverter x:Key="SkyDriveItemToIconUriConverter"/>
     </Page.Resources>
 
@@ -113,7 +114,7 @@
                         </ListView.ItemsPanel>
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <Grid HorizontalAlignment="Left" Width="250" Height="250">
+                                <Grid HorizontalAlignment="Left">
                                     <Border Background="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}">
                                         <Image Stretch="UniformToFill" AutomationProperties.Name="{Binding name}" Source="Assets/Profile.png"/>
                                     </Border>
@@ -121,6 +122,7 @@
                                         <TextBlock Text="{Binding name}" Foreground="{ThemeResource ListViewItemOverlayForegroundThemeBrush}" Style="{StaticResource BaseTextBlockStyle}" Height="60" Margin="15,0,15,0" FontWeight="SemiBold"/>
                                         <TextBlock Text="{Binding id}" Foreground="{ThemeResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="NoWrap" Margin="15,0,15,10" FontSize="12"/>
                                     </StackPanel>
+                                    <Border BorderThickness="5" BorderBrush="Red" Visibility="{Binding user_id, Converter={StaticResource IfNullThenNotVisible}}"></Border>
                                 </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>

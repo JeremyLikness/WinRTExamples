@@ -29,4 +29,27 @@ namespace LiveConnectExample.Common
             return value is Visibility && (Visibility)value == TrueValue;
         }
     }
+
+    public sealed class NullToVisibilityConverter : IValueConverter
+    {
+        public NullToVisibilityConverter()
+        {
+            NullValue = Visibility.Collapsed;
+        }
+
+        public Visibility NullValue { get; set; }
+
+        public Object Convert(Object value, Type targetType, Object parameter, String language)
+        {
+            return (value == null)
+                ? NullValue
+                : NullValue == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+
+        }
+
+        public Object ConvertBack(Object value, Type targetType, Object parameter, String language)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
