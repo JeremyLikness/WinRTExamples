@@ -78,7 +78,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoapServiceExample", "SoapS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationHelper", "NotificationHelper\NotificationHelper.csproj", "{18CFD343-5194-4819-9578-55C4FF5E0308}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter07", "Chapter07", "{2EFE7EA2-FDE5-4366-984D-4542ADA7B1E3}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter06", "Chapter06", "{2EFE7EA2-FDE5-4366-984D-4542ADA7B1E3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TileExplorer", "TileExplorer\TileExplorer.csproj", "{379CC5D0-039B-43D0-B2B0-D001A3EFF12B}"
 EndProject
@@ -124,7 +124,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationExampleLauncher"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeGroupExample", "HomeGroupExample\HomeGroupExample.csproj", "{A3D54F08-9918-41AA-9731-472D21E58333}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter06", "Chapter06", "{D55B3603-79FD-4C48-B0FE-D8303B66D1E8}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter07", "Chapter07", "{D55B3603-79FD-4C48-B0FE-D8303B66D1E8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveConnectExample", "LiveConnectExample\LiveConnectExample.csproj", "{37DD3DDA-D4B8-4957-ACA6-1EAA57CCD183}"
 EndProject
