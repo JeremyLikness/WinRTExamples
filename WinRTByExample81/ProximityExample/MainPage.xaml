@@ -40,7 +40,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Triggered Connection:" Style="{StaticResource BaseTextBlockStyle}" Margin="10 0 0 0" />
+                <TextBlock Text="Triggered:" Style="{StaticResource BaseTextBlockStyle}" Margin="10 0 0 0" />
                 <TextBlock Text="Supported"
                            Visibility="{Binding SupportsTriggeredConnect, Converter={StaticResource Show}}"
                            Style="{StaticResource BaseTextBlockStyle}"
@@ -48,7 +48,7 @@
                 <TextBlock Text="Not Supported"
                            Visibility="{Binding SupportsTriggeredConnect, Converter={StaticResource Show}, ConverterParameter='reverse'}"
                            Style="{StaticResource BaseTextBlockStyle}" Margin="10 0 0 0" />
-                <TextBlock Text="Browse Connection:" Style="{StaticResource BaseTextBlockStyle}" Margin="20 0 0 0" />
+                <TextBlock Text="Browse:" Style="{StaticResource BaseTextBlockStyle}" Margin="20 0 0 0" />
                 <TextBlock Text="Supported"
                            Visibility="{Binding SupportsBrowseConnect, Converter={StaticResource Show}}"
                            Style="{StaticResource BaseTextBlockStyle}"
@@ -56,11 +56,16 @@
                 <TextBlock Text="Not Supported"
                            Visibility="{Binding SupportsBrowseConnect, Converter={StaticResource Show}, ConverterParameter='reverse'}"
                            Style="{StaticResource BaseTextBlockStyle}" Margin="10 0 0 0" />
+                <TextBlock Text="Connected Peer:" Style="{StaticResource BaseTextBlockStyle}" Margin="20 0 0 0" />
+                <TextBlock Text="{Binding ConnectedPeer, FallbackValue='None'}"
+                           Style="{StaticResource BaseTextBlockStyle}"
+                           Margin="10 0 0 0" />
             </StackPanel>
             <StackPanel Grid.Row="1" Orientation="Horizontal">
                 <Button Content="Start Advertising" Command="{Binding StartAdvertising}" />
                 <Button Content="Stop Advertising" Command="{Binding StopAdvertising}" />
                 <Button Content="Browse" Command="{Binding Browse}" Margin="10 0 0 0"/>
+                <Button Content="Connect" Command="{Binding Connect}" Margin="10 0 0 0"/>
             </StackPanel>
             <TextBlock Grid.Row="2" Text="{Binding ErrorMessage}" Style="{StaticResource BaseTextBlockStyle}" FontWeight="Bold" Foreground="Red"/>
             <StackPanel Grid.Row="3" Orientation="Horizontal">
