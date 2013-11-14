@@ -45,7 +45,7 @@
             }
 
             Connect = new ActionCommand(async obj => await this.ConnectCommand(), obj => this.SelectedPeer != null && !this.IsConnecting);
-            SendMessage = new ActionCommand(obj => this.SendMessageCommand(), obj => this.peerConnectionSocket != null && !string.IsNullOrWhiteSpace(this.messageToSend));
+            SendMessage = new ActionCommand(obj => this.SendMessageCommand(), obj => this.peerConnectionSocket != null);
             Browse = new ActionCommand(async obj => await this.BrowseCommand(), obj => this.IsAdvertising && !this.IsBrowsing && !this.IsConnecting);
             StartAdvertising = new ActionCommand(obj => this.StartAdvertisingCommand(), obj => this.SupportsPeer && !this.IsAdvertising);
             StopAdvertising = new ActionCommand(obj => this.StopAdvertisingCommand(), obj => this.IsAdvertising && !this.IsConnecting);
@@ -215,8 +215,7 @@
             set
             {
                 this.messageToSend = value;
-                this.OnPropertyChanged();
-                this.SendMessage.OnCanExecuteChanged();
+                this.OnPropertyChanged();             
             }
         }
 
@@ -364,6 +363,7 @@
                 this.peerConnectionSocket = new PeerSocket(socket);
                 this.peerConnectionSocket.ErrorRaisedEvent += this.PeerConnectionSocketErrorRaisedEvent;
                 this.peerConnectionSocket.MessageRaisedEvent += this.PeerConnectionSocketMessageRaisedEvent;
+                this.peerConnectionSocket.ReadLoop();
                 this.SendMessage.OnCanExecuteChanged();
                 this.ConnectedPeer = this.SelectedPeer.Name; 
             }
@@ -426,6 +426,7 @@
                 this.peerConnectionSocket = new PeerSocket(socket);
                 this.peerConnectionSocket.ErrorRaisedEvent += this.PeerConnectionSocketErrorRaisedEvent;
                 this.peerConnectionSocket.MessageRaisedEvent += this.PeerConnectionSocketMessageRaisedEvent;
+                this.peerConnectionSocket.ReadLoop();
                 this.RouteToUiThread(
                     () =>
                         {
