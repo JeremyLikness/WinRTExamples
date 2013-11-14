@@ -28,11 +28,12 @@
             <TextBlock Text="Proximity Example" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1"
                        IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,30,40" />
         </Grid>
-        <Grid Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="3">
             <Grid.DataContext>
                 <data:ViewModel />
             </Grid.DataContext>
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -67,12 +68,18 @@
                 <Button Content="Browse" Command="{Binding Browse}" Margin="10 0 0 0"/>
                 <Button Content="Connect" Command="{Binding Connect}" Margin="10 0 0 0"/>
             </StackPanel>
-            <TextBlock Grid.Row="2" Text="{Binding ErrorMessage}" Style="{StaticResource BaseTextBlockStyle}" FontWeight="Bold" Foreground="Red"/>
-            <StackPanel Grid.Row="3" Orientation="Horizontal">
+            <StackPanel Grid.Row="2" Orientation="Horizontal">
+                <TextBox Text="{Binding MessageToSend, Mode=TwoWay}" Width="300"/>
+                <Button Content="Send" Command="{Binding SendMessage}"/>
+                <TextBox Text="Last Message: " Style="{StaticResource BaseTextBlockStyle}" Margin="20 0 0 0"/>
+                <TextBlock TextWrapping="Wrap" Style="{StaticResource BaseTextBlockStyle}" Text="{Binding LastMessage}"/>
+            </StackPanel>
+            <TextBlock Grid.Row="3" Text="{Binding ErrorMessage}" Style="{StaticResource BaseTextBlockStyle}" FontWeight="Bold" Foreground="Red"/>
+            <StackPanel Grid.Row="4" Orientation="Horizontal">
                 <TextBlock Text="Selected Peer:" Style="{StaticResource BaseTextBlockStyle}"/>
                 <TextBlock Text="{Binding SelectedPeer.Name, FallbackValue='None'}" Margin="10 0 0 0" Style="{StaticResource BaseTextBlockStyle}"/>
             </StackPanel>
-            <ListView Grid.Row="4" ItemsSource="{Binding Peers}" SelectedItem="{Binding SelectedPeer, Mode=TwoWay}">
+            <ListView Grid.Row="5" ItemsSource="{Binding Peers}" SelectedItem="{Binding SelectedPeer, Mode=TwoWay}">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Horizontal"></StackPanel>

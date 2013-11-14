@@ -129,6 +129,7 @@
     </Compile>
     <Compile Include="Common\BoolVisibilityConverter.cs" />
     <Compile Include="Data\FoundPeer.cs" />
+    <Compile Include="Data\PeerSocket.cs" />
     <Compile Include="Data\ViewModel.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
