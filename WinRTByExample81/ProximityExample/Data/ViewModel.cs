@@ -8,7 +8,6 @@
     using System.Threading.Tasks;
 
     using Windows.Networking.Proximity;
-    using Windows.Networking.Sockets;
     using Windows.UI.Core;
 
     using ViewModelHelper;
@@ -35,6 +34,7 @@
                 this.Peers.Add(new FoundPeer { Name = "Another Design Peer", Text = "Some Discovery Text"} );
                 this.selectedPeer = this.Peers[0];
                 this.connectedPeer = "Design-time Connected Peer";
+                this.lastMessage = "Something from a peer.";
             }
             else
             {
@@ -44,7 +44,8 @@
                 this.supportsBrowseConnect = (PeerFinder.SupportedDiscoveryTypes & PeerDiscoveryTypes.Browse) > 0;
             }
 
-            Connect = new ActionCommand(async Object => await this.ConnectCommand(), obj => this.SelectedPeer != null && !this.IsConnecting);
+            Connect = new ActionCommand(async obj => await this.ConnectCommand(), obj => this.SelectedPeer != null && !this.IsConnecting);
+            SendMessage = new ActionCommand(obj => this.SendMessageCommand(), obj => this.peerConnectionSocket != null && !string.IsNullOrWhiteSpace(this.messageToSend));
             Browse = new ActionCommand(async obj => await this.BrowseCommand(), obj => this.IsAdvertising && !this.IsBrowsing && !this.IsConnecting);
             StartAdvertising = new ActionCommand(obj => this.StartAdvertisingCommand(), obj => this.SupportsPeer && !this.IsAdvertising);
             StopAdvertising = new ActionCommand(obj => this.StopAdvertisingCommand(), obj => this.IsAdvertising && !this.IsConnecting);
@@ -52,9 +53,9 @@
 
         private bool isAdvertising, isBrowsing, isConnecting, supportsTriggeredConnect, supportsBrowseConnect;
 
-        private string errorMessage, connectedPeer;
+        private string errorMessage, connectedPeer, lastMessage, messageToSend;
 
-        private StreamSocket peerConnectionSocket;
+        private PeerSocket peerConnectionSocket;
 
         private FoundPeer selectedPeer; 
 
@@ -65,6 +66,8 @@
         public ActionCommand Browse { get; private set; }
 
         public ActionCommand Connect { get; private set; }
+
+        public ActionCommand SendMessage { get; private set; }
 
         public ObservableCollection<FoundPeer> Peers { get; private set; } 
         
@@ -185,6 +188,35 @@
             {
                 this.connectedPeer = value;
                 this.OnPropertyChanged();
+            }
+        }
+
+        public string LastMessage
+        {
+            get
+            {
+                return this.lastMessage;
+            }
+
+            set
+            {
+                this.lastMessage = value;
+                this.OnPropertyChanged();
+            }
+        }
+
+        public string MessageToSend 
+        {
+            get
+            {
+                return this.messageToSend;
+            }
+
+            set
+            {
+                this.messageToSend = value;
+                this.OnPropertyChanged();
+                this.SendMessage.OnCanExecuteChanged();
             }
         }
 
@@ -323,13 +355,16 @@
             {
                 if (this.peerConnectionSocket != null)
                 {
-                    this.peerConnectionSocket.Dispose();
-                    this.peerConnectionSocket = null;
+                    this.DisposeSocket();
                 }
 
                 this.ConnectedPeer = "Connecting...";
 
-                this.peerConnectionSocket = await PeerFinder.ConnectAsync(this.SelectedPeer.Information);
+                var socket = await PeerFinder.ConnectAsync(this.SelectedPeer.Information);
+                this.peerConnectionSocket = new PeerSocket(socket);
+                this.peerConnectionSocket.ErrorRaisedEvent += this.PeerConnectionSocketErrorRaisedEvent;
+                this.peerConnectionSocket.MessageRaisedEvent += this.PeerConnectionSocketMessageRaisedEvent;
+                this.SendMessage.OnCanExecuteChanged();
                 this.ConnectedPeer = this.SelectedPeer.Name; 
             }
             catch (Exception ex)
@@ -339,6 +374,29 @@
             }
 
             this.IsConnecting = false;
+        }
+
+        private async void SendMessageCommand()
+        {
+            if (string.IsNullOrWhiteSpace(this.MessageToSend) || this.peerConnectionSocket == null)
+            {
+                return;
+            }
+            var message = this.MessageToSend;
+            this.MessageToSend = string.Empty;
+            await this.peerConnectionSocket.WriteMessage(message);
+        }
+
+        private void DisposeSocket()
+        {
+            if (this.peerConnectionSocket != null)
+            {
+                this.peerConnectionSocket.ErrorRaisedEvent -= this.PeerConnectionSocketErrorRaisedEvent;
+                this.peerConnectionSocket.MessageRaisedEvent -= this.PeerConnectionSocketMessageRaisedEvent;
+                this.peerConnectionSocket.Dispose();
+                this.peerConnectionSocket = null;
+                this.RouteToUiThread(() => this.SendMessage.OnCanExecuteChanged());
+            }
         }
 
         private async void PeerFinderConnectionRequested(object sender, ConnectionRequestedEventArgs args)
@@ -361,14 +419,17 @@
 
                 if (this.peerConnectionSocket != null)
                 {
-                    this.peerConnectionSocket.Dispose();
-                    this.peerConnectionSocket = null;
+                    this.DisposeSocket();
                 }
 
-                this.peerConnectionSocket = await PeerFinder.ConnectAsync(args.PeerInformation);
+                var socket = await PeerFinder.ConnectAsync(args.PeerInformation);
+                this.peerConnectionSocket = new PeerSocket(socket);
+                this.peerConnectionSocket.ErrorRaisedEvent += this.PeerConnectionSocketErrorRaisedEvent;
+                this.peerConnectionSocket.MessageRaisedEvent += this.PeerConnectionSocketMessageRaisedEvent;
                 this.RouteToUiThread(
                     () =>
                         {
+                            this.SendMessage.OnCanExecuteChanged();
                             this.IsConnecting = false;
                             var peer =
                                 this.Peers.FirstOrDefault(p => p.Information.Id == args.PeerInformation.Id);
@@ -385,6 +446,17 @@
             {
                 this.RouteToUiThread(() => this.ErrorMessage = ex.Message);
             }
+        }
+
+        private void PeerConnectionSocketMessageRaisedEvent(object sender, string e)
+        {
+            this.RouteToUiThread(() => this.LastMessage = e);
+        }
+
+        private void PeerConnectionSocketErrorRaisedEvent(object sender, string e)
+        {
+            this.RouteToUiThread(() => this.ErrorMessage = e);
+            this.DisposeSocket();
         }
 
         private void PeerFinder_TriggeredConnectionStateChanged(object sender, TriggeredConnectionStateChangedEventArgs args)
