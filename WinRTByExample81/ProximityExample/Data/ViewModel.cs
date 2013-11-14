@@ -8,6 +8,7 @@
     using System.Threading.Tasks;
 
     using Windows.Networking.Proximity;
+    using Windows.Networking.Sockets;
     using Windows.UI.Core;
 
     using ViewModelHelper;
@@ -282,7 +283,7 @@
 
             try
             {
-                PeerFinder.TriggeredConnectionStateChanged += PeerFinder_TriggeredConnectionStateChanged;
+                PeerFinder.TriggeredConnectionStateChanged += this.PeerFinderTriggeredConnectionStateChanged;
                 PeerFinder.ConnectionRequested += this.PeerFinderConnectionRequested;
                 
                 PeerFinder.Role = PeerRole.Peer;
@@ -302,7 +303,7 @@
 
             try
             {
-                PeerFinder.TriggeredConnectionStateChanged -= this.PeerFinder_TriggeredConnectionStateChanged;
+                PeerFinder.TriggeredConnectionStateChanged -= this.PeerFinderTriggeredConnectionStateChanged;
                 PeerFinder.ConnectionRequested -= this.PeerFinderConnectionRequested;
                 PeerFinder.Stop();
             }
@@ -352,19 +353,9 @@
 
             try
             {
-                if (this.peerConnectionSocket != null)
-                {
-                    this.DisposeSocket();
-                }
-
                 this.ConnectedPeer = "Connecting...";
-
                 var socket = await PeerFinder.ConnectAsync(this.SelectedPeer.Information);
-                this.peerConnectionSocket = new PeerSocket(socket);
-                this.peerConnectionSocket.ErrorRaisedEvent += this.PeerConnectionSocketErrorRaisedEvent;
-                this.peerConnectionSocket.MessageRaisedEvent += this.PeerConnectionSocketMessageRaisedEvent;
-                this.peerConnectionSocket.ReadLoop();
-                this.SendMessage.OnCanExecuteChanged();
+                this.InitializeSocket(socket);
                 this.ConnectedPeer = this.SelectedPeer.Name; 
             }
             catch (Exception ex)
@@ -387,16 +378,36 @@
             await this.peerConnectionSocket.WriteMessage(message);
         }
 
-        private void DisposeSocket()
+        private void InitializeSocket(StreamSocket socket)
         {
             if (this.peerConnectionSocket != null)
             {
-                this.peerConnectionSocket.ErrorRaisedEvent -= this.PeerConnectionSocketErrorRaisedEvent;
-                this.peerConnectionSocket.MessageRaisedEvent -= this.PeerConnectionSocketMessageRaisedEvent;
-                this.peerConnectionSocket.Dispose();
-                this.peerConnectionSocket = null;
-                this.RouteToUiThread(() => this.SendMessage.OnCanExecuteChanged());
+                this.DisposeSocket();
             }
+
+            this.peerConnectionSocket = new PeerSocket(socket);
+            this.peerConnectionSocket.ErrorRaisedEvent += this.PeerConnectionSocketErrorRaisedEvent;
+            this.peerConnectionSocket.MessageRaisedEvent += this.PeerConnectionSocketMessageRaisedEvent;
+            this.peerConnectionSocket.ReadLoop();               
+        }
+
+        private void DisposeSocket()
+        {
+            if (this.peerConnectionSocket == null)
+            {
+                return;
+            }
+
+            this.peerConnectionSocket.ErrorRaisedEvent -= this.PeerConnectionSocketErrorRaisedEvent;
+            this.peerConnectionSocket.MessageRaisedEvent -= this.PeerConnectionSocketMessageRaisedEvent;
+            this.peerConnectionSocket.Dispose();
+            this.peerConnectionSocket = null;
+            this.RouteToUiThread(
+                () =>
+                    {
+                        this.ConnectedPeer = null;
+                        this.SendMessage.OnCanExecuteChanged();
+                    });
         }
 
         private async void PeerFinderConnectionRequested(object sender, ConnectionRequestedEventArgs args)
@@ -417,20 +428,11 @@
                                 args.PeerInformation.DisplayName);
                         });                
 
-                if (this.peerConnectionSocket != null)
-                {
-                    this.DisposeSocket();
-                }
-
                 var socket = await PeerFinder.ConnectAsync(args.PeerInformation);
-                this.peerConnectionSocket = new PeerSocket(socket);
-                this.peerConnectionSocket.ErrorRaisedEvent += this.PeerConnectionSocketErrorRaisedEvent;
-                this.peerConnectionSocket.MessageRaisedEvent += this.PeerConnectionSocketMessageRaisedEvent;
-                this.peerConnectionSocket.ReadLoop();
+                this.InitializeSocket(socket);
                 this.RouteToUiThread(
                     () =>
                         {
-                            this.SendMessage.OnCanExecuteChanged();
                             this.IsConnecting = false;
                             var peer =
                                 this.Peers.FirstOrDefault(p => p.Information.Id == args.PeerInformation.Id);
@@ -460,10 +462,38 @@
             this.DisposeSocket();
         }
 
-        private void PeerFinder_TriggeredConnectionStateChanged(object sender, TriggeredConnectionStateChangedEventArgs args)
+        private void PeerFinderTriggeredConnectionStateChanged(object sender, TriggeredConnectionStateChangedEventArgs args)
         {
-            throw new NotImplementedException();
+            switch (args.State)
+            {
+                case TriggeredConnectState.Connecting:
+                case TriggeredConnectState.PeerFound:
+                    this.RouteToUiThread(
+                        () =>
+                            {
+                                this.IsConnecting = true;
+                                this.ConnectedPeer = "Tap complete, opening socket.";
+                            });
+                    break;
+                case TriggeredConnectState.Completed:
+                    this.RouteToUiThread(
+                        () =>
+                            {
+                                this.IsConnecting = false;
+                                this.InitializeSocket(args.Socket);                            
+                            });
+                    break;
+                default:
+                    if (args.State != TriggeredConnectState.Listening)
+                    {
+                        this.RouteToUiThread(
+                            () =>
+                                {
+                                    this.ErrorMessage = string.Format("Issue connecting to tap socket: {0}", args.State);
+                                });
+                    }
+                    break;
+            }
         }
-
     }
 }
