@@ -303,6 +303,11 @@
 
             try
             {
+                if (this.peerConnectionSocket != null)
+                {
+                    this.DisposeSocket();
+                }
+
                 PeerFinder.TriggeredConnectionStateChanged -= this.PeerFinderTriggeredConnectionStateChanged;
                 PeerFinder.ConnectionRequested -= this.PeerFinderConnectionRequested;
                 PeerFinder.Stop();
@@ -326,8 +331,8 @@
             }
 
             this.SelectedPeer = null;
-
             this.Peers.Clear();
+
             try
             {
                 var peers = await PeerFinder.FindAllPeersAsync();
@@ -344,6 +349,7 @@
             {
                 this.ErrorMessage = ex.Message;
             }
+
             this.IsBrowsing = false;
         }
 
@@ -373,6 +379,7 @@
             {
                 return;
             }
+
             var message = this.MessageToSend;
             this.MessageToSend = string.Empty;
             await this.peerConnectionSocket.WriteMessage(message);
@@ -388,6 +395,7 @@
             this.peerConnectionSocket = new PeerSocket(socket);
             this.peerConnectionSocket.ErrorRaisedEvent += this.PeerConnectionSocketErrorRaisedEvent;
             this.peerConnectionSocket.MessageRaisedEvent += this.PeerConnectionSocketMessageRaisedEvent;
+            this.RouteToUiThread(() => this.SendMessage.OnCanExecuteChanged());
             this.peerConnectionSocket.ReadLoop();               
         }
 
