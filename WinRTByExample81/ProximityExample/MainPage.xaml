@@ -71,8 +71,8 @@
             <StackPanel Grid.Row="2" Orientation="Horizontal">
                 <TextBox Text="{Binding MessageToSend, Mode=TwoWay}" Width="300"/>
                 <Button Content="Send" Command="{Binding SendMessage}"/>
-                <TextBox Text="Last Message: " Style="{StaticResource BaseTextBlockStyle}" Margin="20 0 0 0"/>
-                <TextBlock TextWrapping="Wrap" Style="{StaticResource BaseTextBlockStyle}" Text="{Binding LastMessage}"/>
+                <TextBlock Text="Last Message: " Style="{StaticResource BaseTextBlockStyle}" Margin="20 0 0 0"/>
+                <TextBlock TextWrapping="Wrap" Style="{StaticResource BaseTextBlockStyle}" Text="{Binding LastMessage}" Margin="10 0 0 0"/>
             </StackPanel>
             <TextBlock Grid.Row="3" Text="{Binding ErrorMessage}" Style="{StaticResource BaseTextBlockStyle}" FontWeight="Bold" Foreground="Red"/>
             <StackPanel Grid.Row="4" Orientation="Horizontal">
