@@ -323,13 +323,6 @@
             this.IsBrowsing = true;
             this.ErrorMessage = string.Empty;
 
-            if (this.peerConnectionSocket != null)
-            {
-                this.peerConnectionSocket.Dispose();
-                this.peerConnectionSocket = null;
-                this.ConnectedPeer = null;
-            }
-
             this.SelectedPeer = null;
             this.Peers.Clear();
 
@@ -382,6 +375,7 @@
 
             var message = this.MessageToSend;
             this.MessageToSend = string.Empty;
+            
             await this.peerConnectionSocket.WriteMessage(message);
         }
 
@@ -392,11 +386,18 @@
                 this.DisposeSocket();
             }
 
-            this.peerConnectionSocket = new PeerSocket(socket);
-            this.peerConnectionSocket.ErrorRaisedEvent += this.PeerConnectionSocketErrorRaisedEvent;
-            this.peerConnectionSocket.MessageRaisedEvent += this.PeerConnectionSocketMessageRaisedEvent;
-            this.RouteToUiThread(() => this.SendMessage.OnCanExecuteChanged());
-            this.peerConnectionSocket.ReadLoop();               
+            try
+            {
+                this.peerConnectionSocket = new PeerSocket(socket);
+                this.peerConnectionSocket.ErrorRaisedEvent += this.PeerConnectionSocketErrorRaisedEvent;
+                this.peerConnectionSocket.MessageRaisedEvent += this.PeerConnectionSocketMessageRaisedEvent;
+                this.RouteToUiThread(() => this.SendMessage.OnCanExecuteChanged());
+                this.peerConnectionSocket.ReadLoop();
+            }
+            catch (Exception ex)
+            {
+                this.RouteToUiThread(() => this.ErrorMessage = ex.Message);
+            }
         }
 
         private void DisposeSocket()
@@ -483,14 +484,16 @@
                                 this.ConnectedPeer = "Tap complete, opening socket.";
                             });
                     break;
+                
                 case TriggeredConnectState.Completed:
                     this.RouteToUiThread(
                         () =>
                             {
-                                this.IsConnecting = false;
-                                this.InitializeSocket(args.Socket);                            
+                                this.IsConnecting = false;                                
                             });
+                    this.InitializeSocket(args.Socket);                            
                     break;
+               
                 default:
                     if (args.State != TriggeredConnectState.Listening)
                     {
