@@ -1,7 +1,6 @@
 ﻿namespace ProximityExample.Data
 {
     using System;
-    using System.IO;
     using System.Threading.Tasks;
 
     using Windows.Networking.Sockets;
@@ -27,19 +26,33 @@
 
         public async void ReadLoop()
         {
-            var bytesToRead = await this.reader.LoadAsync(sizeof(UInt32));
-            if (bytesToRead > 0)
+            try
             {
-                var length = this.reader.ReadUInt32();
-                bytesToRead = await this.reader.LoadAsync(length);
-                if (bytesToRead > 0)
+                // Read first 4 bytes (length of the subsequent string).
+                var sizeFieldCount = await reader.LoadAsync(sizeof(uint));
+                if (sizeFieldCount != sizeof(uint))
                 {
-                    var message = this.reader.ReadString(length);
-                    MessageRaisedEvent(this, message);
-                    this.ReadLoop();
+                    // The underlying socket was closed before we were able to read the whole data.
+                    ErrorRaisedEvent(this, "The socket is no longer available.");
                 }
+
+                // Read the string.
+                var stringLength = reader.ReadUInt32();
+                var actualStringLength = await reader.LoadAsync(stringLength);
+                if (stringLength != actualStringLength)
+                {
+                    // The underlying socket was closed before we were able to read the whole data.
+                    ErrorRaisedEvent(this, "Unable to read the data from the socket.");
+                }
+
+                var data = reader.ReadString(actualStringLength);
+                MessageRaisedEvent(this, data);
+                this.ReadLoop();
             }
-            ErrorRaisedEvent(this, "Nothing to read.");
+            catch (Exception ex)
+            {
+                ErrorRaisedEvent(this, ex.Message);
+            }
         }
 
         public async Task<bool> WriteMessage(string message)
