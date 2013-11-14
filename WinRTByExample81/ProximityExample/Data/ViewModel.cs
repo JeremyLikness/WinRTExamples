@@ -308,6 +308,10 @@
                     this.DisposeSocket();
                 }
 
+                this.SelectedPeer = null;
+                this.ConnectedPeer = null; 
+                this.Peers.Clear();
+
                 PeerFinder.TriggeredConnectionStateChanged -= this.PeerFinderTriggeredConnectionStateChanged;
                 PeerFinder.ConnectionRequested -= this.PeerFinderConnectionRequested;
                 PeerFinder.Stop();
