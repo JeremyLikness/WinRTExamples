@@ -10,6 +10,7 @@
     mc:Ignorable="d">
     <Page.Resources>
         <common:BoolVisibilityConverter x:Key="Show" />
+        <data:ViewModel x:Key="ViewModel"/>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
@@ -28,10 +29,7 @@
             <TextBlock Text="Proximity Example" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1"
                        IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,30,40" />
         </Grid>
-        <Grid Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="3">
-            <Grid.DataContext>
-                <data:ViewModel />
-            </Grid.DataContext>
+        <Grid DataContext="{StaticResource ViewModel}" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="3">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -41,7 +39,15 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Triggered:" Style="{StaticResource BaseTextBlockStyle}" Margin="10 0 0 0" />
+                <TextBlock Text="Proximity Device:" Style="{StaticResource BaseTextBlockStyle}"/>
+                <TextBlock Text="Found"
+                           Visibility="{Binding HasProximityDevice, Converter={StaticResource Show}}"
+                           Style="{StaticResource BaseTextBlockStyle}"
+                           Margin="10 0 0 0" />
+                <TextBlock Text="None"
+                           Visibility="{Binding HasProximityDevice, Converter={StaticResource Show}, ConverterParameter='reverse'}"
+                           Style="{StaticResource BaseTextBlockStyle}" Margin="10 0 0 0" />
+                <TextBlock Text="Trigger:" Style="{StaticResource BaseTextBlockStyle}" Margin="10 0 0 0" />
                 <TextBlock Text="Supported"
                            Visibility="{Binding SupportsTriggeredConnect, Converter={StaticResource Show}}"
                            Style="{StaticResource BaseTextBlockStyle}"
