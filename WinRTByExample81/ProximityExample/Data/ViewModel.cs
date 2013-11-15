@@ -496,7 +496,7 @@
             this.RouteToUiThread(
                 () =>
                     {
-                        this.LastMessage = string.Format("Device {0} left range.", sender.DeviceId);
+                        this.LastMessage = string.Format("Device left range.");
                     });
         }
 
@@ -505,7 +505,7 @@
             this.RouteToUiThread(
                 () =>
                 {
-                    this.LastMessage = string.Format("Device {0} entered range.", sender.DeviceId);
+                    this.LastMessage = string.Format("Device entered range.");
                 });
         }
 
