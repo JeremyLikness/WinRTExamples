@@ -42,8 +42,10 @@ namespace ShareTargetExample
             get
             {
                 var result = false;
+                var localSettings = ApplicationData.Current.LocalSettings;
                 Object acceptAllObject;
-                if (ApplicationData.Current.LocalSettings.Values.TryGetValue("AcceptAll", out acceptAllObject))
+                if (localSettings.Values.TryGetValue("AcceptAll", 
+                    out acceptAllObject))
                 {
                     result = (Boolean) acceptAllObject;
                 }
@@ -51,7 +53,8 @@ namespace ShareTargetExample
             }
             set
             {
-                ApplicationData.Current.LocalSettings.Values["AcceptAll"] = value;
+                var localSettings = ApplicationData.Current.LocalSettings;
+                localSettings.Values["AcceptAll"] = value;
             }
         }
 

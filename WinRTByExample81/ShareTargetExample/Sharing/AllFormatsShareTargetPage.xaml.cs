@@ -22,7 +22,7 @@ namespace ShareTargetExample
     /// <summary>
     /// This page allows other applications to share content through this application.
     /// </summary>
-    public sealed partial class AllFormatsShareTargetPage : Page
+    public sealed partial class AllFormatsShareTargetPage : Page, IActivateForSharingPage
     {
         /// <summary>
         /// Provides a channel to communicate with Windows about the sharing operation.

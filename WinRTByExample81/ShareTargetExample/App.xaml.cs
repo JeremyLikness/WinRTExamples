@@ -136,18 +136,12 @@ namespace ShareTargetExample
         /// <param name="e">Details about the activation request.</param>
         protected override void OnShareTargetActivated(ShareTargetActivatedEventArgs e)
         {
-            // Choose which Sharing panel to bring up based on the user's setting selection
+            // Choose which Sharing panel to show based on the setting value
             var appSettings = new AppSettings();
-            if (appSettings.AcceptAllSetting)
-            {
-                var sharePage = new AllFormatsShareTargetPage();
-                sharePage.Activate(e);
-            }
-            else
-            {
-                var sharePage = new PreferredFormatShareTargetPage();
-                sharePage.Activate(e);
-            }
+            var sharePage = appSettings.AcceptAllSetting
+                ? new AllFormatsShareTargetPage() as IActivateForSharingPage
+                : new PreferredFormatShareTargetPage() as IActivateForSharingPage;
+            sharePage.Activate(e);
         }
     }
 }

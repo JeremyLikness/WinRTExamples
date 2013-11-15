@@ -16,7 +16,7 @@ namespace ShareTargetExample
         {
             InitializeComponent();
 
-            AcceptAllSwitch.IsOn = !_appSettings.AcceptAllSetting;
+            AcceptAllOrPreferredSwitch.IsOn = !_appSettings.AcceptAllSetting;
 
             _orderedShareFormats = new ObservableCollection<ShareFormat>(_appSettings.OrderedFormats);
 
@@ -28,9 +28,9 @@ namespace ShareTargetExample
             MyTestListView.ItemsSource = _orderedShareFormats;
         }
 
-        private void HandleAcceptAllSwitchToggled(Object sender, RoutedEventArgs e)
+        private void HandleSwitchToggled(Object sender, RoutedEventArgs e)
         {
-            _appSettings.AcceptAllSetting = !AcceptAllSwitch.IsOn;
+            _appSettings.AcceptAllSetting = !AcceptAllOrPreferredSwitch.IsOn;
         }
     }
 }
