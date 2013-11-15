@@ -27,7 +27,10 @@
                 </TextBlock.Text>
             </TextBlock>
 
-            <ToggleSwitch x:Name="AcceptAllSwitch" OffContent="Accept All" OnContent="Preferred" Header="Accept All or Only Preferred" Toggled="HandleAcceptAllSwitchToggled" />
+            <ToggleSwitch x:Name="AcceptAllOrPreferredSwitch" 
+                          OffContent="Accept All" OnContent="Preferred" 
+                          Header="Accept All or Only Preferred" 
+                          Toggled="HandleSwitchToggled" />
         </StackPanel>
 
         <StackPanel Style="{StaticResource SettingsFlyoutSectionStyle}">
