@@ -23,6 +23,8 @@
 
         private readonly bool isDesignTime;
 
+        private ProximityDevice proximityDevice;
+
         public ViewModel()
         {
             this.Peers = new ObservableCollection<FoundPeer>();
@@ -39,6 +41,12 @@
             }
             else
             {
+                this.proximityDevice = ProximityDevice.GetDefault();
+                if (this.proximityDevice != null)
+                {
+                    this.proximityDevice.DeviceArrived += this.ProximityDeviceDeviceArrived;
+                    this.proximityDevice.DeviceDeparted += this.ProximityDeviceDeviceDeparted;
+                }
                 this.dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
                 this.routeToUiThread = action => this.dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
                 this.supportsTriggeredConnect = (PeerFinder.SupportedDiscoveryTypes & PeerDiscoveryTypes.Triggered) > 0;
@@ -70,7 +78,15 @@
 
         public ActionCommand SendMessage { get; private set; }
 
-        public ObservableCollection<FoundPeer> Peers { get; private set; } 
+        public ObservableCollection<FoundPeer> Peers { get; private set; }
+
+        public bool HasProximityDevice
+        {
+            get
+            {
+                return this.proximityDevice != null;
+            }
+        }
         
         public bool IsAdvertising
         {
@@ -475,6 +491,24 @@
             this.DisposeSocket();
         }
 
+        private void ProximityDeviceDeviceDeparted(ProximityDevice sender)
+        {
+            this.RouteToUiThread(
+                () =>
+                    {
+                        this.LastMessage = string.Format("Device {0} left range.", sender.DeviceId);
+                    });
+        }
+
+        private void ProximityDeviceDeviceArrived(ProximityDevice sender)
+        {
+            this.RouteToUiThread(
+                () =>
+                {
+                    this.LastMessage = string.Format("Device {0} entered range.", sender.DeviceId);
+                });
+        }
+
         private void PeerFinderTriggeredConnectionStateChanged(object sender, TriggeredConnectionStateChangedEventArgs args)
         {
             switch (args.State)
@@ -508,6 +542,23 @@
                                 });
                     }
                     break;
+            }
+        }
+
+        public void Dispose()
+        {
+            if (this.proximityDevice != null)
+            {
+                this.proximityDevice.DeviceDeparted -= this.ProximityDeviceDeviceDeparted;
+                this.proximityDevice.DeviceArrived -= this.ProximityDeviceDeviceArrived;
+                this.proximityDevice = null;
+            }
+
+            this.DisposeSocket();
+
+            if (this.isAdvertising)
+            {
+                PeerFinder.Stop();
             }
         }
     }
