@@ -1,0 +1,138 @@
+﻿<Page
+    x:Class="TapAndGoProximityNetworking.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TapAndGoProximityNetworking"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid x:Name="DownloadGrid" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Download the Video? (approx. 580 MB)" Style="{StaticResource SubheaderTextBlockStyle}"/>
+            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Content="Download" Click="DownloadOnClick" Margin="10"/>
+                <Button Content="Cancel" Click="CancelOnClick" Margin="10"/>
+            </StackPanel>
+        </Grid>
+        <Grid x:Name="DownloadedGrid" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Video is Downloaded" Style="{StaticResource SubheaderTextBlockStyle}"/>
+            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Content="Delete" Click="DeleteOnClick" Margin="10"/>
+                <Button Content="Watch" Click="WatchOnClick" Margin="10"/>
+            </StackPanel>
+        </Grid>
+        <Grid x:Name="DownloadingGrid" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Downloading..." Style="{StaticResource SubheaderTextBlockStyle}" HorizontalAlignment="Center"/>
+            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBlock x:Name="BytesReceived" Text="0" Style="{StaticResource BaseTextBlockStyle}"/>
+                <TextBlock Text="/" Style="{StaticResource BaseTextBlockStyle}"/>
+                <TextBlock x:Name="TotalBytes" Text="0" Style="{StaticResource BaseTextBlockStyle}"/>
+            </StackPanel>
+            <ProgressBar Margin="10" Grid.Row="2" HorizontalAlignment="Center" Width="400" x:Name="ProgressIndicator" Minimum="0" Maximum="100"/>
+            <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center">
+                <AppBarButton Icon="Stop" Label="Cancel" Click="CancelDownloadOnClick"/>
+                <AppBarButton x:Name="PauseButton" Icon="Pause" Label="Pause" Click="PauseDownloadOnClick"/>
+                <AppBarButton x:Name="ResumeButton" Icon="Play" Label="Resume" Click="ResumeDownloadOnClick"/>
+            </StackPanel>
+        </Grid>
+        <Grid x:Name="ViewingGrid" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="Launching Video..." HorizontalAlignment="Center" Style="{StaticResource SubheaderTextBlockStyle}"/>
+        </Grid>
+        <Grid x:Name="ErrorGrid" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock x:Name="ErrorMessage" Foreground="Red" TextWrapping="Wrap" Text="Error!" HorizontalAlignment="Center" Style="{StaticResource SubheaderTextBlockStyle}"/>
+        </Grid>
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="TapAndGo">
+                <VisualState x:Name="NotDownloaded"/>
+                <VisualState x:Name="Downloading">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DownloadGrid" Storyboard.TargetProperty="(FrameworkElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>Collapsed</Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DownloadingGrid" Storyboard.TargetProperty="(FrameworkElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>Visible</Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="Downloaded">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DownloadGrid" Storyboard.TargetProperty="(FrameworkElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>Collapsed</Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ViewingGrid" Storyboard.TargetProperty="(FrameworkElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>Visible</Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="DownloadedPrevious">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DownloadGrid" Storyboard.TargetProperty="(FrameworkElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>Collapsed</Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DownloadedGrid" Storyboard.TargetProperty="(FrameworkElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>Visible</Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="Error">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DownloadGrid" Storyboard.TargetProperty="(FrameworkElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>Collapsed</Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ErrorGrid" Storyboard.TargetProperty="(FrameworkElement.Visibility)">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0">
+                                <DiscreteObjectKeyFrame.Value>
+                                    <Visibility>Visible</Visibility>
+                                </DiscreteObjectKeyFrame.Value>
+                            </DiscreteObjectKeyFrame>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+    </Grid>
+</Page>
