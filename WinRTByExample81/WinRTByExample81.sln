@@ -140,9 +140,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProximityExample", "Proximi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewModelHelper", "ViewModelHelper\ViewModelHelper.csproj", "{D0EB723A-8A80-4F05-A8C1-7ED9F5D0E555}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TapAndGoProximityNetworking", "TapAndGoProximityNetworking\TapAndGoProximityNetworking.csproj", "{956B4EE7-9476-4F57-AD02-79DEF7C3A6DB}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 52
+		SccNumberOfProjects = 53
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs04
 		SccLocalPath0 = .
@@ -350,6 +352,10 @@ Global
 		SccProjectTopLevelParentUniqueName51 = WinRTByExample81.sln
 		SccProjectName51 = ViewModelHelper
 		SccLocalPath51 = ViewModelHelper
+		SccProjectUniqueName52 = TapAndGoProximityNetworking\\TapAndGoProximityNetworking.csproj
+		SccProjectTopLevelParentUniqueName52 = WinRTByExample81.sln
+		SccProjectName52 = TapAndGoProximityNetworking
+		SccLocalPath52 = TapAndGoProximityNetworking
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1502,6 +1508,30 @@ Global
 		{D0EB723A-8A80-4F05-A8C1-7ED9F5D0E555}.Release|ARM.ActiveCfg = Release|Any CPU
 		{D0EB723A-8A80-4F05-A8C1-7ED9F5D0E555}.Release|x64.ActiveCfg = Release|Any CPU
 		{D0EB723A-8A80-4F05-A8C1-7ED9F5D0E555}.Release|x86.ActiveCfg = Release|Any CPU
+		{956B4EE7-9476-4F57-AD02-79DEF7C3A6DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{956B4EE7-9476-4F57-AD02-79DEF7C3A6DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{956B4EE7-9476-4F57-AD02-79DEF7C3A6DB}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{956B4EE7-9476-4F57-AD02-79DEF7C3A6DB}.Debug|ARM.ActiveCfg = Debug|ARM
+		{956B4EE7-9476-4F57-AD02-79DEF7C3A6DB}.Debug|ARM.Build.0 = Debug|ARM
+		{956B4EE7-9476-4F57-AD02-79DEF7C3A6DB}.Debug|ARM.Deploy.0 = Debug|ARM
+		{956B4EE7-9476-4F57-AD02-79DEF7C3A6DB}.Debug|x64.ActiveCfg = Debug|x64
+		{956B4EE7-9476-4F57-AD02-79DEF7C3A6DB}.Debug|x64.Build.0 = Debug|x64
+		{956B4EE7-9476-4F57-AD02-79DEF7C3A6DB}.Debug|x64.Deploy.0 = Debug|x64
+		{956B4EE7-9476-4F57-AD02-79DEF7C3A6DB}.Debug|x86.ActiveCfg = Debug|x86
+		{956B4EE7-9476-4F57-AD02-79DEF7C3A6DB}.Debug|x86.Build.0 = Debug|x86
+		{956B4EE7-9476-4F57-AD02-79DEF7C3A6DB}.Debug|x86.Deploy.0 = Debug|x86
+		{956B4EE7-9476-4F57-AD02-79DEF7C3A6DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{956B4EE7-9476-4F57-AD02-79DEF7C3A6DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{956B4EE7-9476-4F57-AD02-79DEF7C3A6DB}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{956B4EE7-9476-4F57-AD02-79DEF7C3A6DB}.Release|ARM.ActiveCfg = Release|ARM
+		{956B4EE7-9476-4F57-AD02-79DEF7C3A6DB}.Release|ARM.Build.0 = Release|ARM
+		{956B4EE7-9476-4F57-AD02-79DEF7C3A6DB}.Release|ARM.Deploy.0 = Release|ARM
+		{956B4EE7-9476-4F57-AD02-79DEF7C3A6DB}.Release|x64.ActiveCfg = Release|x64
+		{956B4EE7-9476-4F57-AD02-79DEF7C3A6DB}.Release|x64.Build.0 = Release|x64
+		{956B4EE7-9476-4F57-AD02-79DEF7C3A6DB}.Release|x64.Deploy.0 = Release|x64
+		{956B4EE7-9476-4F57-AD02-79DEF7C3A6DB}.Release|x86.ActiveCfg = Release|x86
+		{956B4EE7-9476-4F57-AD02-79DEF7C3A6DB}.Release|x86.Build.0 = Release|x86
+		{956B4EE7-9476-4F57-AD02-79DEF7C3A6DB}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1554,6 +1584,7 @@ Global
 		{D323102B-1E69-45B0-9BF9-49F56BB4BBB2} = {C31D8751-720C-40F8-A39B-2770DAA6E1CF}
 		{E12ECA65-1B12-4BCC-B3F4-11DA78740703} = {C31D8751-720C-40F8-A39B-2770DAA6E1CF}
 		{1108E0F0-A6FE-4A9F-9F14-48C9D54DDBA0} = {C31D8751-720C-40F8-A39B-2770DAA6E1CF}
+		{956B4EE7-9476-4F57-AD02-79DEF7C3A6DB} = {C31D8751-720C-40F8-A39B-2770DAA6E1CF}
 		{78B3DBEA-C3D8-420F-B6F2-C1A37912B350} = {9942C54A-55BA-4C46-80AB-1BBF4A3ED08A}
 		{39D24AC7-36D0-4E14-A104-0C4BF44EEC8A} = {9942C54A-55BA-4C46-80AB-1BBF4A3ED08A}
 		{37DD3DDA-D4B8-4957-ACA6-1EAA57CCD183} = {D55B3603-79FD-4C48-B0FE-D8303B66D1E8}
