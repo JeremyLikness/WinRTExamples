@@ -633,9 +633,9 @@ namespace LiveConnectExample
 
         //private void ShowProgress(LiveOperationProgress liveOperationProgress)
         //{
-        //    // Display progress UI
+        //    // Display progress UI, making sure to check for thread access
         //    UpdateUserInterfaceProgress(
-        //        liveOperationProgress.BytesTransferred, 
+        //        liveOperationProgress.BytesTransferred,
         //        liveOperationProgress.TotalBytes,
         //        liveOperationProgress.ProgressPercentage);
         //}
