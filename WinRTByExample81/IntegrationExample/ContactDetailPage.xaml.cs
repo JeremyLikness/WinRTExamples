@@ -67,7 +67,7 @@ namespace IntegrationExample
         /// session.  The state will be null the first time a page is visited.</param>
         private async void HandleNavigationHelperLoadState(Object sender, LoadStateEventArgs e)
         {
-            var contact = Application.Current.GetSampleData().GetItem((String)e.NavigationParameter);
+            var contact = AppSampleData.Current.SampleData.GetItem((String)e.NavigationParameter);
             DefaultViewModel["Contact"] = contact;
             DefaultViewModel["Files"] = await contact.GetRelatedFiles();
         }
@@ -200,7 +200,7 @@ namespace IntegrationExample
         }
     }
 
-    public static partial class Extensions
+    public static class Extensions
     {
         public static Rect GetElementRect(this FrameworkElement frameworkElement)
         {

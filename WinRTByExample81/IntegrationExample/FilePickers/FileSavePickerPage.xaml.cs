@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Windows.ApplicationModel.Contacts;
 using Windows.Storage.Pickers.Provider;
-using Windows.UI.Core;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using IntegrationExample.Common;
 using IntegrationExample.Data;
@@ -37,24 +35,6 @@ namespace IntegrationExample
         public FileSavePickerPage()
         {
             InitializeComponent();
-            Window.Current.SizeChanged += HandleWindowSizeChanged;
-            InvalidateVisualState();
-        }
-
-        private void HandleWindowSizeChanged(Object sender, WindowSizeChangedEventArgs e)
-        {
-            InvalidateVisualState();
-        }
-
-        private void InvalidateVisualState()
-        {
-            var visualState = DetermineVisualState();
-            VisualStateManager.GoToState(this, visualState, false);
-        }
-
-        private String DetermineVisualState()
-        {
-            return Window.Current.Bounds.Width >= 500 ? "HorizontalView" : "VerticalView";
         }
 
         /// <summary>
@@ -81,7 +61,7 @@ namespace IntegrationExample
         private void LoadContacts()
         {
             // Fetch the data and set it to the View Model
-            var sampleDataGroups = Application.Current.GetSampleData().Groups;
+            var sampleDataGroups = AppSampleData.Current.SampleData.Groups;
             var allContacts =
                 sampleDataGroups.SelectMany(group => group.Items)
                     .OrderBy(x => x.LastName)
@@ -141,17 +121,6 @@ namespace IntegrationExample
             // Complete the deferral to let the Picker know 
             // that the request processing has finished
             deferral.Complete();
-        }
-
-        /// <summary>
-        /// Invoked when the "Go up" button is clicked, indicating that the user wants to pop up
-        /// a level in the hierarchy of files.
-        /// </summary>
-        /// <param name="sender">The Button instance used to represent the "Go up" command.</param>
-        /// <param name="e">Event data that describes how the button was clicked.</param>
-        private void GoUpButton_Click(Object sender, RoutedEventArgs e)
-        {
-            // Not used in this example, since the hierarchy is fairly "flat"
         }
     }
 }

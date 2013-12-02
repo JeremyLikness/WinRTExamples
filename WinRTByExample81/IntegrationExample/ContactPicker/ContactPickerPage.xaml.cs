@@ -3,7 +3,6 @@ using System.Linq;
 using Windows.ApplicationModel.Contacts;
 using Windows.ApplicationModel.Contacts.Provider;
 using Windows.UI.Core;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using IntegrationExample.Common;
 
@@ -35,24 +34,6 @@ namespace IntegrationExample
         public ContactPickerPage()
         {
             InitializeComponent();
-            Window.Current.SizeChanged += HandleWindowSizeChanged;
-            InvalidateVisualState();
-        }
-
-        private void HandleWindowSizeChanged(Object sender, WindowSizeChangedEventArgs e)
-        {
-            InvalidateVisualState();
-        }
-
-        private void InvalidateVisualState()
-        {
-            var visualState = DetermineVisualState();
-            VisualStateManager.GoToState(this, visualState, false);
-        }
-
-        private string DetermineVisualState()
-        {
-            return Window.Current.Bounds.Width >= 500 ? "HorizontalView" : "VerticalView";
         }
 
         /// <summary>
@@ -73,7 +54,7 @@ namespace IntegrationExample
             DefaultViewModel["SelectedContact"] = null;
 
             // Fetch the data and set it to the View Model
-            var sampleDataGroups = Application.Current.GetSampleData().Groups
+            var sampleDataGroups = AppSampleData.Current.SampleData.Groups
                 .OrderBy(x => x.Key)
                 .ToList();
             DefaultViewModel["ContactGroups"] = sampleDataGroups;
@@ -120,24 +101,7 @@ namespace IntegrationExample
                 {
                     ContactGridView.SelectedItems.Remove(removedSelectedGridItem);
                 }
-
-                var removedSelectedListItem = ContactGridView.SelectedItems.Cast<Contact>().FirstOrDefault(x => x.Id == e.Id);
-                if (removedSelectedListItem != null)
-                {
-                    ContactListView.SelectedItems.Remove(removedSelectedListItem);
-                }
             });
-        }
-
-        /// <summary>
-        /// Invoked when the "Go up" button is clicked, indicating that the user wants to pop up
-        /// a level in the hierarchy.
-        /// </summary>
-        /// <param name="sender">The Button instance used to represent the "Go up" command.</param>
-        /// <param name="e">Event data that describes how the button was clicked.</param>
-        private void GoUpButton_Click(Object sender, RoutedEventArgs e)
-        {
-            // Not used in this example, since the hierarchy is fairly "flat"
         }
     }
 }
