@@ -273,7 +273,7 @@
             }
             else
             {
-                ProgressIndicator.IsIndeterminate = true;
+                ProgressIndicator.IsIndeterminate = true;                
             }
 
             if (download.Progress.Status.Equals(BackgroundTransferStatus.PausedByApplication))
