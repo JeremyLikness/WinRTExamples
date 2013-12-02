@@ -65,19 +65,17 @@ namespace IntegrationExample
         /// Invoked when the application is activated to display a file open picker.
         /// </summary>
         /// <param name="e">Details about the activation request.</param>
-        protected async override void OnFileOpenPickerActivated(FileOpenPickerActivatedEventArgs e)
+        protected override void OnFileOpenPickerActivated
+            (FileOpenPickerActivatedEventArgs e)
         {
-            // Create the user interface element to be displayed within the picker area
+            // Create the page to be displayed within the picker area
             var fileOpenPickerPage = new FileOpenPickerPage();
 
             // Activate the current Window
             Window.Current.Content = fileOpenPickerPage;
             Window.Current.Activate();
 
-            // TODO - locate this better
-            await LoadSampleDataAsync();
-
-            // Initialize the window to display its UI
+            // Initialize the window
             fileOpenPickerPage.Initialize(e.FileOpenPickerUI);
         }
         
@@ -85,18 +83,17 @@ namespace IntegrationExample
         /// Invoked when the application is activated to display a file open picker.
         /// </summary>
         /// <param name="e">Details about the activation request.</param>
-        protected async override void OnFileSavePickerActivated(FileSavePickerActivatedEventArgs e)
+        protected override void OnFileSavePickerActivated
+            (FileSavePickerActivatedEventArgs e)
         {
-            // Create the user interface element to be displayed within the picker area
+            // Create the page to be displayed within the picker area
             var fileSavePickerPage = new FileSavePickerPage();
 
             // Activate the current Window
             Window.Current.Content = fileSavePickerPage;
             Window.Current.Activate();
 
-            // TODO - locate this better
-            await LoadSampleDataAsync();
-
+            // Initialize the window 
             fileSavePickerPage.Initialize(e.FileSavePickerUI);
         }
 
@@ -123,7 +120,7 @@ namespace IntegrationExample
                     var contactFiles = await query.GetFilesAsync();
                     foreach (var contactFile in contactFiles)
                     {
-                        await SampleData.ProcessActivationFile(contactFile);
+                        await AppSampleData.Current.SampleData.ProcessActivationFile(contactFile);
                     }
                 }
             }
@@ -132,7 +129,7 @@ namespace IntegrationExample
                 foreach (var storageFile in args.Files.OfType<IStorageFile>())
                 {
                     // For multiple registrations, examine the file type
-                    await SampleData.ProcessActivationFile(storageFile);
+                    await AppSampleData.Current.SampleData.ProcessActivationFile(storageFile);
                 }
             }
         }
@@ -153,9 +150,6 @@ namespace IntegrationExample
                 Window.Current.Content = contactPickerPage;
                 Window.Current.Activate();
 
-                // TODO - locate this better
-                await LoadSampleDataAsync();
-                
                 var contactPickerArgs = (ContactPickerActivatedEventArgs)args;
                 contactPickerPage.Initialize(contactPickerArgs.ContactPickerUI);
             }
@@ -175,7 +169,7 @@ namespace IntegrationExample
                     // matching Id
                     var itemId = providedUri.Host;
                     if (!String.IsNullOrWhiteSpace(itemId) &&
-                        SampleData.GetItem(itemId) != null)
+                        AppSampleData.Current.SampleData.GetItem(itemId) != null)
                     {
                         var rootFrame = (Frame) Window.Current.Content;
                         rootFrame.Navigate(typeof (ContactDetailPage), itemId);
@@ -214,9 +208,6 @@ namespace IntegrationExample
                 // Set the default language
                 rootFrame.Language = Windows.Globalization.ApplicationLanguages.Languages[0];
 
-                // TODO - locate this better
-                await LoadSampleDataAsync();
-
                 if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
                     // Restore the saved session state only when appropriate
@@ -247,31 +238,46 @@ namespace IntegrationExample
             // Ensure the current window is active
             Window.Current.Activate();
         }
-
-        private SampleDataSource _sampleDataSource;
-        public SampleDataSource SampleData
-        {
-            get { return _sampleDataSource ?? (_sampleDataSource = new SampleDataSource()); }
-        }
-
-        private Boolean _isSampleDataLoaded;
-        private async Task LoadSampleDataAsync()
-        {
-            // TODO - get rid of this (yuck!)
-            if (_isSampleDataLoaded) return;
-
-            var dataUri = new Uri("ms-appx:///DataModel/SampleData.json");
-            var sampleDataFile = await StorageFile.GetFileFromApplicationUriAsync(dataUri);
-            await SampleData.ProcessActivationFile(sampleDataFile);
-            _isSampleDataLoaded = true;
-        }
     }
 
-    public static partial class Extensions
+    public class AppSampleData
     {
-        public static SampleDataSource GetSampleData(this Application currentApplication)
+        private readonly SampleDataSource _sampleData = new SampleDataSource();
+        
+        #region Constructor(s) and Initialization
+
+        private static AppSampleData _instance;
+
+        /// <summary>
+        /// Gets the current instance.
+        /// </summary>
+        /// <value>
+        /// The current instance.
+        /// </value>
+        public static AppSampleData Current
         {
-            return ((App) Application.Current).SampleData;
+            get { return _instance ?? (_instance = new AppSampleData()); }
+        }
+
+        /// <summary>
+        /// Prevents a default instance of the <see cref="AppSampleData"/> class from being created.
+        /// </summary>
+        private AppSampleData()
+        {
+            LoadData();
+        } 
+        #endregion
+
+        public SampleDataSource SampleData
+        {
+            get { return _sampleData; }
+        }
+
+        private async void LoadData()
+        {
+            var dataUri = new Uri("ms-appx:///DataModel/SampleData.json");
+            var sampleDataFile = await StorageFile.GetFileFromApplicationUriAsync(dataUri);
+            await _sampleData.ProcessActivationFile(sampleDataFile);
         }
     }
 }

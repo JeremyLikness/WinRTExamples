@@ -1,11 +1,7 @@
 ﻿using System;
-using Windows.ApplicationModel.Appointments;
 using Windows.ApplicationModel.Contacts;
-using Windows.Foundation;
-using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using IntegrationExample.Common;
 
@@ -56,7 +52,7 @@ namespace IntegrationExample
         /// session.  The state will be null the first time a page is visited.</param>
         private void HandleNavigationHelperLoadState(Object sender, LoadStateEventArgs e)
         {
-            var sampleDataGroups = Application.Current.GetSampleData().Groups;
+            var sampleDataGroups = AppSampleData.Current.SampleData.Groups;
             DefaultViewModel["Groups"] = sampleDataGroups;
         }
 
@@ -123,7 +119,7 @@ namespace IntegrationExample
             var contacts = await contactPicker.PickContactsAsync();
             foreach (var contact in contacts)
             {
-                Application.Current.GetSampleData().AddContact(contact);
+                AppSampleData.Current.SampleData.AddContact(contact);
             }
         }
     }

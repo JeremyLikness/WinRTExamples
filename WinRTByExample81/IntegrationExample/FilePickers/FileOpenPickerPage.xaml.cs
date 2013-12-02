@@ -4,7 +4,6 @@ using System.Linq;
 using Windows.ApplicationModel.Contacts;
 using Windows.Storage.Pickers.Provider;
 using Windows.UI.Core;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using IntegrationExample.Common;
 using IntegrationExample.Data;
@@ -18,7 +17,7 @@ namespace IntegrationExample
     public sealed partial class FileOpenPickerPage : Page
     {
         /// <summary>
-        /// Files are added to or removed from the Windows UI to let Windows know what has been selected.
+        /// Files are added to or removed from the File Open Picker UI to let Windows know what has been selected.
         /// </summary>
         private FileOpenPickerUI _fileOpenPickerUI;
         private readonly ObservableDictionary _defaultViewModel = new ObservableDictionary();
@@ -37,24 +36,6 @@ namespace IntegrationExample
         public FileOpenPickerPage()
         {
             InitializeComponent();
-            Window.Current.SizeChanged += HandleWindowSizeChanged;
-            InvalidateVisualState();
-        }
-
-        private void HandleWindowSizeChanged(Object sender, WindowSizeChangedEventArgs e)
-        {
-            InvalidateVisualState();
-        }
-
-        private void InvalidateVisualState()
-        {
-            var visualState = DetermineVisualState();
-            VisualStateManager.GoToState(this, visualState, false);
-        }
-
-        private string DetermineVisualState()
-        {
-            return Window.Current.Bounds.Width >= 500 ? "HorizontalView" : "VerticalView";
         }
 
         /// <summary>
@@ -70,7 +51,6 @@ namespace IntegrationExample
             _fileOpenPickerUI.FileRemoved += HandleFilePickerUIFileRemoved;
 
             // Initialize the ViewModel
-            DefaultViewModel["CanGoUp"] = false;
             DefaultViewModel["SelectionMode"] =
                 _fileOpenPickerUI.SelectionMode == FileSelectionMode.Multiple
                     ? ListViewSelectionMode.Multiple
@@ -85,7 +65,7 @@ namespace IntegrationExample
         private void LoadContacts()
         {
             // Fetch the data and set it to the View Model
-            var sampleDataGroups = Application.Current.GetSampleData().Groups;
+            var sampleDataGroups = AppSampleData.Current.SampleData.Groups;
             var allContacts =
                 sampleDataGroups.SelectMany(group => group.Items)
                     .OrderBy(x => x.LastName)
@@ -153,26 +133,7 @@ namespace IntegrationExample
                 {
                     FileGridView.SelectedItems.Remove(removedSelectedGridItem);
                 }
-
-                var removedSelectedListItem = 
-                    FileGridView.SelectedItems.Cast<FileInfo>()
-                    .FirstOrDefault(x => x.Title == e.Id);
-                if (removedSelectedListItem != null)
-                {
-                    FileListView.SelectedItems.Remove(removedSelectedListItem);
-                }
             });
-        }
-
-        /// <summary>
-        /// Invoked when the "Go up" button is clicked, indicating that the user wants to pop up
-        /// a level in the hierarchy of files.
-        /// </summary>
-        /// <param name="sender">The Button instance used to represent the "Go up" command.</param>
-        /// <param name="e">Event data that describes how the button was clicked.</param>
-        private void GoUpButton_Click(Object sender, RoutedEventArgs e)
-        {
-            // Not used in this example, since the hierarchy is fairly "flat"
         }
     }
 }

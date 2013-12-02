@@ -59,6 +59,10 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+        <!-- Command area -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="120,20,120,30">
+        </StackPanel>
+
         <!-- Horizontal scrolling grid of files fills the remainder -->
         <GridView x:Name="ContactGridView"
                   AutomationProperties.AutomationId="ContactGridView"
@@ -71,54 +75,5 @@
                   SelectionChanged="HandleSelectedContactChanged"
                   Padding="116,76,116,20" 
                   Visibility="Visible"/>
-
-        <!-- A vertical scrolling list is used when the window is less than 500 px wide -->
-        <ListView x:Name="ContactListView"
-                  AutomationProperties.AutomationId="ContactListView"
-                  AutomationProperties.Name="Contacts"
-                  Grid.Row="0" Grid.RowSpan="2"
-                  ItemsSource="{Binding Source={StaticResource ContactsViewSource}}"
-                  ItemTemplate="{StaticResource ContactItemTemplate}"
-                  SelectionMode="Multiple"
-                  SelectedItem="{Binding SelectedContact, Mode=TwoWay}"
-                  SelectionChanged="HandleSelectedContactChanged"
-                  Margin="10,0,0,0"
-                  Padding="0,0,0,60"
-                  Visibility="Collapsed" />
-
-        <!-- Command area -->
-        <StackPanel Grid.Row="0" x:Name="CommandPanel" Orientation="Horizontal" Margin="120,20,120,30">
-            <Button
-                AutomationProperties.AutomationId="GoUpButton"
-                AutomationProperties.Name="Go Up"
-                Click="GoUpButton_Click"
-                IsEnabled="{Binding CanGoUp}"
-                Margin="-3,-3,35,0"
-                Style="{StaticResource TextBlockButtonStyle}"
-                Foreground="{ThemeResource ApplicationSecondaryForegroundThemeBrush}" Visibility="Collapsed">
-                <TextBlock Text="Go Up" Margin="3,-7,3,10" Style="{StaticResource SubheaderTextBlockStyle}" TextWrapping="NoWrap" />
-            </Button>
-        </StackPanel>
-
-        <VisualStateManager.VisualStateGroups>
-            <!-- Visual states reflect the application's view state -->
-            <VisualStateGroup x:Name="ViewStates">
-                <VisualState x:Name="HorizontalView" />
-                <!-- Switch to vertical scrolling when the window size is less than 500px-->
-                <VisualState x:Name="VerticalView">
-                    <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContactGridView" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContactListView" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="CommandPanel" Storyboard.TargetProperty="Margin">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="20,20,20,30"/>
-                        </ObjectAnimationUsingKeyFrames>
-                    </Storyboard>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
     </Grid>
 </Page>
