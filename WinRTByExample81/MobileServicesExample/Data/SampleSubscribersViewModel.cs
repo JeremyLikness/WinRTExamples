@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MobileServicesExample
@@ -9,7 +10,7 @@ namespace MobileServicesExample
                                                                 {
                                                                   new Subscriber
                                                                   {
-                                                                      Id = 1,
+                                                                      Id = Guid.NewGuid().ToString(),
                                                                       FirstName = "Rhonda",
                                                                       LastName = "Engelhardt",
                                                                       MailingAddress = "179 Winding Way, North Kingstown, RI 02852",
@@ -19,7 +20,7 @@ namespace MobileServicesExample
                                                                   },
                                                                   new Subscriber
                                                                   {
-                                                                      Id = 2,
+                                                                      Id = Guid.NewGuid().ToString(),
                                                                       FirstName = "James",
                                                                       LastName = "Willis",
                                                                       MailingAddress = "4682 Poe Lane, Kansas City, KS 66207",

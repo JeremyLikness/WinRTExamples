@@ -11,7 +11,7 @@ namespace MobileServicesExample
     {
         #region Fields
 
-        private Int32 _id;
+        private String _id;
         private String _firstName;
         private String _lastName;
         private Gender _gender;
@@ -21,7 +21,7 @@ namespace MobileServicesExample
    
         #endregion     
 
-        public Int32 Id
+        public String Id
         {
             get { return _id; }
             set
