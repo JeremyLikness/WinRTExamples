@@ -9,7 +9,7 @@
     <Application.Resources>
         <!-- Application-specific resources -->
 
-        <x:String x:Key="AppName">ReferenceHubApp</x:String>
+        <x:String x:Key="AppName">Reference Hub App</x:String>
 
     </Application.Resources>
 </Application>
