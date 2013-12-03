@@ -10,7 +10,7 @@
 
         <!-- Application-specific resources -->
 
-        <x:String x:Key="AppName">HelloWorldGridApp</x:String>
+        <x:String x:Key="AppName">Hello World Grid App</x:String>
 
     </Application.Resources>
 </Application>

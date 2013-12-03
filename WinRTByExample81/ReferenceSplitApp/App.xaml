@@ -9,6 +9,6 @@
     <Application.Resources>
 
         <!-- Application-specific resources -->
-        <x:String x:Key="AppName">ReferenceSplitApp</x:String>
+        <x:String x:Key="AppName">Reference Split App</x:String>
     </Application.Resources>
 </Application>
