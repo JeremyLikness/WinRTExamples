@@ -49,6 +49,14 @@
             <StackPanel Grid.Row="0" Orientation="Horizontal">
                 <Button Content="Add" Click="AddOnClick"/>
                 <ToggleSwitch OnContent="State Management Is On" OffContent="State Management is Off" x:Name="ToggleControl" Toggled="ToggleControlOnToggled"/>
+                <SearchBox x:Name="SearchBoxControl" 
+                           VerticalAlignment="Center" 
+                           Width="200" 
+                           PlaceholderText="Enter Text to Search..." 
+                           QueryChanged="SearchBoxControlOnQueryChanged"
+                           QuerySubmitted="SearchBoxControlOnQuerySubmitted"
+                           SuggestionsRequested="SearchBoxControlOnSuggestionsRequested"
+                           ResultSuggestionChosen="SearchBoxControlOnResultSuggestionChosen"/>
             </StackPanel>
             <ListView x:Name="ItemListControl" Grid.Row="1" DisplayMemberPath="Text" SelectionChanged="ItemListControlOnSelectionChanged"/>
         </Grid>       
