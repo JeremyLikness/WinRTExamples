@@ -1,5 +1,10 @@
 ﻿namespace StateManagementExample
 {
+    using System.Collections.ObjectModel;
+    using System.Linq;
+
+    using Windows.Storage.Streams;
+
     using StateManagementExample.Common;
     using System;
 
@@ -13,6 +18,8 @@
     public sealed partial class MainPage
     {
         private readonly NavigationHelper navigationHelper;
+
+        private string searchTerm = string.Empty;
         
         /// <summary>
         /// NavigationHelper is used on each page to aid in navigation and 
@@ -69,10 +76,7 @@
         /// serializable state.</param>
         private void NavigationHelperSaveState(object sender, SaveStateEventArgs e)
         {
-            if (!App.StateManagement)
-            {
-                return;
-            }            
+            // to-do: anything special here             
         }
 
         #region NavigationHelper registration
@@ -98,6 +102,8 @@
 
         #endregion
 
+        #region Add and Select (Navigation)
+
         private void AddOnClick(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(ItemDetail), 0);
@@ -117,5 +123,82 @@
         {
             App.StateManagement = this.ToggleControl.IsOn; 
         }
+
+        #endregion 
+
+        #region Search Functionality 
+
+        private void SearchBoxControlOnQuerySubmitted(SearchBox sender, SearchBoxQuerySubmittedEventArgs args)
+        {
+            this.searchTerm = args.QueryText;
+            this.ItemListControl.ItemsSource = string.IsNullOrWhiteSpace(this.searchTerm)
+                                                   ? App.ItemList
+                                                   : new ObservableCollection<Item>(App.ItemList.Where(i => i.Text.StartsWith(this.searchTerm)).ToList());
+        }
+
+        private void SearchBoxControlOnSuggestionsRequested(SearchBox sender, SearchBoxSuggestionsRequestedEventArgs args)
+        {
+            if (string.IsNullOrWhiteSpace(args.QueryText))
+            {
+                return;
+            }
+            var collection = args.Request.SearchSuggestionCollection;
+            var results =
+                App.ItemList.Where(i => i.Text.StartsWith(args.QueryText, StringComparison.CurrentCultureIgnoreCase))
+                    .ToList();
+            
+            bool separator = false;
+
+            foreach (var item in results)
+            {
+                separator = true;
+                collection.AppendQuerySuggestion(item.Text);
+            }
+
+            if (separator)
+            {
+                collection.AppendSearchSeparator("Matches");
+            }
+
+            if (args.QueryText.Length > 2)
+            {
+                foreach (var item in results)
+                {
+                    var uri = new Uri("ms-appx:///Assets/StoreLogo.scale-100.png");
+                    var image = RandomAccessStreamReference.CreateFromUri(uri);
+                    collection.AppendResultSuggestion(
+                        item.Id.ToString(),
+                        item.Text,
+                        item.Id.ToString(),
+                        image,
+                        item.Text);
+                }
+            }
+        }
+
+        private void SearchBoxControlOnResultSuggestionChosen(SearchBox sender, SearchBoxResultSuggestionChosenEventArgs args)
+        {
+            int id;
+            if (string.IsNullOrWhiteSpace(args.Tag) || !int.TryParse(args.Tag, out id))
+            {
+                return;
+            }
+            App.CurrentItem = App.ItemById(id);
+            if (App.CurrentItem != null)
+            {
+                this.Frame.Navigate(typeof(ItemDetail), App.CurrentItem.Id);
+            }
+        }
+
+        private void SearchBoxControlOnQueryChanged(SearchBox sender, SearchBoxQueryChangedEventArgs args)
+        {
+            if (string.IsNullOrWhiteSpace(args.QueryText) && !string.IsNullOrWhiteSpace(args.QueryText))
+            {
+                this.ItemListControl.ItemsSource = App.ItemList;
+            }
+        }
+
+        #endregion
+
     }
 }

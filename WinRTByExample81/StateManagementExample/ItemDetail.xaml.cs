@@ -15,6 +15,8 @@ namespace StateManagementExample
     {
         private Item item;
         private readonly NavigationHelper navigationHelper;
+
+        private const string ItemTextKey = "ItemKey";
      
         /// <summary>
         /// NavigationHelper is used on each page to aid in navigation and 
@@ -49,12 +51,17 @@ namespace StateManagementExample
         {
             this.ItemEditControl.Text = string.Empty;
 
+            if (e.PageState != null && e.PageState.ContainsKey(ItemTextKey))
+            {
+                this.ItemEditControl.Text = e.PageState[ItemTextKey].ToString();
+            }
+
             var text = e.NavigationParameter.ToString();
             int id;
 
             this.item = int.TryParse(text, out id) ? (id == 0 ? new Item() : App.ItemById(id)) : new Item();
 
-            if (this.item != null)
+            if (this.item != null && string.IsNullOrWhiteSpace(this.ItemEditControl.Text))
             {
                 this.ItemEditControl.Text = item.Text ?? string.Empty;
             }
@@ -69,7 +76,11 @@ namespace StateManagementExample
         /// <param name="e">Event data that provides an empty dictionary to be populated with
         /// serializable state.</param>
         private void NavigationHelperSaveState(object sender, SaveStateEventArgs e)
-        {            
+        {
+            if (App.StateManagement)
+            {
+                e.PageState[ItemTextKey] = ItemEditControl.Text;
+            }
         }
 
         #region NavigationHelper registration
