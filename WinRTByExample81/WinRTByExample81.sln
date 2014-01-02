@@ -158,9 +158,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortableTests", "PortableTe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StateManagementExample", "StateManagementExample\StateManagementExample.csproj", "{8318B515-5105-43EA-B062-B4EC8EBECB45}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter13", "Chapter13", "{8998038C-16BE-4977-B609-929338697AEE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InputsExample", "InputsExample\InputsExample.csproj", "{35BEA01B-4516-4629-881D-CC870A1CDE57}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 61
+		SccNumberOfProjects = 62
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs04
 		SccLocalPath0 = .
@@ -404,6 +408,10 @@ Global
 		SccProjectTopLevelParentUniqueName60 = WinRTByExample81.sln
 		SccProjectName60 = StateManagementExample
 		SccLocalPath60 = StateManagementExample
+		SccProjectUniqueName61 = InputsExample\\InputsExample.csproj
+		SccProjectTopLevelParentUniqueName61 = WinRTByExample81.sln
+		SccProjectName61 = InputsExample
+		SccLocalPath61 = InputsExample
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1730,6 +1738,30 @@ Global
 		{8318B515-5105-43EA-B062-B4EC8EBECB45}.Release|x86.ActiveCfg = Release|x86
 		{8318B515-5105-43EA-B062-B4EC8EBECB45}.Release|x86.Build.0 = Release|x86
 		{8318B515-5105-43EA-B062-B4EC8EBECB45}.Release|x86.Deploy.0 = Release|x86
+		{35BEA01B-4516-4629-881D-CC870A1CDE57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35BEA01B-4516-4629-881D-CC870A1CDE57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35BEA01B-4516-4629-881D-CC870A1CDE57}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{35BEA01B-4516-4629-881D-CC870A1CDE57}.Debug|ARM.ActiveCfg = Debug|ARM
+		{35BEA01B-4516-4629-881D-CC870A1CDE57}.Debug|ARM.Build.0 = Debug|ARM
+		{35BEA01B-4516-4629-881D-CC870A1CDE57}.Debug|ARM.Deploy.0 = Debug|ARM
+		{35BEA01B-4516-4629-881D-CC870A1CDE57}.Debug|x64.ActiveCfg = Debug|x64
+		{35BEA01B-4516-4629-881D-CC870A1CDE57}.Debug|x64.Build.0 = Debug|x64
+		{35BEA01B-4516-4629-881D-CC870A1CDE57}.Debug|x64.Deploy.0 = Debug|x64
+		{35BEA01B-4516-4629-881D-CC870A1CDE57}.Debug|x86.ActiveCfg = Debug|x86
+		{35BEA01B-4516-4629-881D-CC870A1CDE57}.Debug|x86.Build.0 = Debug|x86
+		{35BEA01B-4516-4629-881D-CC870A1CDE57}.Debug|x86.Deploy.0 = Debug|x86
+		{35BEA01B-4516-4629-881D-CC870A1CDE57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35BEA01B-4516-4629-881D-CC870A1CDE57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35BEA01B-4516-4629-881D-CC870A1CDE57}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{35BEA01B-4516-4629-881D-CC870A1CDE57}.Release|ARM.ActiveCfg = Release|ARM
+		{35BEA01B-4516-4629-881D-CC870A1CDE57}.Release|ARM.Build.0 = Release|ARM
+		{35BEA01B-4516-4629-881D-CC870A1CDE57}.Release|ARM.Deploy.0 = Release|ARM
+		{35BEA01B-4516-4629-881D-CC870A1CDE57}.Release|x64.ActiveCfg = Release|x64
+		{35BEA01B-4516-4629-881D-CC870A1CDE57}.Release|x64.Build.0 = Release|x64
+		{35BEA01B-4516-4629-881D-CC870A1CDE57}.Release|x64.Deploy.0 = Release|x64
+		{35BEA01B-4516-4629-881D-CC870A1CDE57}.Release|x86.ActiveCfg = Release|x86
+		{35BEA01B-4516-4629-881D-CC870A1CDE57}.Release|x86.Build.0 = Release|x86
+		{35BEA01B-4516-4629-881D-CC870A1CDE57}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1795,5 +1827,6 @@ Global
 		{39D24AC7-36D0-4E14-A104-0C4BF44EEC8A} = {9942C54A-55BA-4C46-80AB-1BBF4A3ED08A}
 		{37DD3DDA-D4B8-4957-ACA6-1EAA57CCD183} = {D55B3603-79FD-4C48-B0FE-D8303B66D1E8}
 		{01F40C2E-F5CE-4C56-8827-C430890CF5DC} = {D55B3603-79FD-4C48-B0FE-D8303B66D1E8}
+		{35BEA01B-4516-4629-881D-CC870A1CDE57} = {8998038C-16BE-4977-B609-929338697AEE}
 	EndGlobalSection
 EndGlobal
