@@ -107,8 +107,23 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <Content Include="..\Common\Logo.scale-100.png">
+      <Link>Assets\Logo.scale-100.png</Link>
+    </Content>
+    <Content Include="..\Common\SmallLogo.scale-100.png">
+      <Link>Assets\SmallLogo.scale-100.png</Link>
+    </Content>
+    <Content Include="..\Common\SplashScreen.scale-100.png">
+      <Link>Assets\SplashScreen.scale-100.png</Link>
+    </Content>
+    <Content Include="..\Common\StoreLogo.scale-100.png">
+      <Link>Assets\StoreLogo.scale-100.png</Link>
+    </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Common\CommonAssemblyInfo.cs">
+      <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
@@ -122,12 +137,6 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="AudioBackgroundExample_TemporaryKey.pfx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Assets\Logo.scale-100.png" />
-    <Content Include="Assets\SmallLogo.scale-100.png" />
-    <Content Include="Assets\SplashScreen.scale-100.png" />
-    <Content Include="Assets\StoreLogo.scale-100.png" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
