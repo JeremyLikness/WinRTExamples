@@ -1,0 +1,193 @@
+﻿<Page
+    x:Name="PageRoot"
+    x:Class="SensorsExample.BasicPage"
+    DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SensorsExample"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:maps="using:Bing.Maps"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    mc:Ignorable="d">
+
+    <!--
+        This grid acts as a root panel for the page that defines two rows:
+        * Row 0 contains the back button and page title
+        * Row 1 contains the rest of the page layout
+    -->
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="140"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Back button and page title -->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="BackButton" Margin="39,59,39,0" Command="{Binding NavigationHelper.GoBackCommand, ElementName=PageRoot}"
+                        Style="{StaticResource NavigationBackButtonNormalStyle}"
+                        VerticalAlignment="Top"
+                        AutomationProperties.Name="Back"
+                        AutomationProperties.AutomationId="BackButton"
+                        AutomationProperties.ItemType="Navigation Button"/>
+            <TextBlock x:Name="PageTitle" Text="{StaticResource AppName}" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
+                        IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,30,40"/>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.Resources>
+                <Style TargetType="TextBlock" BasedOn="{StaticResource BodyTextBlockStyle}">
+                    <Setter Property="Margin" Value="5"/>
+                </Style>
+                <Style TargetType="TextBlock" BasedOn="{StaticResource BodyTextBlockStyle}" x:Key="BlockHeaderTextBlockStyle">
+                    <Setter Property="Margin" Value="3,0,5,10"/>
+                    <Setter Property="FontWeight" Value="Bold"></Setter>
+                </Style>
+                <Style TargetType="TextBox">
+                    <Setter Property="Margin" Value="3,-2,3,5"/>
+                </Style>
+                <Style TargetType="Border">
+                    <Setter Property="BorderThickness" Value="{StaticResource FlyoutBorderThemeThickness}"/>
+                    <Setter Property="BorderBrush" Value="{StaticResource FlyoutBorderThemeBrush}"/>
+                    <Setter Property="Padding" Value="5"/>
+                    <Setter Property="Margin" Value="5"/>
+                </Style>
+            </Grid.Resources>
+            <Grid Grid.Column="0" Width="320">
+                <StackPanel Grid.Row="0" DataContext="{Binding SensorSettings}" d:DataContext="{d:DesignInstance Type=local:SensorSettings, IsDesignTimeCreatable=true}">
+                    <Border>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Text="Compass" Style="{StaticResource BlockHeaderTextBlockStyle}"/>
+                            <TextBox Grid.Row="1" IsReadOnly="true" Text="{Binding LatestCompassReadingText}"/>
+                            <Button Grid.Row="2" Content="Get Current" IsEnabled="{Binding IsCompassAvailable}" Click="HandleCompassRequest"/>
+                            <CheckBox Grid.Row="3" Content="Follow" IsEnabled="{Binding IsCompassAvailable}" IsChecked="{Binding IsFollowingCompass, Mode=TwoWay}" />
+                        </Grid>
+                    </Border>
+
+                    <Border>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Text="Inclinometer" Style="{StaticResource BlockHeaderTextBlockStyle}"/>
+                            <TextBox Grid.Row="1" IsReadOnly="true" Text="{Binding InclinometerReadingText}"/>
+                            <Button Grid.Row="2" Content="Get Current" IsEnabled="{Binding IsInclinometerAvailable}" Click="HandleInclinometerRequest" VerticalAlignment="Top"/>
+                            <CheckBox Grid.Row="3" Content="Follow" IsEnabled="{Binding IsInclinometerAvailable}" IsChecked="{Binding FollowInclinometer, Mode=TwoWay}"/>
+                        </Grid>
+                    </Border>
+
+                    <Border>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Text="Location" Style="{StaticResource BlockHeaderTextBlockStyle}"/>
+                            <TextBox Grid.Row="1" IsReadOnly="true" Text="{Binding LatestLocationReadingText}"/>
+                            <Button Grid.Row="2" Content="Show Current" IsEnabled="{Binding IsLocationAvailable}" HorizontalAlignment="Stretch" Click="HandleShowCurentLocationRequest"/>
+                            <Button Grid.Row="3" Content="Center Map on Current" IsEnabled="{Binding IsLocationAvailable}" HorizontalAlignment="Stretch" Click="HandleCenterOnLocationRequest"/>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </Grid>
+            <Grid Grid.Column="1">
+                <maps:Map Credentials="{StaticResource MapKey}" x:Name="myMap"> 
+                    <interactivity:Interaction.Behaviors>
+                        <local:MapExtensions Position="{Binding Position, Mode=TwoWay}" Heading="{Binding Heading, Mode=TwoWay}"/>
+                    </interactivity:Interaction.Behaviors>
+                </maps:Map>
+            </Grid>
+            <Grid Grid.Column="2" Width="320">
+                <StackPanel DataContext="{Binding SensorSettings}" d:DataContext="{d:DesignInstance Type=local:SensorSettings, IsDesignTimeCreatable=true}">
+                    <Border>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Text="Simple Orientation" Style="{StaticResource BlockHeaderTextBlockStyle}"/>
+                            <TextBox Grid.Row="1" IsReadOnly="true" Text="{Binding LatestSimpleOrientationReading}"/>
+                            <Button Grid.Row="2" Content="Get Current" IsEnabled="{Binding IsSimpleOrientationAvailable}" Click="HandleSimpleOrientationRequest"/>
+                        </Grid>
+                    </Border>
+
+                    <Border>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Text="Light Sensor" Style="{StaticResource BlockHeaderTextBlockStyle}"/>
+                            <TextBox Grid.Row="1" IsReadOnly="true" Text="{Binding LatestLightSensorReadingText}"/>
+                            <Button Grid.Row="2" Content="Get Current" IsEnabled="{Binding IsLightSensorAvailable}" Click="HandleLightSensorRequest"/>
+                        </Grid>
+                    </Border>
+
+                    <Border>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Text="Accelerometer" Style="{StaticResource BlockHeaderTextBlockStyle}"/>
+                            <TextBox Grid.Row="1" IsReadOnly="true" Text="{Binding LatestAccelerometerReadingText}"/>
+                            <Button Grid.Row="2" Content="Get Current" IsEnabled="{Binding IsAccelerometerAvailable}" Click="HandleAccelerometerRequest"/>
+                        </Grid>
+                    </Border>
+
+                    <Border>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Text="Gyrometer" Style="{StaticResource BlockHeaderTextBlockStyle}"/>
+                            <TextBox Grid.Row="1" IsReadOnly="true" Text="{Binding LatestGyrometerReadingText}"/>
+                            <Button Grid.Row="2" Content="Get Current" IsEnabled="{Binding IsGyrometerAvailable}" Click="HandleGyrometerRequest"/>
+                        </Grid>
+                    </Border>
+                    <Border>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Text="Orientation Sensor" Style="{StaticResource BlockHeaderTextBlockStyle}"/>
+                            <TextBox Grid.Row="1" IsReadOnly="true" Text="{Binding LatestOrientationSensorReadingText}"/>
+                            <Button Grid.Row="2" Content="Get Current" IsEnabled="{Binding IsOrientationSensorAvailable}" Click="HandleOrientationSensorRequest"/>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>

@@ -1,13 +1,16 @@
 ﻿<Application
-    x:Class="InputsExample.App"
+    x:Class="SensorsExample.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:InputsExample"
-    xmlns:localData="using:InputsExample.Data"
+    xmlns:local="using:SensorsExample"
     RequestedTheme="Light">
 
+
     <Application.Resources>
+
         <!-- Application-specific resources -->
-        <x:String x:Key="AppName">Inputs Example</x:String>
+        <x:String x:Key="AppName">Sensors Example</x:String>
+        
+        <x:String x:Key="MapKey">YOUR-BING-MAPS-KEY-HERE</x:String>
     </Application.Resources>
 </Application>

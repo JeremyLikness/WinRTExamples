@@ -4,17 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{35BEA01B-4516-4629-881D-CC870A1CDE57}</ProjectGuid>
+    <ProjectGuid>{CD4F250C-C1BA-48CD-8A79-8C3B77A72674}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>InputsExample</RootNamespace>
-    <AssemblyName>InputsExample</AssemblyName>
+    <RootNamespace>SensorsExample</RootNamespace>
+    <AssemblyName>SensorsExample</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformVersion>8.1</TargetPlatformVersion>
     <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>InputsExample_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>SensorsExample_TemporaryKey.pfx</PackageCertificateKeyFile>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
@@ -106,40 +106,7 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\Common\CommonAssemblyInfo.cs">
-      <Link>Properties\CommonAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="InputSettings.cs" />
-    <Compile Include="Properties\Annotations.cs" />
-    <Compile Include="ShapeTemplateSelector.cs" />
-    <Compile Include="SquareControl.xaml.cs">
-      <DependentUpon>SquareControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ShapeModel.cs" />
-    <Compile Include="BallControl.xaml.cs">
-      <DependentUpon>BallControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Common\BooleanToVisibilityConverter.cs" />
-    <Compile Include="InputEventHandler.cs" />
-    <Compile Include="InputsPage.xaml.cs">
-      <DependentUpon>InputsPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DataModel\SampleDataSource.cs" />
-    <Compile Include="Common\RelayCommand.cs" />
-    <Compile Include="Common\ObservableDictionary.cs" />
-    <Compile Include="Common\NavigationHelper.cs" />
-    <Compile Include="Common\SuspensionManager.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <AppxManifest Include="Package.appxmanifest">
-      <SubType>Designer</SubType>
-    </AppxManifest>
-    <None Include="Common\ReadMe.txt" />
-    <None Include="InputsExample_TemporaryKey.pfx" />
+    <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
     <Content Include="..\Common\Logo.scale-100.png">
       <Link>Assets\Logo.scale-100.png</Link>
     </Content>
@@ -152,25 +119,56 @@
     <Content Include="..\Common\StoreLogo.scale-100.png">
       <Link>Assets\StoreLogo.scale-100.png</Link>
     </Content>
-    <Content Include="DataModel\SampleData.json" />
+    <Content Include="Common\ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Common\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="BasicPage.xaml.cs">
+      <DependentUpon>BasicPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Common\NavigationHelper.cs" />
+    <Compile Include="Common\ObservableDictionary.cs" />
+    <Compile Include="Common\RelayCommand.cs" />
+    <Compile Include="Common\SuspensionManager.cs" />
+    <Compile Include="GeolocationHelper.cs" />
+    <Compile Include="MapExtensions.cs" />
+    <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReadingDisplayExtensions.cs" />
+    <Compile Include="SensorSettings.cs" />
+    <Compile Include="SensorHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </AppxManifest>
+    <None Include="SensorsExample_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="SquareControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="BallControl.xaml">
+    <Page Include="BasicPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="InputsPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <SDKReference Include="BehaviorsXamlSDKManaged, Version=12.0">
+      <Name>Behaviors SDK %28XAML%29</Name>
+    </SDKReference>
+    <SDKReference Include="Bing.Maps.Xaml, Version=1.313.0825.0">
+      <Name>Bing Maps for C#, C++, or Visual Basic</Name>
+    </SDKReference>
+    <SDKReference Include="Microsoft.VCLibs, version=12.0">
+      <Name>Microsoft Visual C++ 2013 Runtime Package for Windows</Name>
+    </SDKReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>
