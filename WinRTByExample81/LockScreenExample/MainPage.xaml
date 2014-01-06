@@ -8,6 +8,13 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Initializing..." Style="{StaticResource SubheaderTextBlockStyle}" Margin="10" x:Name="Status"/>
+        <TextBlock Text="Last Run Unknown." Grid.Row="1" Style="{StaticResource SubheaderTextBlockStyle}" Margin="10" x:Name="LastRun"/>
     </Grid>
 </Page>
+
+    
