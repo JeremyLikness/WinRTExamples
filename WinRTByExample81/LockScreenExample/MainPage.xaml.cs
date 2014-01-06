@@ -17,14 +17,54 @@ using Windows.UI.Xaml.Navigation;
 
 namespace LockScreenExample
 {
+    using System.Threading.Tasks;
+
+    using Windows.ApplicationModel.Background;
+
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        private const string TimerTask = "Lock Timer Task";
         public MainPage()
         {
             this.InitializeComponent();
+        }
+
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            await BackgroundExecutionManager.RequestAccessAsync(); // subsequent calls are ignored 
+            var status = await BackgroundExecutionManager.RequestAccessAsync();
+            if (status != BackgroundAccessStatus.Denied)
+            {
+                if (BackgroundTaskRegistration.AllTasks.Any(t => t.Value.Name == TimerTask))
+                {
+                    Status.Text = "Already registered.";
+                    return;
+                }
+
+                Status.Text = "Registering...";
+                var builder = new BackgroundTaskBuilder
+                                  {
+                                      Name = TimerTask,
+                                      TaskEntryPoint = "LockScreenExample.LockTimer"
+                                  };
+                builder.SetTrigger(new TimeTrigger(15, false));
+                var registration = builder.Register();
+                registration.Completed += this.RegistrationCompleted;
+                Status.Text = "Registered.";
+            }
+            else
+            {
+                Status.Text = "Access Denied.";
+            }
+        }
+
+        private void RegistrationCompleted(BackgroundTaskRegistration sender, BackgroundTaskCompletedEventArgs args)
+        {
+
+            LastRun.Text = string.Format("Last Run: {0}", DateTime.Now);
         }
     }
 }
