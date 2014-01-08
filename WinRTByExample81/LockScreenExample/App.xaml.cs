@@ -5,13 +5,13 @@
     using Windows.ApplicationModel;
     using Windows.ApplicationModel.Activation;
     using Windows.Storage;
-    using Windows.UI.Notifications;
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
     using Windows.UI.Xaml.Navigation;
 
+    using LockScreenTasks;
+
     using WinRTByExample.NotificationHelper.Badges;
-    using WinRTByExample.NotificationHelper.Tiles;
 
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
@@ -37,9 +37,12 @@
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            LockTimer.RefreshTiles();
+
             if (!ApplicationData.Current.LocalSettings.Values.ContainsKey(Init))
             {
-                FirstTime();
+                BadgeGlyphTypes.Attention.GetBadge().Set();
+                ApplicationData.Current.LocalSettings.Values[Init] = true;
             }
 
             Frame rootFrame = Window.Current.Content as Frame;
@@ -73,20 +76,7 @@
             }
             // Ensure the current window is active
             Window.Current.Activate();
-        }
-
-        private static void FirstTime()
-        {
-            ApplicationData.Current.LocalSettings.Values[Init] = true;
-
-            TileTemplateType.TileWide310x150Text03.GetTile()
-                                        .AddText("This is the initial text")
-                                        .AddText("That should appear on the")
-                                        .AddText("lockscreen for this app.")
-                                        .Set();
-            // set a numeric badge
-            2.GetBadge().Set();                
-        }
+        }        
 
         /// <summary>
         /// Invoked when Navigation to a certain page fails

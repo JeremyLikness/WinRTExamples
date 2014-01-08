@@ -170,9 +170,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SensorsExample", "SensorsEx
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LockScreenExample", "LockScreenExample\LockScreenExample.csproj", "{EB109927-DCE0-4A12-860C-2F4F9B3F1B62}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LockScreenTasks", "LockScreenTasks\LockScreenTasks.csproj", "{06E2E008-D32D-4664-B472-12C4862C0FF8}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 65
+		SccNumberOfProjects = 66
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs04
 		SccLocalPath0 = .
@@ -432,6 +434,10 @@ Global
 		SccProjectTopLevelParentUniqueName64 = WinRTByExample81.sln
 		SccProjectName64 = LockScreenExample
 		SccLocalPath64 = LockScreenExample
+		SccProjectUniqueName65 = LockScreenTasks\\LockScreenTasks.csproj
+		SccProjectTopLevelParentUniqueName65 = WinRTByExample81.sln
+		SccProjectName65 = LockScreenTasks
+		SccLocalPath65 = LockScreenTasks
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1854,6 +1860,22 @@ Global
 		{EB109927-DCE0-4A12-860C-2F4F9B3F1B62}.Release|x86.ActiveCfg = Release|x86
 		{EB109927-DCE0-4A12-860C-2F4F9B3F1B62}.Release|x86.Build.0 = Release|x86
 		{EB109927-DCE0-4A12-860C-2F4F9B3F1B62}.Release|x86.Deploy.0 = Release|x86
+		{06E2E008-D32D-4664-B472-12C4862C0FF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06E2E008-D32D-4664-B472-12C4862C0FF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06E2E008-D32D-4664-B472-12C4862C0FF8}.Debug|ARM.ActiveCfg = Debug|ARM
+		{06E2E008-D32D-4664-B472-12C4862C0FF8}.Debug|ARM.Build.0 = Debug|ARM
+		{06E2E008-D32D-4664-B472-12C4862C0FF8}.Debug|x64.ActiveCfg = Debug|x64
+		{06E2E008-D32D-4664-B472-12C4862C0FF8}.Debug|x64.Build.0 = Debug|x64
+		{06E2E008-D32D-4664-B472-12C4862C0FF8}.Debug|x86.ActiveCfg = Debug|x86
+		{06E2E008-D32D-4664-B472-12C4862C0FF8}.Debug|x86.Build.0 = Debug|x86
+		{06E2E008-D32D-4664-B472-12C4862C0FF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06E2E008-D32D-4664-B472-12C4862C0FF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06E2E008-D32D-4664-B472-12C4862C0FF8}.Release|ARM.ActiveCfg = Release|ARM
+		{06E2E008-D32D-4664-B472-12C4862C0FF8}.Release|ARM.Build.0 = Release|ARM
+		{06E2E008-D32D-4664-B472-12C4862C0FF8}.Release|x64.ActiveCfg = Release|x64
+		{06E2E008-D32D-4664-B472-12C4862C0FF8}.Release|x64.Build.0 = Release|x64
+		{06E2E008-D32D-4664-B472-12C4862C0FF8}.Release|x86.ActiveCfg = Release|x86
+		{06E2E008-D32D-4664-B472-12C4862C0FF8}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1923,5 +1945,6 @@ Global
 		{CD4F250C-C1BA-48CD-8A79-8C3B77A72674} = {8998038C-16BE-4977-B609-929338697AEE}
 		{4A98427C-C4E6-4D16-B227-471302C32F88} = {864AEE38-7D67-4F30-A864-EE0AEBC1F236}
 		{EB109927-DCE0-4A12-860C-2F4F9B3F1B62} = {864AEE38-7D67-4F30-A864-EE0AEBC1F236}
+		{06E2E008-D32D-4664-B472-12C4862C0FF8} = {864AEE38-7D67-4F30-A864-EE0AEBC1F236}
 	EndGlobalSection
 EndGlobal

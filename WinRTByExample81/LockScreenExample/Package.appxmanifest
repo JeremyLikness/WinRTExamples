@@ -26,7 +26,7 @@
         <m2:SplashScreen Image="Assets\SplashScreen.png" />
       </m2:VisualElements>
       <Extensions>
-        <Extension Category="windows.backgroundTasks" EntryPoint="LockScreenExample.LockTimer">
+        <Extension Category="windows.backgroundTasks" EntryPoint="LockScreenTasks.LockTimer">
           <BackgroundTasks>
             <Task Type="timer" />
           </BackgroundTasks>

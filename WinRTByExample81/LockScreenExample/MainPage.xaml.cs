@@ -1,70 +1,76 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
+
 using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace LockScreenExample
 {
-    using System.Threading.Tasks;
-
     using Windows.ApplicationModel.Background;
+    using Windows.UI.Core;
 
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class MainPage
     {
         private const string TimerTask = "Lock Timer Task";
         public MainPage()
         {
             this.InitializeComponent();
+            Loaded += async (o, e) =>
+                {
+                    try
+                    {
+                        await BackgroundExecutionManager.RequestAccessAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        Status.Text = string.Format("Lock screen request: {0}", ex.Message);
+                    }
+                };
         }
 
-        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            await BackgroundExecutionManager.RequestAccessAsync(); // subsequent calls are ignored 
-            var status = await BackgroundExecutionManager.RequestAccessAsync();
-            if (status != BackgroundAccessStatus.Denied)
+            try
             {
                 if (BackgroundTaskRegistration.AllTasks.Any(t => t.Value.Name == TimerTask))
                 {
                     Status.Text = "Already registered.";
+                    foreach (var timerTask in
+                        BackgroundTaskRegistration.AllTasks.Where(task => task.Value.Name == TimerTask)
+                            .Select(task => task.Value))
+                    {
+                        timerTask.Completed += this.TaskRunCompleted;
+                    }
                     return;
                 }
 
                 Status.Text = "Registering...";
+                var trigger = new TimeTrigger(15, false);
                 var builder = new BackgroundTaskBuilder
                                   {
                                       Name = TimerTask,
-                                      TaskEntryPoint = "LockScreenExample.LockTimer"
+                                      TaskEntryPoint = "LockScreenTasks.LockTimer"
                                   };
-                builder.SetTrigger(new TimeTrigger(15, false));
+                builder.SetTrigger(trigger);
                 var registration = builder.Register();
-                registration.Completed += this.RegistrationCompleted;
+                registration.Completed += this.TaskRunCompleted;
                 Status.Text = "Registered.";
             }
-            else
+            catch (Exception ex)
             {
-                Status.Text = "Access Denied.";
+                LastRun.Text = ex.Message;
             }
         }
 
-        private void RegistrationCompleted(BackgroundTaskRegistration sender, BackgroundTaskCompletedEventArgs args)
+        private async void TaskRunCompleted(BackgroundTaskRegistration sender, BackgroundTaskCompletedEventArgs args)
         {
-
-            LastRun.Text = string.Format("Last Run: {0}", DateTime.Now);
-        }
+            await Dispatcher.RunAsync(
+                CoreDispatcherPriority.Normal,
+                () => LastRun.Text = string.Format("Last Run: {0}", DateTime.Now));
+        }  
     }
 }
