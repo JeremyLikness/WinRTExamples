@@ -23,7 +23,7 @@ namespace LockScreenExample
                 {
                     try
                     {
-                        await BackgroundExecutionManager.RequestAccessAsync();
+                        await BackgroundExecutionManager.RequestAccessAsync();                        
                     }
                     catch (Exception ex)
                     {
@@ -49,13 +49,18 @@ namespace LockScreenExample
                 }
 
                 Status.Text = "Registering...";
-                var trigger = new TimeTrigger(15, false);
                 var builder = new BackgroundTaskBuilder
-                                  {
-                                      Name = TimerTask,
-                                      TaskEntryPoint = "LockScreenTasks.LockTimer"
-                                  };
+                                    {
+                                        Name = TimerTask,
+                                        TaskEntryPoint = "LockScreenTasks.LockTimer"
+                                    };
+                
+                var trigger = new TimeTrigger(15, false);
                 builder.SetTrigger(trigger);
+
+                var condition = new SystemCondition(SystemConditionType.InternetAvailable);
+                builder.AddCondition(condition);
+
                 var registration = builder.Register();
                 registration.Completed += this.TaskRunCompleted;
                 Status.Text = "Registered.";
