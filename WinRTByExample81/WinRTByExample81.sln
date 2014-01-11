@@ -178,9 +178,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RawNotificationExample", "R
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RawNotificationSender", "RawNotificationSender\RawNotificationSender.csproj", "{E4CFB957-7C2F-4DD4-A6F9-699E76DADFA6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PushNotificationExample", "PushNotificationExample\PushNotificationExample.csproj", "{273CC9D9-1833-4F46-8011-5F72F95E61E7}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 69
+		SccNumberOfProjects = 70
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs04
 		SccLocalPath0 = .
@@ -456,6 +458,10 @@ Global
 		SccProjectTopLevelParentUniqueName68 = WinRTByExample81.sln
 		SccProjectName68 = RawNotificationSender
 		SccLocalPath68 = RawNotificationSender
+		SccProjectUniqueName69 = PushNotificationExample\\PushNotificationExample.csproj
+		SccProjectTopLevelParentUniqueName69 = WinRTByExample81.sln
+		SccProjectName69 = PushNotificationExample
+		SccLocalPath69 = PushNotificationExample
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1936,6 +1942,30 @@ Global
 		{E4CFB957-7C2F-4DD4-A6F9-699E76DADFA6}.Release|ARM.ActiveCfg = Release|Any CPU
 		{E4CFB957-7C2F-4DD4-A6F9-699E76DADFA6}.Release|x64.ActiveCfg = Release|Any CPU
 		{E4CFB957-7C2F-4DD4-A6F9-699E76DADFA6}.Release|x86.ActiveCfg = Release|Any CPU
+		{273CC9D9-1833-4F46-8011-5F72F95E61E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{273CC9D9-1833-4F46-8011-5F72F95E61E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{273CC9D9-1833-4F46-8011-5F72F95E61E7}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{273CC9D9-1833-4F46-8011-5F72F95E61E7}.Debug|ARM.ActiveCfg = Debug|ARM
+		{273CC9D9-1833-4F46-8011-5F72F95E61E7}.Debug|ARM.Build.0 = Debug|ARM
+		{273CC9D9-1833-4F46-8011-5F72F95E61E7}.Debug|ARM.Deploy.0 = Debug|ARM
+		{273CC9D9-1833-4F46-8011-5F72F95E61E7}.Debug|x64.ActiveCfg = Debug|x64
+		{273CC9D9-1833-4F46-8011-5F72F95E61E7}.Debug|x64.Build.0 = Debug|x64
+		{273CC9D9-1833-4F46-8011-5F72F95E61E7}.Debug|x64.Deploy.0 = Debug|x64
+		{273CC9D9-1833-4F46-8011-5F72F95E61E7}.Debug|x86.ActiveCfg = Debug|x86
+		{273CC9D9-1833-4F46-8011-5F72F95E61E7}.Debug|x86.Build.0 = Debug|x86
+		{273CC9D9-1833-4F46-8011-5F72F95E61E7}.Debug|x86.Deploy.0 = Debug|x86
+		{273CC9D9-1833-4F46-8011-5F72F95E61E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{273CC9D9-1833-4F46-8011-5F72F95E61E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{273CC9D9-1833-4F46-8011-5F72F95E61E7}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{273CC9D9-1833-4F46-8011-5F72F95E61E7}.Release|ARM.ActiveCfg = Release|ARM
+		{273CC9D9-1833-4F46-8011-5F72F95E61E7}.Release|ARM.Build.0 = Release|ARM
+		{273CC9D9-1833-4F46-8011-5F72F95E61E7}.Release|ARM.Deploy.0 = Release|ARM
+		{273CC9D9-1833-4F46-8011-5F72F95E61E7}.Release|x64.ActiveCfg = Release|x64
+		{273CC9D9-1833-4F46-8011-5F72F95E61E7}.Release|x64.Build.0 = Release|x64
+		{273CC9D9-1833-4F46-8011-5F72F95E61E7}.Release|x64.Deploy.0 = Release|x64
+		{273CC9D9-1833-4F46-8011-5F72F95E61E7}.Release|x86.ActiveCfg = Release|x86
+		{273CC9D9-1833-4F46-8011-5F72F95E61E7}.Release|x86.Build.0 = Release|x86
+		{273CC9D9-1833-4F46-8011-5F72F95E61E7}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1981,6 +2011,7 @@ Global
 		{5D7B391D-871D-4ACF-94C9-F2147E27002D} = {4C5AE9B3-E41E-4043-9A1C-FDE4946A9C7E}
 		{379CC5D0-039B-43D0-B2B0-D001A3EFF12B} = {2EFE7EA2-FDE5-4366-984D-4542ADA7B1E3}
 		{9B3BFFCA-03C1-4A36-A136-E4EF248D5E04} = {2EFE7EA2-FDE5-4366-984D-4542ADA7B1E3}
+		{273CC9D9-1833-4F46-8011-5F72F95E61E7} = {2EFE7EA2-FDE5-4366-984D-4542ADA7B1E3}
 		{7156F9B2-73C4-41A4-8BD9-60131A245E5B} = {43421F7E-57ED-469E-8D2D-6CCB8D3CDDAD}
 		{6CB212C3-80F3-49BC-8FA2-997DBEA70024} = {43421F7E-57ED-469E-8D2D-6CCB8D3CDDAD}
 		{3B377D8E-F329-433A-AA07-1CBFD671C7C4} = {43421F7E-57ED-469E-8D2D-6CCB8D3CDDAD}
