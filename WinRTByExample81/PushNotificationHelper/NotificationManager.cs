@@ -11,7 +11,6 @@
 
     public class NotificationManager
     {
-        private const string MediaType = "text/xml";
         private const string XWnsType = "X-WNS-Type";
         private const string AuthHeader = "Bearer";                    
         private const string AuthWwwHeader = "WWW-Authenticate";
@@ -38,8 +37,8 @@
                     var accessToken = token = token ?? await GetAccessToken(secret, sid);
 
                     var requestMessage = new HttpRequestMessage(HttpMethod.Post, uri) { Content = new ByteArrayContent(Encoding.UTF8.GetBytes(xml)) };
-                    requestMessage.Content.Headers.ContentType = new MediaTypeHeaderValue(MediaType);
-                    requestMessage.Headers.Add(XWnsType, contentType);
+                    requestMessage.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
+                    requestMessage.Headers.Add(XWnsType, notificationType);
                     requestMessage.Headers.Authorization = new AuthenticationHeaderValue(AuthHeader, accessToken);
 
                     var responseMessage = await new HttpClient().SendAsync(requestMessage);
