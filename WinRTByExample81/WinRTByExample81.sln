@@ -172,9 +172,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LockScreenExample", "LockSc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LockScreenTasks", "LockScreenTasks\LockScreenTasks.csproj", "{06E2E008-D32D-4664-B472-12C4862C0FF8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PushNotificationHelper", "PushNotificationHelper\PushNotificationHelper.csproj", "{D971EA67-E3B0-466F-A46B-9B3B1723A4E9}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 66
+		SccNumberOfProjects = 67
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs04
 		SccLocalPath0 = .
@@ -438,6 +440,10 @@ Global
 		SccProjectTopLevelParentUniqueName65 = WinRTByExample81.sln
 		SccProjectName65 = LockScreenTasks
 		SccLocalPath65 = LockScreenTasks
+		SccProjectUniqueName66 = PushNotificationHelper\\PushNotificationHelper.csproj
+		SccProjectTopLevelParentUniqueName66 = WinRTByExample81.sln
+		SccProjectName66 = PushNotificationHelper
+		SccLocalPath66 = PushNotificationHelper
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1876,6 +1882,16 @@ Global
 		{06E2E008-D32D-4664-B472-12C4862C0FF8}.Release|x64.Build.0 = Release|x64
 		{06E2E008-D32D-4664-B472-12C4862C0FF8}.Release|x86.ActiveCfg = Release|x86
 		{06E2E008-D32D-4664-B472-12C4862C0FF8}.Release|x86.Build.0 = Release|x86
+		{D971EA67-E3B0-466F-A46B-9B3B1723A4E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D971EA67-E3B0-466F-A46B-9B3B1723A4E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D971EA67-E3B0-466F-A46B-9B3B1723A4E9}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{D971EA67-E3B0-466F-A46B-9B3B1723A4E9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D971EA67-E3B0-466F-A46B-9B3B1723A4E9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D971EA67-E3B0-466F-A46B-9B3B1723A4E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D971EA67-E3B0-466F-A46B-9B3B1723A4E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D971EA67-E3B0-466F-A46B-9B3B1723A4E9}.Release|ARM.ActiveCfg = Release|Any CPU
+		{D971EA67-E3B0-466F-A46B-9B3B1723A4E9}.Release|x64.ActiveCfg = Release|Any CPU
+		{D971EA67-E3B0-466F-A46B-9B3B1723A4E9}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1889,6 +1905,7 @@ Global
 		{18CFD343-5194-4819-9578-55C4FF5E0308} = {D1D12C89-FE48-439C-AA92-07E75223DE74}
 		{4173D369-2E8F-4F01-8FA5-4896FD777301} = {D1D12C89-FE48-439C-AA92-07E75223DE74}
 		{D0EB723A-8A80-4F05-A8C1-7ED9F5D0E555} = {D1D12C89-FE48-439C-AA92-07E75223DE74}
+		{D971EA67-E3B0-466F-A46B-9B3B1723A4E9} = {D1D12C89-FE48-439C-AA92-07E75223DE74}
 		{8DC0AC27-9769-435F-92CC-379177E5DC8C} = {BC048F5D-8C83-412F-B11C-C2A5D9C98ADC}
 		{53EC1AD3-0A33-4C08-B717-BBEB6272B300} = {BC048F5D-8C83-412F-B11C-C2A5D9C98ADC}
 		{B78F0552-BF1B-4A88-A905-9774005AC5B2} = {BC048F5D-8C83-412F-B11C-C2A5D9C98ADC}
