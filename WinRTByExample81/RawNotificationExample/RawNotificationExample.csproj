@@ -14,12 +14,12 @@
     <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>RawNotificationExample_StoreKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>RawNotificationExample_TemporaryKey.pfx</PackageCertificateKeyFile>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
-    <PackageCertificateThumbprint>FAF915B7E23275C81DE534D0CDDF5137860244DB</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>86FA35B753C4E4969912F6FCE7902294DB398789</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -121,7 +121,6 @@
       <Link>Assets\StoreLogo.scale-100.png</Link>
     </Content>
     <Content Include="Assets\badge.png" />
-    <None Include="Package.StoreAssociation.xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Common\CommonAssemblyInfo.cs">
@@ -139,7 +138,6 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="RawNotificationExample_StoreKey.pfx" />
     <None Include="RawNotificationExample_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

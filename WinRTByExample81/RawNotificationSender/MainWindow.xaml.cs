@@ -8,8 +8,9 @@ namespace RawNotificationSender
     /// </summary>
     public partial class MainWindow
     {
-        private const string Secret = "Your App Secret";
-        private const string Sid = "ms-app://Your App Sid";
+        // TODO: update Secret and Sid with your own 
+        private const string Secret = "<your secret here>";
+        private const string Sid = "ms-app://s-update-with-your-own";
         private const string NotificationType = "wns/raw";
         private const string ContentType = "application/octet-stream";
 

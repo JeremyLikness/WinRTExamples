@@ -12,6 +12,8 @@
 
     using LockScreenTasks;
 
+    using WinRTByExample.NotificationHelper.Badges;
+
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
@@ -40,6 +42,9 @@
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+
+            BadgeHelper.ClearBadge().Set();
+            ApplicationData.Current.LocalSettings.Values[RawNotificationTask.GetCountKey()] = 0;
 
             if (this.initialized)
             {
