@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
-  <Identity Name="22144JeremyLiknessCreatio.15RawNotificationExample" Publisher="CN=CBE4FC36-ABA9-41F9-BE22-BACE471603F0" Version="1.1.0.0" />
+  <Identity Name="WinRTExampleRawNotificationExample" Publisher="CN=Jeremy" Version="1.1.0.0" />
   <Properties>
-    <DisplayName>15 Raw Notification Example</DisplayName>
+    <DisplayName>Raw Notification Example</DisplayName>
     <PublisherDisplayName>Jeremy Likness Creations</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -15,7 +15,7 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="RawNotificationExample.App">
-      <m2:VisualElements DisplayName="15 Raw Notification Example" Square150x150Logo="Assets\Logo.png" Square30x30Logo="Assets\SmallLogo.png" Description="RawNotificationExample" ForegroundText="light" BackgroundColor="#464646" ToastCapable="true">
+      <m2:VisualElements DisplayName="Raw Notification Example" Square150x150Logo="Assets\Logo.png" Square30x30Logo="Assets\SmallLogo.png" Description="RawNotificationExample" ForegroundText="light" BackgroundColor="#464646" ToastCapable="true">
         <m2:LockScreen Notification="badge" BadgeLogo="Assets/badge.png" />
         <m2:DefaultTile>
           <m2:ShowNameOnTiles>
