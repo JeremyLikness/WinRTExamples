@@ -113,6 +113,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="InputSettings.cs" />
+    <Compile Include="PointerExtensions.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="ShapeTemplateSelector.cs" />
     <Compile Include="SquareControl.xaml.cs">

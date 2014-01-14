@@ -4,8 +4,10 @@ using System.Linq;
 using Windows.Devices.Input;
 using Windows.Foundation;
 using Windows.System;
+using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -20,12 +22,16 @@ namespace InputsExample
     /// </summary>
     public sealed partial class InputsPage : Page
     {
+        #region Fields
+
         private readonly NavigationHelper _navigationHelper;
         private readonly ObservableDictionary _defaultViewModel = new ObservableDictionary();
 
-        private readonly DispatcherTimer _timer = new DispatcherTimer();
+        private readonly DispatcherTimer _animationTimer = new DispatcherTimer();
         private readonly ObservableCollection<ShapeModel> _shapes = new ObservableCollection<ShapeModel>();
-        private readonly InputSettings _inputSettings = new InputSettings();
+        private readonly InputSettings _inputSettings = new InputSettings(); 
+
+        #endregion
 
         /// <summary>
         /// This can be changed to a strongly typed view model.
@@ -45,6 +51,11 @@ namespace InputsExample
         }
 
 
+        #region Constructor(s) and Initialization
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InputsPage"/> class.
+        /// </summary>
         public InputsPage()
         {
             InitializeComponent();
@@ -54,30 +65,18 @@ namespace InputsExample
 
             SizeChanged += OnSizeChanged;
 
-            _inputSettings.PropertyChanged += (sender, args) => UpdateInputSettings();
+            // Subscribe to changes in the input settings
+            _inputSettings.PropertyChanged += (sender, args) => UpdateStateFromInputSettings();
 
+            // Make sure the page has input focus so that keyboard events are available immediately
             Loaded += (sender, args) => Focus(FocusState.Programmatic);
-        }
 
-        protected override void OnKeyUp(KeyRoutedEventArgs e)
-        {
-            base.OnKeyUp(e);
-            if (e.Key == VirtualKey.B) CreateShape(ShapeModel.ShapeType.Ball);
-            if (e.Key == VirtualKey.S) CreateShape(ShapeModel.ShapeType.Square);
-        }
+            // Initialize the animation timer
+            _animationTimer.Interval = TimeSpan.FromMilliseconds(30);
+            _animationTimer.Tick += HandleAnimationTimer;
+        } 
 
-        private void OnSizeChanged(Object sender, SizeChangedEventArgs sizeChangedEventArgs)
-        {
-            // Compensate for screen size change - make sure everything is put back within the new screen dimensions
-            _timer.Stop();
-
-            foreach (var shape in _shapes)
-            {
-                shape.UpdateExtents(new Point(0,0), new Point(ShapePanel.ActualWidth, ShapePanel.ActualHeight));
-            }
-
-            _timer.Start();
-        }
+        #endregion
 
         /// <summary>
         /// Populates the page with content passed during navigation. Any saved state is also
@@ -122,7 +121,6 @@ namespace InputsExample
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             _navigationHelper.OnNavigatedTo(e);
-            InitializeTimer();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -131,6 +129,19 @@ namespace InputsExample
         }
 
         #endregion
+
+        private void OnSizeChanged(Object sender, SizeChangedEventArgs sizeChangedEventArgs)
+        {
+            // Compensate for screen size change - make sure everything is put back within the new screen dimensions
+            StopAnimationTimer();
+
+            foreach (var shape in _shapes)
+            {
+                shape.UpdateExtents(new Point(0, 0), new Point(ShapePanel.ActualWidth, ShapePanel.ActualHeight));
+            }
+
+            UpdateAnimationTimerState();
+        }
 
         private void CreateShape(ShapeModel.ShapeType shapeType)
         {
@@ -158,58 +169,86 @@ namespace InputsExample
 
             _shapes.Add(shape);
 
-            UpdateInputSettings();
+            UpdateStateFromInputSettings();
         }
 
-        private void InitializeTimer()
+        private void StopAnimationTimer()
         {
-            _timer.Interval = TimeSpan.FromMilliseconds(30);
-            _timer.Start();
-            _timer.Tick += TimerOnTick;
+            _animationTimer.Stop();
         }
 
-        private void TimerOnTick(Object sender, Object o)
+        private void UpdateAnimationTimerState()
         {
-            _timer.Stop();
+            if (_inputSettings.IsAnimationOn) _animationTimer.Start();
+            else _animationTimer.Stop();
+        }
+
+        private void HandleAnimationTimer(Object sender, Object o)
+        {
+            StopAnimationTimer();
             foreach (var shape in _shapes.Where(x => !x.IsHot))
             {
                 shape.UpdateShapePosition();
             }
-            _timer.Start();
+            UpdateAnimationTimerState();
         }
 
-        private void UpdateInputSettings()
+        private void UpdateStateFromInputSettings()
         {
+            // Turn the timer on/off based on settings
+            UpdateAnimationTimerState();
+
+            // Update each shape based on the settings values
             foreach (var shape in _shapes)
             {
                 shape.UpdateInputSettings(_inputSettings);
             }
         }
 
-        private void HandleAddBallClick(Object sender, RoutedEventArgs e)
-        {
-            CreateShape(ShapeModel.ShapeType.Ball);
-        }
-
-        private void HandleAddSquareClick(Object sender, RoutedEventArgs e)
-        {
-            CreateShape(ShapeModel.ShapeType.Square);
-        }
-
         private void HandleMouseDetailsClick(Object sender, RoutedEventArgs e)
         {
-            var mouseCapabilities = new MouseCapabilities();
-            var message = mouseCapabilities.MousePresent == 1
-                ? String.Format(
-                    "There is a mouse present.  The connected mice have a max of {0} buttons.  There {1} a vertical wheel present.  There {2} a horizontal wheel present.  Mouse buttons {3} been swapped."
-                    , mouseCapabilities.NumberOfButtons
-                    , mouseCapabilities.VerticalWheelPresent == 1 ? "is" : "is not"
-                    , mouseCapabilities.HorizontalWheelPresent == 1 ? "is" : "is not"
-                    , mouseCapabilities.SwapButtons == 1 ? "have" : "have not"
-                    )
-                : "There are no mice present.";
+            var capabilities = new MouseCapabilities();
+            String message;
+            if (capabilities.MousePresent == 1)
+            {
+                var rawMessage =
+                    "There is a mouse present.  " + 
+                    "The connected mice have a max of {0} buttons.  " + 
+                    "There {1} a vertical wheel present.  " + 
+                    "There {2} a horizontal wheel present. "  + 
+                    "Mouse buttons {3} been swapped.";
 
+                message = String.Format(rawMessage
+                    , capabilities.NumberOfButtons
+                    , capabilities.VerticalWheelPresent == 1 ? "is" : "is not"
+                    , capabilities.HorizontalWheelPresent == 1 ? "is" : "is not"
+                    , capabilities.SwapButtons == 1 ? "have" : "have not"
+                    );
+            }
+            else
+            {
+                message = "There are no mice present.";
+            }
             ShowMessage(message, "Mouse Properties");
+        }
+
+        private void HandleTouchDetailsClick(Object sender, RoutedEventArgs e)
+        {
+            var capabilities = new TouchCapabilities();
+            String message;
+            if (capabilities.TouchPresent == 1)
+            {
+                var rawMessage = 
+                    "Touch support is available.  " + 
+                    "Up to {0} touch points are supported.";
+
+                message = String.Format(rawMessage, capabilities.Contacts);
+            }
+            else
+            {
+                message = "Touch support is not available.";
+            }
+            ShowMessage(message, "Touch Properties");
         }
 
         private void HandleKeyboardDetailsClick(Object sender, RoutedEventArgs e)
@@ -222,15 +261,6 @@ namespace InputsExample
             ShowMessage(message, "Keyboard Properties");
         }
 
-        private void HandleTouchDetailsClick(Object sender, RoutedEventArgs e)
-        {
-            var touchCapabilities = new TouchCapabilities();
-            var message = touchCapabilities.TouchPresent == 1
-                ? String.Format("Touch support is available.  Up to {0} touch points are supported.", touchCapabilities.Contacts)
-                : "Touch support is not available.";
-            ShowMessage(message, "Touch Properties");
-        }
-
         private async void ShowMessage(String content, String title)
         {
             var messageDialog = new MessageDialog(content, title);
@@ -241,6 +271,55 @@ namespace InputsExample
         {
             // Adding this extra tap handler so that clicking on the background causes something to get focus so that keybaord actions can be raised/caught.
             Focus(FocusState.Programmatic);
+        }
+
+        protected override void OnKeyDown(KeyRoutedEventArgs args)
+        {
+            // Check for shift, control, alt (AKA VirtualKey.Menu)
+            var currentWindow = CoreWindow.GetForCurrentThread();
+            var ctrlState = currentWindow.GetKeyState(VirtualKey.Control);
+            var shftState = currentWindow.GetKeyState(VirtualKey.Shift);
+            var altState = currentWindow.GetKeyState(VirtualKey.Menu);
+            var isControlKeyPressed =
+                (ctrlState & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
+            var isShiftKeyPressed =
+                (shftState & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
+            var isAltKeyPressed =
+                (altState & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
+
+            System.Diagnostics.Debug.WriteLine("KeyDown: {0} WasDown = {1}, Ctrl={2}, Shift={3}, Alt={4}", 
+                args.Key,
+                args.KeyStatus.WasKeyDown, 
+                isControlKeyPressed,
+                isShiftKeyPressed,
+                isAltKeyPressed);
+        }
+
+        protected override void OnKeyUp(KeyRoutedEventArgs args)
+        {
+            System.Diagnostics.Debug.WriteLine("KeyUp: {0} - {1}, {2}", args.Key, args.KeyStatus.WasKeyDown, args.KeyStatus.IsKeyReleased);
+            if (args.Key == VirtualKey.B) CreateShape(ShapeModel.ShapeType.Ball);
+            if (args.Key == VirtualKey.S) CreateShape(ShapeModel.ShapeType.Square);
+        }
+
+        private void HandlePointerDetailsPressed(Object sender, PointerRoutedEventArgs e)
+        {
+            // Show a flyout that displays the PointerPoint details for the current pointer press
+            var senderElement = (FrameworkElement)sender;
+            var pointerPoint = e.GetCurrentPoint(senderElement);
+            var pointerPointValues = pointerPoint.GetPointerPointDump();
+            DefaultViewModel["PointerPointValues"] = pointerPointValues;
+            FlyoutBase.ShowAttachedFlyout(senderElement);
+        }
+
+        private void HandleAddBallClick(Object sender, RoutedEventArgs e)
+        {
+            CreateShape(ShapeModel.ShapeType.Ball);
+        }
+
+        private void HandleAddSquareClick(Object sender, RoutedEventArgs e)
+        {
+            CreateShape(ShapeModel.ShapeType.Square);
         }
     }
 }

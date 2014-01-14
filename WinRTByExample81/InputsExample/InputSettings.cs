@@ -11,6 +11,7 @@ namespace InputsExample
     {
         #region Fields
 
+        private Boolean _isAnimationOn = true;
         private Boolean _pointerIntegratedDevicesOnly;
         private Boolean _isMouseAvailable = true;
         private Boolean _isTouchAvailable = true;
@@ -46,7 +47,30 @@ namespace InputsExample
 
         #endregion
 
+        public Boolean IsAnimationOn
+        {
+            get { return _isAnimationOn; }
+            set
+            {
+                if (value.Equals(_isAnimationOn)) return;
+                _isAnimationOn = value;
+                OnPropertyChanged();
+            }
+        }
+
         #region Pointers
+
+        public Boolean PointerIntegratedDevicesOnly
+        {
+            get { return _pointerIntegratedDevicesOnly; }
+            set
+            {
+                if (value.Equals(_pointerIntegratedDevicesOnly)) return;
+                _pointerIntegratedDevicesOnly = value;
+                OnPropertyChanged();
+                UpdatePointerCapabilities();
+            }
+        }
 
         public Boolean IsMouseAvailable
         {
@@ -111,18 +135,6 @@ namespace InputsExample
                 if (value.Equals(_pointerSupportPen)) return;
                 _pointerSupportPen = value;
                 OnPropertyChanged();
-            }
-        }
-
-        public Boolean PointerIntegratedDevicesOnly
-        {
-            get { return _pointerIntegratedDevicesOnly; }
-            set
-            {
-                if (value.Equals(_pointerIntegratedDevicesOnly)) return;
-                _pointerIntegratedDevicesOnly = value;
-                OnPropertyChanged();
-                UpdatePointerCapabilities();
             }
         }
 
@@ -261,23 +273,18 @@ namespace InputsExample
 
         private void UpdatePointerCapabilities()
         {
-            var devices = PointerIntegratedDevicesOnly
-                ? PointerDevice.GetPointerDevices().Where(x => x.IsIntegrated).ToList()
-                : PointerDevice.GetPointerDevices().ToList();
+            var devices = PointerDevice.GetPointerDevices();
+            if (PointerIntegratedDevicesOnly)
+            {
+                devices = devices.Where(x => x.IsIntegrated).ToList();
+            }
+            IsTouchAvailable = devices.Any(x => x.PointerDeviceType == PointerDeviceType.Touch); 
             IsMouseAvailable = devices.Any(x => x.PointerDeviceType == PointerDeviceType.Mouse);
-            IsTouchAvailable = devices.Any(x => x.PointerDeviceType == PointerDeviceType.Touch);
             IsPenAvailable = devices.Any(x => x.PointerDeviceType == PointerDeviceType.Pen);
 
+            if (!IsTouchAvailable) PointerSupportTouch = false; 
             if (!IsMouseAvailable) PointerSupportMouse = false;
-            if (!IsTouchAvailable) PointerSupportTouch= false;
             if (!IsPenAvailable) PointerSupportPen = false;
-
-            //foreach (var device in devices)
-            //{
-            //    // device.PointerDeviceType
-            //    // device.IsIntegrated
-            //    // device.MaxContacts
-            //}
         }
     }
 }
