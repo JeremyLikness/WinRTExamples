@@ -15,8 +15,10 @@ namespace InputsExample
         private const Int32 InitialShapeSize = 128;
         private const Int32 MinShapeSize = 32;
 
+        private readonly Color _originalColor;
+
         private Color _color;
-        private Double _size = InitialShapeSize;
+        private Double _scale = 1.0;
         private Point _position;
         private Point _direction;
         private Double _rate;
@@ -35,6 +37,8 @@ namespace InputsExample
             Shape = shapeType;
             SetRandomColor();
             SetRandomDirection();
+
+            _originalColor = Color;
             // Rate = 8,
         }
 
@@ -49,7 +53,7 @@ namespace InputsExample
         public Color Color
         {
             get { return _color; }
-            set
+            private set
             {
                 if (!_color.Equals(value))
                 {
@@ -61,25 +65,28 @@ namespace InputsExample
 
         public Double Size
         {
-            get { return _size; }
-            set
+            get { return InitialShapeSize; }
+        }
+
+        public Double Scale
+        {
+            get { return _scale; }
+            private set
             {
-                if (!_size.Equals(value))
-                {
-                    _size = value;
-                    OnPropertyChanged();
-                }
+                if (value.Equals(_scale)) return;
+                _scale = value;
+                OnPropertyChanged();
             }
         }
 
         public Double LeftPos
         {
-            get { return Position.X - (Size / 2.0); }
+            get { return Position.X - (Size * Scale / 2.0); }
         }
 
         public Double TopPos
         {
-            get { return Position.Y - (Size / 2.0); }
+            get { return Position.Y - (Size * Scale / 2.0); }
         }
 
         public Point MinPosPoint { get; set; }
@@ -104,7 +111,7 @@ namespace InputsExample
         public Double Rotation
         {
             get { return _rotation; }
-            set
+            private set
             {
                 if (!_rotation.Equals(value))
                 {
@@ -256,12 +263,12 @@ namespace InputsExample
         private void FixExtents()
         {
             var xPos = Position.X;
-            xPos = Math.Max(xPos, MinPosPoint.X + (Size / 2.0));
-            xPos = Math.Min(xPos, MaxPosPoint.X - (Size / 2.0));
+            xPos = Math.Max(xPos, MinPosPoint.X + (Size * Scale / 2.0));
+            xPos = Math.Min(xPos, MaxPosPoint.X - (Size * Scale / 2.0));
 
             var yPos = Position.Y;
-            yPos = Math.Max(yPos, MinPosPoint.Y + (Size / 2.0));
-            yPos = Math.Min(yPos, MaxPosPoint.Y - (Size / 2.0));
+            yPos = Math.Max(yPos, MinPosPoint.Y + (Size * Scale / 2.0));
+            yPos = Math.Min(yPos, MaxPosPoint.Y - (Size * Scale / 2.0));
             Position = new Point(xPos, yPos);
         }
 
@@ -275,15 +282,17 @@ namespace InputsExample
 
         public void MoveShape(Double xOffset, Double yOffset)
         {
+            // Check that the effect of applying the offset to the current position does not cause the edges of 
+            // the shape to go outside of the canvas's bounding rectangle.
             var xPos = Position.X;
-            if (xPos + xOffset - (Size / 2.0) <= MinPosPoint.X || xPos + (Size / 2.0) + xOffset >= MaxPosPoint.X)
+            if (xPos + xOffset - (Size * Scale / 2.0) <= MinPosPoint.X || xPos + (Size * Scale / 2.0) + xOffset >= MaxPosPoint.X)
             {
                 Direction = new Point(Direction.X * -1, Direction.Y);
                 xOffset = Direction.X * Rate;
             }
 
             var yPos = Position.Y;
-            if (yPos - (Size / 2.0) + yOffset <= MinPosPoint.Y || yPos + (Size / 2.0) + yOffset >= MaxPosPoint.Y)
+            if (yPos - (Size * Scale / 2.0) + yOffset <= MinPosPoint.Y || yPos + (Size * Scale / 2.0) + yOffset >= MaxPosPoint.Y)
             {
                 Direction = new Point(Direction.X, Direction.Y * -1);
                 yOffset = Direction.Y * Rate;
@@ -292,23 +301,30 @@ namespace InputsExample
             Position = new Point(xPos + xOffset, yPos + yOffset);
         }
 
-        public void UpdateRate(Double xRate, Double yRate)
-        {
-            // TODO (remember, both rate and direction, and units are per 30 ms...so that has to be translated somewhere)
-        }
-
         public void ResizeShape(Double expansionPercent)
         {
-            var newSize = Size * expansionPercent;
-            newSize = Math.Max(newSize, MinShapeSize);
-            newSize = Math.Min(newSize, Math.Min(MaxPosPoint.Y - MinPosPoint.Y, MaxPosPoint.X - MinPosPoint.X));
-            Size = newSize;
+            // Check that the proposed percentage change doesn't shrink the shape below the minimum allowable or grow it larger 
+            // than the current canvas.
+            var newScale = Scale*expansionPercent;
+            newScale = Math.Max(newScale, MinShapeSize/Size);
+
+            var maxSize = Math.Min(MaxPosPoint.Y - MinPosPoint.Y, MaxPosPoint.X - MinPosPoint.X);
+            newScale = Math.Min(newScale, maxSize/Size);
+            Scale = newScale;
             FixExtents();
         }
 
         public void RotateShape(Double degrees)
         {
             Rotation += degrees;
+        }
+
+        public void ResetSizeColorAndRotation()
+        {
+            Color = _originalColor;
+            Scale = 1;
+            Rotation = 0;
+            FixExtents();
         }
 
         public void UpdateInputSettings(InputSettings inputSettings)
