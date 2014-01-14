@@ -1,0 +1,28 @@
+﻿<Page
+    x:Class="ThreadPoolExample.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ThreadPoolExample"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Margin="10" Grid.Row="0" Orientation="Horizontal">
+            <TextBlock Text="My Latest PI Guess:" Style="{StaticResource SubheaderTextBlockStyle}"/>
+            <TextBlock x:Name="Pi" Margin="10 0 0 0" Style="{StaticResource SubheaderTextBlockStyle}"/>
+        </StackPanel>
+        <StackPanel Margin="10" Grid.Row="1" Orientation="Horizontal">
+            <TextBlock Text="Iterations:" Style="{StaticResource SubheaderTextBlockStyle}"/>
+            <TextBlock x:Name="Iterations" Margin="10 0 0 0" Style="{StaticResource SubheaderTextBlockStyle}"/>
+        </StackPanel>
+        <StackPanel Margin="10" Grid.Row="2" Orientation="Horizontal">
+            <Button Content="Cancel" Click="CancelOnClick"/>
+        </StackPanel>
+    </Grid>
+</Page>
