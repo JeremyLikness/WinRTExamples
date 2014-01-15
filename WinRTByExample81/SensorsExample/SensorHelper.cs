@@ -126,42 +126,45 @@ namespace SensorsExample
 
         #endregion
 
-        #region Light Sensor
+        #region Inclinometer
 
-        private void ConfigureLightSensor()
+        private void ConfigureInclinometer()
         {
-            _lightSensor = LightSensor.GetDefault();
-            if (_lightSensor != null)   // Null if not present/supported
+            _inclinometer = Inclinometer.GetDefault();
+            if (_inclinometer != null)   // Null if not present/supported
             {
-                _sensorSettings.IsLightSensorAvailable = true;
+                _sensorSettings.IsInclinometerAvailable = true;
 
-                var minInterval = _lightSensor.MinimumReportInterval;
-                _lightSensor.ReportInterval = Math.Max(_sensorSettings.LightSensorReportInterval, minInterval);
-                _lightSensor.ReadingChanged += LightSensorOnReadingChanged;
+                var minInterval = _inclinometer.MinimumReportInterval;
+                _inclinometer.ReportInterval = Math.Max(_sensorSettings.InclinometerReportInterval, minInterval);
+                _inclinometer.ReadingChanged += InclinometerOnReadingChanged;
 
                 // Read the initial sensor value
-                _sensorSettings.LatestLightSensorReading = GetLightSensorReading();
+                _sensorSettings.LatestInclinometerReading = GetInclinometerReading();
             }
         }
 
-        public LightSensorReading GetLightSensorReading()
+        public InclinometerReading GetInclinometerReading()
         {
-            if (_lightSensor == null) throw new InvalidOperationException("The light sensor is either not present or has not been initialized");
+            if (_inclinometer == null) throw new InvalidOperationException("The inclinometer is either not present or has not been initialized");
 
-            var reading = _lightSensor.GetCurrentReading();
+            var reading = _inclinometer.GetCurrentReading();
             return reading;
             // Available reading values include:
-            // reading.IlluminanceInLux
+            // reading.PitchDegrees
+            // reading.RollDegrees
+            // reading.YawDegrees
+            // reading.YawAccuracy
             // reading.Timestamp
         }
 
-        private void LightSensorOnReadingChanged(LightSensor sender, LightSensorReadingChangedEventArgs args)
+        private void InclinometerOnReadingChanged(Inclinometer sender, InclinometerReadingChangedEventArgs args)
         {
-            _sensorSettings.LatestLightSensorReading = args.Reading;
+            _sensorSettings.LatestInclinometerReading = args.Reading;
         }
 
         #endregion
-
+        
         #region Accelerometer
 
         private void ConfigureAccelerometer()
@@ -245,45 +248,6 @@ namespace SensorsExample
 
         #endregion
 
-        #region Inclinometer
-
-        private void ConfigureInclinometer()
-        {
-            _inclinometer = Inclinometer.GetDefault();
-            if (_inclinometer != null)   // Null if not present/supported
-            {
-                _sensorSettings.IsInclinometerAvailable = true;
-
-                var minInterval = _inclinometer.MinimumReportInterval;
-                _inclinometer.ReportInterval = Math.Max(_sensorSettings.InclinometerReportInterval, minInterval);
-                _inclinometer.ReadingChanged += InclinometerOnReadingChanged;
-
-                // Read the initial sensor value
-                _sensorSettings.LatestInclinometerReading = GetInclinometerReading();
-            }
-        }
-
-        public InclinometerReading GetInclinometerReading()
-        {
-            if (_inclinometer == null) throw new InvalidOperationException("The inclinometer is either not present or has not been initialized");
-
-            var reading = _inclinometer.GetCurrentReading();
-            return reading;
-            // Available reading values include:
-            // reading.PitchDegrees
-            // reading.RollDegrees
-            // reading.YawDegrees
-            // reading.YawAccuracy
-            // reading.Timestamp
-        }
-
-        private void InclinometerOnReadingChanged(Inclinometer sender, InclinometerReadingChangedEventArgs args)
-        {
-            _sensorSettings.LatestInclinometerReading = args.Reading;
-        }
-
-        #endregion
-
         #region Orientation Sensor
 
         private void ConfigureOrientationSensor()
@@ -319,6 +283,42 @@ namespace SensorsExample
         {
             _sensorSettings.LatestOrientationSensorReading = args.Reading;
         } 
+
+        #endregion
+
+        #region Light Sensor
+
+        private void ConfigureLightSensor()
+        {
+            _lightSensor = LightSensor.GetDefault();
+            if (_lightSensor != null)   // Null if not present/supported
+            {
+                _sensorSettings.IsLightSensorAvailable = true;
+
+                var minInterval = _lightSensor.MinimumReportInterval;
+                _lightSensor.ReportInterval = Math.Max(_sensorSettings.LightSensorReportInterval, minInterval);
+                _lightSensor.ReadingChanged += LightSensorOnReadingChanged;
+
+                // Read the initial sensor value
+                _sensorSettings.LatestLightSensorReading = GetLightSensorReading();
+            }
+        }
+
+        public LightSensorReading GetLightSensorReading()
+        {
+            if (_lightSensor == null) throw new InvalidOperationException("The light sensor is either not present or has not been initialized");
+
+            var reading = _lightSensor.GetCurrentReading();
+            return reading;
+            // Available reading values include:
+            // reading.IlluminanceInLux
+            // reading.Timestamp
+        }
+
+        private void LightSensorOnReadingChanged(LightSensor sender, LightSensorReadingChangedEventArgs args)
+        {
+            _sensorSettings.LatestLightSensorReading = args.Reading;
+        }
 
         #endregion
     }

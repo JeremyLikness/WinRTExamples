@@ -35,6 +35,7 @@ namespace SensorsExample
         private InclinometerReading _latestInclinometerReading;
 
         private Boolean _isLocationAvailable;
+        private Boolean _isLocationRequestingHighAccuracy;
         private BasicGeoposition _latestLocationReading;
 
         private Boolean _isOrientationSensorAvailable;
@@ -290,6 +291,17 @@ namespace SensorsExample
             {
                 if (value.Equals(_isLocationAvailable)) return;
                 _isLocationAvailable = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Boolean IsLocationRequestingHighAccuracy
+        {
+            get { return _isLocationRequestingHighAccuracy; }
+            set
+            {
+                if (value.Equals(_isLocationRequestingHighAccuracy)) return;
+                _isLocationRequestingHighAccuracy = value;
                 OnPropertyChanged();
             }
         }

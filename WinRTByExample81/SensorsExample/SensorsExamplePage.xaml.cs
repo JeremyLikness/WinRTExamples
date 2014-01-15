@@ -15,8 +15,10 @@ namespace SensorsExample
     /// <summary>
     /// A basic page that provides characteristics common to most applications.
     /// </summary>
-    public sealed partial class BasicPage : Page
+    public sealed partial class SensorsExamplePage : Page
     {
+
+        #region Fields
 
         private readonly NavigationHelper _navigationHelper;
         private readonly ObservableDictionary _defaultViewModel = new ObservableDictionary();
@@ -24,7 +26,9 @@ namespace SensorsExample
         private readonly SensorHelper _sensorHelper;
         private readonly GeolocationHelper _geolocationHelper;
 
-        private readonly DispatcherTimer _timer = new DispatcherTimer();
+        private readonly DispatcherTimer _timer = new DispatcherTimer(); 
+
+        #endregion
 
         /// <summary>
         /// This can be changed to a strongly typed view model.
@@ -43,7 +47,12 @@ namespace SensorsExample
             get { return _navigationHelper; }
         }
 
-        public BasicPage()
+        #region Constructor(s) and Initialization
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SensorsExamplePage"/> class.
+        /// </summary>
+        public SensorsExamplePage()
         {
             _sensorSettings = new SensorSettings
                               {
@@ -61,7 +70,10 @@ namespace SensorsExample
             _navigationHelper = new NavigationHelper(this);
             _navigationHelper.LoadState += HandleNavigationHelperLoadState;
             _navigationHelper.SaveState += HandleNavigationHelperSaveState;
-        }
+        } 
+
+        #endregion
+
 
         /// <summary>
         /// Populates the page with content passed during navigation. Any saved state is also
@@ -116,11 +128,32 @@ namespace SensorsExample
 
         #endregion
 
-        private async void HandleSimpleOrientationRequest(Object sender, RoutedEventArgs e)
+        private async void HandleShowCurentLocationRequest(Object sender, RoutedEventArgs e)
         {
             _timer.Stop();
-            var reading = _sensorHelper.GetSimpleOrientationReaading();
-            await ShowMessage(String.Format("SimpleOrientation = {0}", reading));
+            var position = await _geolocationHelper.GetPosition();
+            await ShowMessage(String.Format("Location: {0}",
+                position.Coordinate.Point.Position.DisplayText()));
+            _timer.Start();
+        }
+
+        private async void HandleCenterOnLocationRequest(Object sender, RoutedEventArgs e)
+        {
+            // Suspend the inclinometer timer while recentering to avoid a potential race condition
+            _timer.Stop();
+
+            var position = await _geolocationHelper.GetPosition();
+            await Dispatcher.Dispatch(async () =>
+            {
+                if (position == null)
+                {
+                    await ShowMessage("No Position returned.");
+                }
+                else
+                {
+                    DefaultViewModel["Position"] = position.Coordinate.Point.Position;
+                }
+            });
             _timer.Start();
         }
 
@@ -132,11 +165,19 @@ namespace SensorsExample
             _timer.Start();
         }
 
-        private async void HandleLightSensorRequest(Object sender, RoutedEventArgs e)
+        private async void HandleInclinometerRequest(Object sender, RoutedEventArgs e)
         {
             _timer.Stop();
-            var reading = _sensorHelper.GetLightSensorReading();
-            await ShowMessage(String.Format("Light Sensor: {0}", reading.DisplayText()));
+            var reading = _sensorHelper.GetInclinometerReading();
+            await ShowMessage(String.Format("Inclinometer: {0}", reading.DisplayText()));
+            _timer.Start();
+        }
+
+        private async void HandleSimpleOrientationRequest(Object sender, RoutedEventArgs e)
+        {
+            _timer.Stop();
+            var reading = _sensorHelper.GetSimpleOrientationReaading();
+            await ShowMessage(String.Format("SimpleOrientation = {0}", reading));
             _timer.Start();
         }
 
@@ -156,14 +197,6 @@ namespace SensorsExample
             _timer.Start();
         }
 
-        private async void HandleInclinometerRequest(Object sender, RoutedEventArgs e)
-        {
-            _timer.Stop();
-            var reading = _sensorHelper.GetInclinometerReading();
-            await ShowMessage(String.Format("Inclinometer: {0}", reading.DisplayText()));
-            _timer.Start();
-        }
-
         private async void HandleOrientationSensorRequest(Object sender, RoutedEventArgs e)
         {
             _timer.Stop();
@@ -172,30 +205,11 @@ namespace SensorsExample
             _timer.Start();
         }
 
-        private async void HandleShowCurentLocationRequest(Object sender, RoutedEventArgs e)
+        private async void HandleLightSensorRequest(Object sender, RoutedEventArgs e)
         {
             _timer.Stop();
-            var position = await _geolocationHelper.GetPosition();
-            await ShowMessage(String.Format("Location: {0}",
-                position.Coordinate.Point.Position.DisplayText()));
-            _timer.Start();
-        }
-
-        private async void HandleCenterOnLocationRequest(Object sender, RoutedEventArgs e)
-        {
-            _timer.Stop();
-            var position = await _geolocationHelper.GetPosition();
-            await Dispatcher.Dispatch(async () =>
-            {
-                if (position == null)
-                {
-                    await ShowMessage("No Position returned.");
-                }
-                else
-                {
-                    DefaultViewModel["Position"] = position.Coordinate.Point.Position;
-                }
-            });
+            var reading = _sensorHelper.GetLightSensorReading();
+            await ShowMessage(String.Format("Light Sensor: {0}", reading.DisplayText()));
             _timer.Start();
         }
 
@@ -219,10 +233,13 @@ namespace SensorsExample
             {
                 var inclinometerReading = _sensorSettings.LatestInclinometerReading;
 
+                // Adjust the rate of travel relative to the current map zoom level
                 var position = (BasicGeoposition)DefaultViewModel["Position"];
-                var factor = 50/myMap.ZoomLevel;
+                var factor = 50 / ExampleMap.ZoomLevel;
                 var newlatitude = (position.Latitude + (factor * Math.Sin(inclinometerReading.PitchDegrees * Math.PI / 180))).Between(-90, 90);
                 var newlongitude = (position.Longitude + (factor * Math.Sin(inclinometerReading.RollDegrees * Math.PI / 180))) % 180;
+
+
                 var newPosition = new BasicGeoposition
                 {
                     Altitude = position.Altitude,
