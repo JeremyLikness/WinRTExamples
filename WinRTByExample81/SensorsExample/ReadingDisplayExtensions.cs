@@ -8,6 +8,14 @@ namespace SensorsExample
 {
     public static class ReadingDisplayExtensions
     {
+        public static String DisplayText(this BasicGeoposition reading)
+        {
+            return String.Format("Lat= {0} Lon={1} Alt={2}",
+                reading.Latitude,
+                reading.Longitude,
+                reading.Altitude);
+        }
+
         public static String DisplayText([NotNull] this CompassReading reading)
         {
             if (reading == null) throw new ArgumentNullException("reading");
@@ -16,12 +24,15 @@ namespace SensorsExample
                 reading.HeadingTrueNorth);
         }
 
-        public static String DisplayText([NotNull] this LightSensorReading reading)
+        public static String DisplayText([NotNull] this InclinometerReading reading)
         {
             if (reading == null) throw new ArgumentNullException("reading");
-            return String.Format("Illuminance(Lux): {0}", 
-                reading.IlluminanceInLux);
-        }     
+            return String.Format("Pitch={0} Roll={1} Yaw={2} Yaw Accuracy={3}",
+                reading.PitchDegrees,
+                reading.RollDegrees,
+                reading.YawDegrees,
+                reading.YawAccuracy);
+        }
         
         public static String DisplayText([NotNull] this AccelerometerReading reading)
         {
@@ -40,16 +51,6 @@ namespace SensorsExample
                 reading.AngularVelocityY,
                 reading.AngularVelocityZ);
         }
-        
-        public static String DisplayText([NotNull] this InclinometerReading reading)
-        {
-            if (reading == null) throw new ArgumentNullException("reading");
-            return String.Format("Pitch={0} Roll={1} Yaw={2} Yaw Accuracy={3}",
-                reading.PitchDegrees,
-                reading.RollDegrees,
-                reading.YawDegrees,
-                reading.YawAccuracy);
-        }
 
         public static String DisplayText([NotNull] this OrientationSensorReading reading)
         {
@@ -61,12 +62,11 @@ namespace SensorsExample
                 reading.Quaternion.W);
         }
 
-        public static String DisplayText(this BasicGeoposition reading)
+        public static String DisplayText([NotNull] this LightSensorReading reading)
         {
-            return String.Format("Lat= {0} Lon={1} Alt={2}",
-                reading.Latitude,
-                reading.Longitude,
-                reading.Altitude);
-        }
+            if (reading == null) throw new ArgumentNullException("reading");
+            return String.Format("Illuminance(Lux): {0}",
+                reading.IlluminanceInLux);
+        }  
     }
 }

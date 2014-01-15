@@ -128,8 +128,8 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BasicPage.xaml.cs">
-      <DependentUpon>BasicPage.xaml</DependentUpon>
+    <Compile Include="SensorsExamplePage.xaml.cs">
+      <DependentUpon>SensorsExamplePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\NavigationHelper.cs" />
     <Compile Include="Common\ObservableDictionary.cs" />
@@ -154,7 +154,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="BasicPage.xaml">
+    <Page Include="SensorsExamplePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
