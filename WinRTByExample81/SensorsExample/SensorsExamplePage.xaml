@@ -164,7 +164,10 @@
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" Text="Accelerometer" Style="{StaticResource BlockHeaderTextBlockStyle}"/>
                             <TextBox Grid.Row="1" IsReadOnly="true" Text="{Binding LatestAccelerometerReadingText}"/>
-                            <Button Grid.Row="2" Content="Get Current" IsEnabled="{Binding IsAccelerometerAvailable}" Click="HandleAccelerometerRequest"/>
+                            <StackPanel  Grid.Row="2" Orientation ="Horizontal">
+                                <Button Content="Get Current" IsEnabled="{Binding IsAccelerometerAvailable}" Click="HandleAccelerometerRequest"/>
+                                <TextBlock Text="{Binding LatestAccelerometerShakeTimeText}"/>
+                            </StackPanel>
                         </Grid>
                     </Border>
 

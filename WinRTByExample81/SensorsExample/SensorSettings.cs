@@ -45,6 +45,7 @@ namespace SensorsExample
 
         private Boolean _isOrientationSensorAvailable;
         private OrientationSensorReading _latestOrientationSensorReading;
+        private DateTimeOffset _lastAccelerometerShakeTime;
 
         #endregion
 
@@ -229,6 +230,28 @@ namespace SensorsExample
         public String LatestAccelerometerReadingText
         {
             get { return GetAccelerometerReadingDisplayText(LatestAccelerometerReading); }
+        }
+
+        public DateTimeOffset LatestAccelerometerShakeTime
+        {
+            get { return _lastAccelerometerShakeTime; }
+            set
+            {
+                if (value.Equals(_lastAccelerometerShakeTime)) return;
+                _lastAccelerometerShakeTime = value;
+                OnPropertyChanged();
+                OnPropertyChanged("LatestAccelerometerShakeTimeText");
+            }
+        }
+
+        public String LatestAccelerometerShakeTimeText
+        {
+            get
+            {
+                return LatestAccelerometerShakeTime == DateTimeOffset.MinValue
+                    ? String.Format("No shake detected")
+                    : String.Format("Shake detected: {0:h:mm:ss tt}", LatestAccelerometerShakeTime); 
+            }
         }
 
         #endregion
