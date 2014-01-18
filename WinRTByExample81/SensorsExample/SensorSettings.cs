@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using Windows.Devices.Geolocation;
 using Windows.Devices.Sensors;
+using Windows.Graphics.Display;
 using SensorsExample.Annotations;
 
 namespace SensorsExample
@@ -13,6 +14,11 @@ namespace SensorsExample
         #region Fields
 
         private readonly SynchronizationContext _context = SynchronizationContext.Current;
+
+        private DisplayOrientations _displayOrientation;
+        private Boolean _compensateForDisplayOrientation = true;
+        private Boolean _isOrientationLocked = true;
+        private UInt32 _sensorReportInterval = 60;
 
         private Boolean _isSimpleOrientationAvailable;
         private SimpleOrientation _latestSimpleOrientationReading;
@@ -36,21 +42,62 @@ namespace SensorsExample
 
         private Boolean _isLocationAvailable;
         private Boolean _isLocationRequestingHighAccuracy;
-        private BasicGeoposition _latestLocationReading;
+        private Geocoordinate _latestLocationReading;
 
         private Boolean _isOrientationSensorAvailable;
         private OrientationSensorReading _latestOrientationSensorReading;
 
         #endregion
 
+        #region Display Orientation
+
+        public DisplayOrientations DisplayOrientation
+        {
+            get { return _displayOrientation; }
+            set
+            {
+                if (value == _displayOrientation) return;
+                _displayOrientation = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Boolean IsOrientationLocked
+        {
+            get { return _isOrientationLocked; }
+            set
+            {
+                if (value.Equals(_isOrientationLocked)) return;
+                _isOrientationLocked = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Boolean CompensateForDisplayOrientation
+        {
+            get { return _compensateForDisplayOrientation; }
+            set
+            {
+                if (value.Equals(_compensateForDisplayOrientation)) return;
+                _compensateForDisplayOrientation = value;
+                OnPropertyChanged();
+            }
+        } 
+        
+        #endregion
+
         #region ReportIntervals
 
-        public UInt32 CompassReportInterval { get; set; }
-        public UInt32 LightSensorReportInterval { get; set; }
-        public UInt32 AccelerometerReportInterval { get; set; }
-        public UInt32 GyrometerReportInterval { get; set; }
-        public UInt32 InclinometerReportInterval { get; set; }
-        public UInt32 OrientationSensorReportInterval { get; set; } 
+        public UInt32 SensorReportInterval
+        {
+            get { return _sensorReportInterval; }
+            set
+            {
+                if (value == _sensorReportInterval) return;
+                _sensorReportInterval = value;
+                OnPropertyChanged();
+            }
+        }
 
         #endregion
 
@@ -118,51 +165,54 @@ namespace SensorsExample
 
         public String LatestCompassReadingText
         {
-            get
-            {
-                if (LatestCompassReading == null) return "No Reading Available.";
-                return LatestCompassReading.DisplayText();
-            }
+            get { return GetCompassReadingDisplayText(LatestCompassReading); }
         }
 
         #endregion
 
-        #region Light Sensor
+        #region Inclinometer
 
-        public Boolean IsLightSensorAvailable
+        public Boolean IsInclinometerAvailable
         {
-            get { return _isLightSensorAvailable; }
+            get { return _isInclinometerAvailable; }
             set
             {
-                if (value.Equals(_isLightSensorAvailable)) return;
-                _isLightSensorAvailable = value;
+                if (value.Equals(_isInclinometerAvailable)) return;
+                _isInclinometerAvailable = value;
                 OnPropertyChanged();
             }
         }
 
-        public LightSensorReading LatestLightSensorReading
+        public Boolean FollowInclinometer
         {
-            get { return _latestLightSensorReading; }
+            get { return _followInclinometer; }
             set
             {
-                if (value == _latestLightSensorReading) return;
-                _latestLightSensorReading = value;
+                if (value.Equals(_followInclinometer)) return;
+                _followInclinometer = value;
                 OnPropertyChanged();
-                OnPropertyChanged("LatestLightSensorReadingText");
             }
         }
 
-        public String LatestLightSensorReadingText
+        public InclinometerReading LatestInclinometerReading
         {
-            get
+            get { return _latestInclinometerReading; }
+            set
             {
-                if (LatestLightSensorReading == null) return "No Reading Available.";
-                return LatestLightSensorReading.DisplayText();
+                if (Equals(value, _latestInclinometerReading)) return;
+                _latestInclinometerReading = value;
+                OnPropertyChanged();
+                OnPropertyChanged("InclinometerReadingText");
             }
+        }
+
+        public String InclinometerReadingText
+        {
+            get { return GetInclinometerReadingDisplayText(LatestInclinometerReading); }
         }
 
         #endregion
-
+        
         #region Accelerometer
 
         public Boolean IsAccelerometerAvailable
@@ -235,92 +285,38 @@ namespace SensorsExample
 
         #endregion
 
-        #region Inclinometer
+        #region Light Sensor
 
-        public Boolean IsInclinometerAvailable
+        public Boolean IsLightSensorAvailable
         {
-            get { return _isInclinometerAvailable; }
+            get { return _isLightSensorAvailable; }
             set
             {
-                if (value.Equals(_isInclinometerAvailable)) return;
-                _isInclinometerAvailable = value;
+                if (value.Equals(_isLightSensorAvailable)) return;
+                _isLightSensorAvailable = value;
                 OnPropertyChanged();
             }
         }
 
-        public Boolean FollowInclinometer
+        public LightSensorReading LatestLightSensorReading
         {
-            get { return _followInclinometer; }
+            get { return _latestLightSensorReading; }
             set
             {
-                if (value.Equals(_followInclinometer)) return;
-                _followInclinometer = value;
+                if (value == _latestLightSensorReading) return;
+                _latestLightSensorReading = value;
                 OnPropertyChanged();
+                OnPropertyChanged("LatestLightSensorReadingText");
             }
         }
 
-        public InclinometerReading LatestInclinometerReading
-        {
-            get { return _latestInclinometerReading; }
-            set
-            {
-                if (Equals(value, _latestInclinometerReading)) return;
-                _latestInclinometerReading = value;
-                OnPropertyChanged();
-                OnPropertyChanged("InclinometerReadingText");
-            }
-        }
-
-        public String InclinometerReadingText
+        public String LatestLightSensorReadingText
         {
             get
             {
-                if (LatestInclinometerReading == null) return "No Reading Available.";
-                return LatestInclinometerReading.DisplayText();
+                if (LatestLightSensorReading == null) return "No Reading Available.";
+                return LatestLightSensorReading.DisplayText();
             }
-        }
-
-        #endregion
-
-        #region Location
-
-        public Boolean IsLocationAvailable
-        {
-            get { return _isLocationAvailable; }
-            set
-            {
-                if (value.Equals(_isLocationAvailable)) return;
-                _isLocationAvailable = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public Boolean IsLocationRequestingHighAccuracy
-        {
-            get { return _isLocationRequestingHighAccuracy; }
-            set
-            {
-                if (value.Equals(_isLocationRequestingHighAccuracy)) return;
-                _isLocationRequestingHighAccuracy = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public BasicGeoposition LatestLocationReading
-        {
-            get { return _latestLocationReading; }
-            set
-            {
-                if (value.Equals(_latestLocationReading)) return;
-                _latestLocationReading = value;
-                OnPropertyChanged();
-                OnPropertyChanged("LatestLocationReadingText");
-            }
-        }
-
-        public String LatestLocationReadingText
-        {
-            get { return LatestLocationReading.DisplayText(); }
         }
 
         #endregion
@@ -361,6 +357,54 @@ namespace SensorsExample
 
         #endregion
 
+        #region Location
+
+        public Boolean IsLocationAvailable
+        {
+            get { return _isLocationAvailable; }
+            set
+            {
+                if (value.Equals(_isLocationAvailable)) return;
+                _isLocationAvailable = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Boolean IsLocationRequestingHighAccuracy
+        {
+            get { return _isLocationRequestingHighAccuracy; }
+            set
+            {
+                if (value.Equals(_isLocationRequestingHighAccuracy)) return;
+                _isLocationRequestingHighAccuracy = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Geocoordinate LatestLocationReading
+        {
+            get { return _latestLocationReading; }
+            set
+            {
+                if (value.Equals(_latestLocationReading)) return;
+                _latestLocationReading = value;
+                OnPropertyChanged();
+                OnPropertyChanged("LatestLocationReadingText");
+            }
+        }
+
+        public String LatestLocationReadingText
+        {
+            get
+            {
+                return LatestLocationReading == null
+                    ? "No Reading"
+                    : LatestLocationReading.Point.Position.DisplayText();
+            }
+        }
+
+        #endregion
+
         #region INotifyPropertyChanged Implementation
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -376,6 +420,48 @@ namespace SensorsExample
                 _context.Post(x => handler(this, new PropertyChangedEventArgs(propertyName)), null);
             }
         } 
+
+        #endregion
+
+        #region Display Text calculations
+
+        public String GetCompassReadingDisplayText(CompassReading reading)
+        {
+            if (reading == null) return "No Reading Available.";
+            
+            var offset = 0;
+            if (CompensateForDisplayOrientation)
+            {
+                offset = DisplayOrientation.CompassOffset();
+            }
+
+            return
+                String.Format("Mag: {0} True: {1}",
+                    (LatestCompassReading.HeadingMagneticNorth + offset)%360,
+                    LatestCompassReading.HeadingTrueNorth.HasValue
+                        ? ((LatestCompassReading.HeadingTrueNorth + offset)%360).ToString()
+                        : "Not Available");
+        }
+
+        public String GetInclinometerReadingDisplayText(InclinometerReading reading)
+        {
+            if (reading == null) return "No Reading Available.";
+
+            var axisAdjustment = SensorExtensions.AxisOffset.Default;
+            if (CompensateForDisplayOrientation)
+            {
+                axisAdjustment = DisplayOrientation.AxisAdjustmentFactor();
+            }
+
+            var adjustedPitchDegrees = reading.PitchDegrees*axisAdjustment.X;
+            var adjustedRollDegrees = reading.RollDegrees*axisAdjustment.Y;
+            var adjustedYawDegrees = reading.YawDegrees*axisAdjustment.Z;
+        
+            return String.Format("Pitch={0} Roll={1} Yaw={2}",
+                adjustedPitchDegrees,
+                adjustedRollDegrees,
+                adjustedYawDegrees);
+        }
 
         #endregion
     }

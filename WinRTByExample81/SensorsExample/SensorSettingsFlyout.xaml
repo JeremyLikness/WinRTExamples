@@ -1,0 +1,30 @@
+﻿<SettingsFlyout
+    x:Class="SensorsExample.SensorSettingsFlyout"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SensorsExample"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    IconSource="Assets/SmallLogo.png"
+    Title="Sensor Settings"
+    d:DesignWidth="346"
+    DataContext="{Binding Settings, RelativeSource={RelativeSource Self}}"
+    d:DataContext="{d:DesignInstance Type=local:SensorSettings, IsDesignTimeCreatable=true}">
+
+    <!-- This StackPanel acts as a root panel for vertical layout of the content sections -->
+    <StackPanel VerticalAlignment="Stretch" Width="280">
+
+        <!-- The StackPanel(s) below define individual content sections -->
+
+        <!-- Content Section 1-->
+        <StackPanel Style="{StaticResource SettingsFlyoutSectionStyle}" >
+            <Slider Minimum="30" Maximum="120" SnapsTo="Ticks" TickFrequency="15" Header="Minimum Sensor Report Interval" Value="{Binding SensorReportInterval, Mode=TwoWay}"/>
+            <CheckBox Content="Compensate for Orientation" IsChecked="{Binding CompensateForDisplayOrientation, Mode=TwoWay}" Margin="0,10"/>
+            <CheckBox Content="Lock Orientation" IsChecked="{Binding IsOrientationLocked, Mode=TwoWay}" Margin="0,10"/>
+        </StackPanel>
+
+        <!-- Define more Content Sections below as necessary -->
+
+    </StackPanel>
+</SettingsFlyout>

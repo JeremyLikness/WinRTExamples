@@ -136,7 +136,7 @@
                                 <Flyout Placement="Right">
                                     <Grid Height="300" Width="300">
                                         <ScrollViewer>
-                                            <ItemsControl ItemsSource="{Binding PointerPointValues}"></ItemsControl>
+                                            <ItemsControl ItemsSource="{Binding PointerPointValues}"/>
                                         </ScrollViewer>
                                     </Grid>
                                 </Flyout>
