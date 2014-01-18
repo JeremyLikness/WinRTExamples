@@ -172,7 +172,7 @@ namespace SensorsExample
         {
             _timer.Stop();
             var reading = _sensorHelper.GetAccelerometerReading();
-            await ShowMessage(String.Format("Accelerometer: {0}", reading.DisplayText()));
+            await ShowMessage(String.Format("Accelerometer: {0}", _sensorSettings.GetAccelerometerReadingDisplayText(reading)));
             _timer.Start();
         }
 
@@ -180,7 +180,7 @@ namespace SensorsExample
         {
             _timer.Stop();
             var reading = _sensorHelper.GetGyrometerReading();
-            await ShowMessage(String.Format("Gyrometer: {0}", reading.DisplayText()));
+            await ShowMessage(String.Format("Gyrometer: {0}", _sensorSettings.GetGyrometerReadingDisplayText(reading)));
             _timer.Start();
         }
 

@@ -218,19 +218,21 @@ namespace SensorsExample
 
         private void ConfigureAccelerometer()
         {
+            // Get the reference to the sensor and see if it is available
             _accelerometer = Accelerometer.GetDefault();
-            if (_accelerometer != null)   // Null if not present/supported
-            {
-                _sensorSettings.IsAccelerometerAvailable = true;
+            if (_accelerometer == null) return;
+            
+            _sensorSettings.IsAccelerometerAvailable = true;
 
-                var minInterval = _accelerometer.MinimumReportInterval;
-                _accelerometer.ReportInterval = Math.Max(_sensorSettings.SensorReportInterval, minInterval);
-                _accelerometer.ReadingChanged += AccelerometerOnReadingChanged;
-                _accelerometer.Shaken += AccelerometerOnShaken;
+            // Set the minimum report interval.  Care must be taken to ensure 
+            // it is not set to a value smaller than the device minimum
+            var minInterval = _accelerometer.MinimumReportInterval;
+            _accelerometer.ReportInterval = Math.Max(_sensorSettings.SensorReportInterval, minInterval);
+            _accelerometer.ReadingChanged += AccelerometerOnReadingChanged;
+            _accelerometer.Shaken += AccelerometerOnShaken;
 
-                // Read the initial sensor value
-                _sensorSettings.LatestAccelerometerReading = GetAccelerometerReading();
-            }
+            // Read the initial sensor value
+            _sensorSettings.LatestAccelerometerReading = GetAccelerometerReading();
         }
 
         public AccelerometerReading GetAccelerometerReading()
@@ -262,18 +264,21 @@ namespace SensorsExample
 
         private void ConfigureGyrometer()
         {
+            // Get the reference to the sensor and see if it is available
             _gyrometer = Gyrometer.GetDefault();
-            if (_gyrometer != null)   // Null if not present/supported
-            {
-                _sensorSettings.IsGyrometerAvailable = true;
+            if (_gyrometer == null) return;
+            
+            _sensorSettings.IsGyrometerAvailable = true;
 
-                var minInterval = _gyrometer.MinimumReportInterval;
-                _gyrometer.ReportInterval = Math.Max(_sensorSettings.SensorReportInterval, minInterval);
-                _gyrometer.ReadingChanged += GyrometerOnReadingChanged;
+            // Set the minimum report interval.  Care must be taken to ensure 
+            // it is not set to a value smaller than the device minimum
+            var minInterval = _gyrometer.MinimumReportInterval;
+            _gyrometer.ReportInterval 
+                = Math.Max(_sensorSettings.SensorReportInterval, minInterval);
+            _gyrometer.ReadingChanged += GyrometerOnReadingChanged;
 
-                // Read the initial sensor value
-                _sensorSettings.LatestGyrometerReading = GetGyrometerReading();
-            }
+            // Read the initial sensor value
+            _sensorSettings.LatestGyrometerReading = GetGyrometerReading();
         }
 
         public GyrometerReading GetGyrometerReading()
@@ -301,18 +306,21 @@ namespace SensorsExample
 
         private void ConfigureOrientationSensor()
         {
+            // Get the reference to the sensor and see if it is available
             _orientationSensor = OrientationSensor.GetDefault();
-            if (_orientationSensor != null)   // Null if not present/supported
-            {
-                _sensorSettings.IsOrientationSensorAvailable = true;
+            if (_orientationSensor == null) return;
+            
+            _sensorSettings.IsOrientationSensorAvailable = true;
 
-                var minInterval = _orientationSensor.MinimumReportInterval;
-                _orientationSensor.ReportInterval = Math.Max(_sensorSettings.SensorReportInterval, minInterval);
-                _orientationSensor.ReadingChanged += OrientationSensorOnReadingChanged;
+            // Set the minimum report interval.  Care must be taken to ensure 
+            // it is not set to a value smaller than the device minimum
+            var minInterval = _orientationSensor.MinimumReportInterval;
+            _orientationSensor.ReportInterval 
+                = Math.Max(_sensorSettings.SensorReportInterval, minInterval);
+            _orientationSensor.ReadingChanged += OrientationSensorOnReadingChanged;
 
-                // Read the initial sensor value
-                _sensorSettings.LatestOrientationSensorReading = GetOrientationSensorReading();
-            }
+            // Read the initial sensor value
+            _sensorSettings.LatestOrientationSensorReading = GetOrientationSensorReading();
         }
 
         public OrientationSensorReading GetOrientationSensorReading()
@@ -339,18 +347,20 @@ namespace SensorsExample
 
         private void ConfigureLightSensor()
         {
+            // Get the reference to the sensor and see if it is available
             _lightSensor = LightSensor.GetDefault();
-            if (_lightSensor != null)   // Null if not present/supported
-            {
-                _sensorSettings.IsLightSensorAvailable = true;
+            if (_lightSensor == null) return;
+            
+            _sensorSettings.IsLightSensorAvailable = true;
 
-                var minInterval = _lightSensor.MinimumReportInterval;
-                _lightSensor.ReportInterval = Math.Max(_sensorSettings.SensorReportInterval, minInterval);
-                _lightSensor.ReadingChanged += LightSensorOnReadingChanged;
+            // Set the minimum report interval.  Care must be taken to ensure 
+            // it is not set to a value smaller than the device minimum
+            var minInterval = _lightSensor.MinimumReportInterval;
+            _lightSensor.ReportInterval = Math.Max(_sensorSettings.SensorReportInterval, minInterval);
+            _lightSensor.ReadingChanged += LightSensorOnReadingChanged;
 
-                // Read the initial sensor value
-                _sensorSettings.LatestLightSensorReading = GetLightSensorReading();
-            }
+            // Read the initial sensor value
+            _sensorSettings.LatestLightSensorReading = GetLightSensorReading();
         }
 
         public LightSensorReading GetLightSensorReading()
