@@ -227,7 +227,8 @@ namespace SensorsExample
             // Set the minimum report interval.  Care must be taken to ensure 
             // it is not set to a value smaller than the device minimum
             var minInterval = _accelerometer.MinimumReportInterval;
-            _accelerometer.ReportInterval = Math.Max(_sensorSettings.SensorReportInterval, minInterval);
+            _accelerometer.ReportInterval 
+                = Math.Max(_sensorSettings.SensorReportInterval, minInterval);
             _accelerometer.ReadingChanged += AccelerometerOnReadingChanged;
             _accelerometer.Shaken += AccelerometerOnShaken;
 
@@ -255,6 +256,7 @@ namespace SensorsExample
 
         private void AccelerometerOnShaken(Accelerometer sender, AccelerometerShakenEventArgs args)
         {
+            _sensorSettings.LatestAccelerometerShakeTime = args.Timestamp;
             // args.Timestamp
         }
 
@@ -320,7 +322,8 @@ namespace SensorsExample
             _orientationSensor.ReadingChanged += OrientationSensorOnReadingChanged;
 
             // Read the initial sensor value
-            _sensorSettings.LatestOrientationSensorReading = GetOrientationSensorReading();
+            _sensorSettings.LatestOrientationSensorReading 
+                = GetOrientationSensorReading();
         }
 
         public OrientationSensorReading GetOrientationSensorReading()
@@ -356,7 +359,8 @@ namespace SensorsExample
             // Set the minimum report interval.  Care must be taken to ensure 
             // it is not set to a value smaller than the device minimum
             var minInterval = _lightSensor.MinimumReportInterval;
-            _lightSensor.ReportInterval = Math.Max(_sensorSettings.SensorReportInterval, minInterval);
+            _lightSensor.ReportInterval 
+                = Math.Max(_sensorSettings.SensorReportInterval, minInterval);
             _lightSensor.ReadingChanged += LightSensorOnReadingChanged;
 
             // Read the initial sensor value
