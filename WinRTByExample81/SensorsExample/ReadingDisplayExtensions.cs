@@ -33,23 +33,23 @@ namespace SensorsExample
         //        reading.YawAccuracy);
         //}
         
-        public static String DisplayText([NotNull] this AccelerometerReading reading)
-        {
-            if (reading == null) throw new ArgumentNullException("reading");
-            return String.Format("X= {0} Y={1} Z={2}",
-                reading.AccelerationX,
-                reading.AccelerationY,
-                reading.AccelerationZ);
-        }
+        //public static String DisplayText([NotNull] this AccelerometerReading reading)
+        //{
+        //    if (reading == null) throw new ArgumentNullException("reading");
+        //    return String.Format("X= {0} Y={1} Z={2}",
+        //        reading.AccelerationX,
+        //        reading.AccelerationY,
+        //        reading.AccelerationZ);
+        //}
 
-        public static String DisplayText([NotNull] this GyrometerReading reading)
-        {
-            if (reading == null) throw new ArgumentNullException("reading");
-            return String.Format("X= {0} Y={1} Z={2}", 
-                reading.AngularVelocityX, 
-                reading.AngularVelocityY,
-                reading.AngularVelocityZ);
-        }
+        //public static String DisplayText([NotNull] this GyrometerReading reading)
+        //{
+        //    if (reading == null) throw new ArgumentNullException("reading");
+        //    return String.Format("X= {0} Y={1} Z={2}", 
+        //        reading.AngularVelocityX, 
+        //        reading.AngularVelocityY,
+        //        reading.AngularVelocityZ);
+        //}
 
         public static String DisplayText([NotNull] this OrientationSensorReading reading)
         {

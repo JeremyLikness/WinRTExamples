@@ -2,6 +2,9 @@
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Globalization;
+using Windows.Graphics.Display;
+using Windows.UI.ApplicationSettings;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -15,6 +18,8 @@ namespace SensorsExample
     /// </summary>
     sealed partial class App : Application
     {
+        public SensorSettings SensorSettings { get; private set; }
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -23,6 +28,37 @@ namespace SensorsExample
         {
             InitializeComponent();
             Suspending += OnSuspending;
+        }
+
+        protected override void OnWindowCreated(WindowCreatedEventArgs args)
+        {
+            base.OnWindowCreated(args);
+
+            var displayInformation = DisplayInformation.GetForCurrentView();
+            SensorSettings = new SensorSettings
+            {
+                DisplayOrientation = displayInformation.CurrentOrientation
+            };
+            displayInformation.OrientationChanged += (sender, o) =>
+            {
+                SensorSettings.DisplayOrientation = displayInformation.CurrentOrientation;
+            };
+
+            SettingsPane.GetForCurrentView().CommandsRequested
+                += OnSettingsCommandsRequested;
+        }
+
+        private void OnSettingsCommandsRequested(SettingsPane sender, SettingsPaneCommandsRequestedEventArgs args)
+        {
+            var sensorSettingsCommand = new SettingsCommand("sensorSettings",
+                "Sensor Settings", ShowSensorSettingsFlyoutHandler);
+            args.Request.ApplicationCommands.Add(sensorSettingsCommand);
+        }
+
+        private void ShowSensorSettingsFlyoutHandler(IUICommand command)
+        {
+            var flyout = new SensorSettingsFlyout();
+            flyout.Show();
         }
 
         /// <summary>

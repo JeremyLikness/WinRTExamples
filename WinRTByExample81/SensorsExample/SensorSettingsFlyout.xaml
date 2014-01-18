@@ -21,7 +21,6 @@
         <StackPanel Style="{StaticResource SettingsFlyoutSectionStyle}" >
             <Slider Minimum="30" Maximum="120" SnapsTo="Ticks" TickFrequency="15" Header="Minimum Sensor Report Interval" Value="{Binding SensorReportInterval, Mode=TwoWay}"/>
             <CheckBox Content="Compensate for Orientation" IsChecked="{Binding CompensateForDisplayOrientation, Mode=TwoWay}" Margin="0,10"/>
-            <CheckBox Content="Lock Orientation" IsChecked="{Binding IsOrientationLocked, Mode=TwoWay}" Margin="0,10"/>
         </StackPanel>
 
         <!-- Define more Content Sections below as necessary -->

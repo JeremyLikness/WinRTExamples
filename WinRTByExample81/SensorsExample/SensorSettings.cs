@@ -17,7 +17,6 @@ namespace SensorsExample
 
         private DisplayOrientations _displayOrientation;
         private Boolean _compensateForDisplayOrientation = true;
-        private Boolean _isOrientationLocked = true;
         private UInt32 _sensorReportInterval = 60;
 
         private Boolean _isSimpleOrientationAvailable;
@@ -58,17 +57,6 @@ namespace SensorsExample
             {
                 if (value == _displayOrientation) return;
                 _displayOrientation = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public Boolean IsOrientationLocked
-        {
-            get { return _isOrientationLocked; }
-            set
-            {
-                if (value.Equals(_isOrientationLocked)) return;
-                _isOrientationLocked = value;
                 OnPropertyChanged();
             }
         }
@@ -240,11 +228,7 @@ namespace SensorsExample
 
         public String LatestAccelerometerReadingText
         {
-            get
-            {
-                if (LatestAccelerometerReading == null) return "No Reading Available.";
-                return LatestAccelerometerReading.DisplayText();
-            }
+            get { return GetAccelerometerReadingDisplayText(LatestAccelerometerReading); }
         }
 
         #endregion
@@ -276,11 +260,7 @@ namespace SensorsExample
 
         public String LatestGyrometerReadingText
         {
-            get
-            {
-                if (LatestGyrometerReading == null) return "No Reading Available.";
-                return LatestGyrometerReading.DisplayText();
-            }
+            get { return GetGyrometerReadingDisplayText(LatestGyrometerReading); }
         }
 
         #endregion
@@ -461,6 +441,46 @@ namespace SensorsExample
                 adjustedPitchDegrees,
                 adjustedRollDegrees,
                 adjustedYawDegrees);
+        }
+
+        public String GetAccelerometerReadingDisplayText(AccelerometerReading reading)
+        {
+            if (reading == null) return "No Reading Available.";
+
+            var axisAdjustment = SensorExtensions.AxisOffset.Default;
+            if (CompensateForDisplayOrientation)
+            {
+                axisAdjustment = DisplayOrientation.AxisAdjustmentFactor();
+            }
+
+            var adjustedAccelerationX = reading.AccelerationX * axisAdjustment.X;
+            var adjustedAccelerationY = reading.AccelerationY * axisAdjustment.Y;
+            var adjustedAccelerationZ = reading.AccelerationZ * axisAdjustment.Z;
+
+            return String.Format("X= {0} Y={1} Z={2}",
+                adjustedAccelerationX,
+                adjustedAccelerationY,
+                adjustedAccelerationZ);
+        }
+
+        public String GetGyrometerReadingDisplayText(GyrometerReading reading)
+        {
+            if (reading == null) return "No Reading Available.";
+
+            var axisAdjustment = SensorExtensions.AxisOffset.Default;
+            if (CompensateForDisplayOrientation)
+            {
+                axisAdjustment = DisplayOrientation.AxisAdjustmentFactor();
+            }
+
+            var adjustedAngularVelocityX = reading.AngularVelocityX*axisAdjustment.X;
+            var adjustedAngularVelocityY = reading.AngularVelocityY*axisAdjustment.Y;
+            var adjustedAngularVelocityZ = reading.AngularVelocityZ*axisAdjustment.Z;
+
+            return String.Format("X= {0} Y={1} Z={2}",
+                adjustedAngularVelocityX,
+                adjustedAngularVelocityY,
+                adjustedAngularVelocityZ);
         }
 
         #endregion
