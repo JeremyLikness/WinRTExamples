@@ -66,9 +66,12 @@
                     <Setter Property="Margin" Value="5"/>
                 </Style>
             </Grid.Resources>
-            <Grid Grid.Column="0" Width="320">
-                <StackPanel Grid.Row="0" DataContext="{Binding SensorSettings}" d:DataContext="{d:DesignInstance Type=local:SensorSettings, IsDesignTimeCreatable=true}">
-
+            <Grid Grid.Column="0" Width="320" DataContext="{Binding SensorSettings}" d:DataContext="{d:DesignInstance Type=local:SensorSettings, IsDesignTimeCreatable=true}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0">
                     <Border>
                         <Grid>
                             <Grid.RowDefinitions>
@@ -81,7 +84,20 @@
                             <TextBlock Grid.Row="0" Text="Location" Style="{StaticResource BlockHeaderTextBlockStyle}"/>
                             <TextBox Grid.Row="1" IsReadOnly="true" Text="{Binding LatestLocationReadingText}"/>
                             <CheckBox Grid.Row="2" Content="Request High Accuracy" IsChecked="{Binding IsLocationRequestingHighAccuracy, Mode=TwoWay}"/>
-                            <Button Grid.Row="3" Content="Show Current" IsEnabled="{Binding IsLocationAvailable}" HorizontalAlignment="Stretch" Click="HandleShowCurentLocationRequest"/>
+                            <Button Grid.Row="3" Content="Show Current" IsEnabled="{Binding IsLocationAvailable}" HorizontalAlignment="Stretch" Click="HandleShowCurentLocationRequest">
+                                <Button.Flyout>
+                                    <Flyout Placement="Right">
+                                        <Grid Height="300" Width="250">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="*"/>
+                                            </Grid.RowDefinitions>
+                                            <TextBlock Grid.Row="0" Text="Geocoordinate Details" Style="{StaticResource BlockHeaderTextBlockStyle}" HorizontalAlignment="Center"/>
+                                            <ItemsControl Grid.Row="1" x:Name="DumpDataList"/>
+                                        </Grid>
+                                    </Flyout>
+                                </Button.Flyout>
+                            </Button>
                             <Button Grid.Row="4" Content="Center Map on Current" IsEnabled="{Binding IsLocationAvailable}" HorizontalAlignment="Stretch" Click="HandleCenterOnLocationRequest"/>
                         </Grid>
                     </Border>

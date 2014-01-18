@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Windows.Devices.Geolocation;
-using Windows.UI.Core;
+using Windows.Foundation;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Bing.Maps;
 using SensorsExample.Common;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
@@ -54,15 +55,7 @@ namespace SensorsExample
         /// </summary>
         public SensorsExamplePage()
         {
-            _sensorSettings = new SensorSettings
-                              {
-                                  AccelerometerReportInterval = 16,
-                                  CompassReportInterval = 16,
-                                  GyrometerReportInterval = 16,
-                                  InclinometerReportInterval = 16,
-                                  LightSensorReportInterval = 16,
-                                  OrientationSensorReportInterval = 16
-                              };
+            _sensorSettings = ((App)Application.Current).SensorSettings;
             _sensorHelper = new SensorHelper(_sensorSettings);
             _geolocationHelper = new GeolocationHelper(_sensorSettings);
 
@@ -131,9 +124,11 @@ namespace SensorsExample
         private async void HandleShowCurentLocationRequest(Object sender, RoutedEventArgs e)
         {
             _timer.Stop();
-            var position = await _geolocationHelper.GetPosition();
-            await ShowMessage(String.Format("Location: {0}",
-                position.Coordinate.Point.Position.DisplayText()));
+            var coordinate = await _geolocationHelper.GetCoordinate();
+            if (coordinate != null)
+            {
+                DumpDataList.ItemsSource = coordinate.ToDataDump();
+            }
             _timer.Start();
         }
 
@@ -141,19 +136,11 @@ namespace SensorsExample
         {
             // Suspend the inclinometer timer while recentering to avoid a potential race condition
             _timer.Stop();
-
-            var position = await _geolocationHelper.GetPosition();
-            await Dispatcher.Dispatch(async () =>
+            var coordinate = await _geolocationHelper.GetCoordinate();
+            if (coordinate != null)
             {
-                if (position == null)
-                {
-                    await ShowMessage("No Position returned.");
-                }
-                else
-                {
-                    DefaultViewModel["Position"] = position.Coordinate.Point.Position;
-                }
-            });
+                DefaultViewModel["Position"] = coordinate.Point.Position;
+            }
             _timer.Start();
         }
 
@@ -161,7 +148,7 @@ namespace SensorsExample
         {
             _timer.Stop();
             var reading = _sensorHelper.GetCompassReading();
-            await ShowMessage(String.Format("Compass: {0}", reading.DisplayText()));
+            await ShowMessage(String.Format("Compass: {0}", _sensorSettings.GetCompassReadingDisplayText(reading)));
             _timer.Start();
         }
 
@@ -169,14 +156,14 @@ namespace SensorsExample
         {
             _timer.Stop();
             var reading = _sensorHelper.GetInclinometerReading();
-            await ShowMessage(String.Format("Inclinometer: {0}", reading.DisplayText()));
+            await ShowMessage(String.Format("Inclinometer: {0}", _sensorSettings.GetInclinometerReadingDisplayText(reading)));
             _timer.Start();
         }
 
         private async void HandleSimpleOrientationRequest(Object sender, RoutedEventArgs e)
         {
             _timer.Stop();
-            var reading = _sensorHelper.GetSimpleOrientationReaading();
+            var reading = _sensorHelper.GetSimpleOrientationReading();
             await ShowMessage(String.Format("SimpleOrientation = {0}", reading));
             _timer.Start();
         }
@@ -229,49 +216,80 @@ namespace SensorsExample
         private void TimerOnTick(Object sender, Object o)
         {
             _timer.Stop();
+
             if (_sensorSettings.FollowInclinometer)
             {
                 var inclinometerReading = _sensorSettings.LatestInclinometerReading;
 
-                // Adjust the rate of travel relative to the current map zoom level
-                var position = (BasicGeoposition)DefaultViewModel["Position"];
-                var factor = 50 / ExampleMap.ZoomLevel;
-                var newlatitude = (position.Latitude + (factor * Math.Sin(inclinometerReading.PitchDegrees * Math.PI / 180))).Between(-90, 90);
-                var newlongitude = (position.Longitude + (factor * Math.Sin(inclinometerReading.RollDegrees * Math.PI / 180))) % 180;
+                // Optionally normalize the sensor reading values
+                var displayAdjustment
+                    = _sensorSettings.CompensateForDisplayOrientation
+                        ? _sensorSettings.DisplayOrientation.AxisAdjustmentFactor()
+                        : SensorExtensions.AxisOffset.Default;
+                var adjustedPitchDegrees 
+                    = inclinometerReading.PitchDegrees * displayAdjustment.X;
+                var adjustedRollDegrees 
+                    = inclinometerReading.RollDegrees * displayAdjustment.Y;
+                
+                // At full speed/inclination, move 100% map size per tick
+                const Double maxScreensPerTick = 1.00;
+                var mapWidth = ExampleMap.ActualWidth;
+                var xFullRateTraversalPerTick = mapWidth * maxScreensPerTick;
+                var mapHeight = ExampleMap.ActualHeight;
+                var yFullRateTraversalPerTick = mapHeight * maxScreensPerTick;
 
+                // Turn rotation angles into percentages
+                var xTraversalPercentage 
+                    = Math.Sin(adjustedRollDegrees*Math.PI/180); 
+                var yTraversalPercentage 
+                    = Math.Sin(adjustedPitchDegrees*Math.PI/180);
 
-                var newPosition = new BasicGeoposition
+                // Compute the final traversal amounts based on the percent-ages
+                // and compute the new destination center point
+                var xTraversalAmount 
+                    = xTraversalPercentage*xFullRateTraversalPerTick; 
+                var yTraversalAmount 
+                    = yTraversalPercentage*yFullRateTraversalPerTick;
+                var destinationPoint = new Point(
+                    mapWidth/2 + xTraversalAmount, 
+                    mapHeight/2 + yTraversalAmount);
+                
+                // Use the Bing Maps methods to convert pixel pos to Lat/Lon
+                // rather than trying to figure out Mercator map math
+                Location location;
+                if (ExampleMap.TryPixelToLocation(destinationPoint, out location))
                 {
-                    Altitude = position.Altitude,
-                    Latitude = newlatitude,
-                    Longitude = newlongitude
-                };
-                DefaultViewModel["Position"] = newPosition;
+                    // Obtain the current map position (for altitude)
+                    var position = (BasicGeoposition)DefaultViewModel["Position"];
+
+                    var newPosition = new BasicGeoposition
+                    {
+                        Altitude = position.Altitude,
+                        Latitude = location.Latitude,
+                        Longitude = location.Longitude
+                    };
+
+                    DefaultViewModel["Position"] = newPosition;
+                }
             }
 
             if (_sensorSettings.IsFollowingCompass)
             {
+                // Get the latest compass reading
                 var compassReading = _sensorSettings.LatestCompassReading;
-                DefaultViewModel["Heading"] = compassReading.HeadingMagneticNorth;
+
+                // Adjust the reading based on the display orientation, if necessary
+                var displayOffset = _sensorSettings.CompensateForDisplayOrientation
+                    ? _sensorSettings.DisplayOrientation.CompassOffset()
+                    : 0;
+                var heading 
+                    = (compassReading.HeadingMagneticNorth + displayOffset)%360;
+
+                // Set the value used by data binding to update the map's heading
+                DefaultViewModel["Heading"] = heading;
             }
 
             _timer.Start();
-        }
-    }
-
-    public static class Extensions
-    {
-        public static Double Between(this Double value, Double minValue, Double maxValue)
-        {
-            if (minValue > maxValue) throw new InvalidOperationException("Max must be greater than min.");
-            var result = Math.Min(value, maxValue);
-            result = Math.Max(result, minValue);
-            return result;
-        }
-
-        public static async Task Dispatch(this CoreDispatcher dispatcher, Action dispatchAction)
-        {
-            await dispatcher.RunAsync(CoreDispatcherPriority.Normal, dispatchAction.Invoke);
         }
     }
 }

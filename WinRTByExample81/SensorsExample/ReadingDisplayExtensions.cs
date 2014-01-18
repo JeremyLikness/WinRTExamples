@@ -1,5 +1,4 @@
 using System;
-using Windows.ApplicationModel.Background;
 using Windows.Devices.Geolocation;
 using Windows.Devices.Sensors;
 using SensorsExample.Annotations;
@@ -16,23 +15,23 @@ namespace SensorsExample
                 reading.Altitude);
         }
 
-        public static String DisplayText([NotNull] this CompassReading reading)
-        {
-            if (reading == null) throw new ArgumentNullException("reading");
-            return String.Format("Mag: {0} True: {1}", 
-                reading.HeadingMagneticNorth, 
-                reading.HeadingTrueNorth);
-        }
+        //public static String DisplayText([NotNull] this CompassReading reading)
+        //{
+        //    if (reading == null) throw new ArgumentNullException("reading");
+        //    return String.Format("Mag: {0} True: {1}", 
+        //        reading.HeadingMagneticNorth, 
+        //        reading.HeadingTrueNorth);
+        //}
 
-        public static String DisplayText([NotNull] this InclinometerReading reading)
-        {
-            if (reading == null) throw new ArgumentNullException("reading");
-            return String.Format("Pitch={0} Roll={1} Yaw={2} Yaw Accuracy={3}",
-                reading.PitchDegrees,
-                reading.RollDegrees,
-                reading.YawDegrees,
-                reading.YawAccuracy);
-        }
+        //public static String DisplayText([NotNull] this InclinometerReading reading)
+        //{
+        //    if (reading == null) throw new ArgumentNullException("reading");
+        //    return String.Format("Pitch={0} Roll={1} Yaw={2} Yaw Accuracy={3}",
+        //        reading.PitchDegrees,
+        //        reading.RollDegrees,
+        //        reading.YawDegrees,
+        //        reading.YawAccuracy);
+        //}
         
         public static String DisplayText([NotNull] this AccelerometerReading reading)
         {

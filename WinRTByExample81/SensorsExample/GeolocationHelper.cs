@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Windows.Devices.Geolocation;
@@ -82,46 +83,58 @@ namespace SensorsExample
 
         #region Getting the Position
 
-        public async Task<Geoposition> GetPosition()
+        public async Task<Geocoordinate> GetCoordinate()
         {
-            Geoposition position = null;
+            Geocoordinate location = null;
             if (_isGeolocatorReady)
             {
-                position = await _geolocator.GetGeopositionAsync();
+                var position = await _geolocator.GetGeopositionAsync();
+                location = position.Coordinate;
             }
-            return position;
-
-            // _geolocator.LocationStatus == PositionStatus.NotInitialized
-
-            // _geolocator.DesiredAccuracy == PositionAccuracy.Default // PositionAccuracy.High
-            // _geolocator.DesiredAccuracyInMeters
-
-            // _geolocator.MovementThreshold   // distance that must be traversed to raise a PositionChanged event
-            // _geolocator.ReportInterval =  // Minimum time interval (MS) for position updates 
-
-            // position.Coordinate.Accuracy
-            // position.Coordinate.Altitude
-            // position.Coordinate.AltitudeAccuracy
-            // position.Coordinate.Heading;
-            // position.Coordinate.Speed
-            // position.Coordinate.Point.AltitudeReferenceSystem == AltitudeReferenceSystem.Terrain
-            // position.Coordinate.Point.GeoshapeType == GeoshapeType.Geocircle
-            // position.Coordinate.Point.SpatialReferenceId
-            // position.Coordinate.Point.Position.Altitude Latitide Longitude
-            // position.Coordinate.PositionSource == PositionSource.WiFi Cellular IPAddress Satellite
-            // position.Coordinate.SatelliteData
-
-            // position.CivicAddress.City
-            // position.CivicAddress.State
-            // position.CivicAddress.Country
-            // position.CivicAddress.PostalCode
+            return location;
         }
 
         private void GeolocatorOnPositionChanged(Geolocator sender, PositionChangedEventArgs args)
         {
-            _sensorSettings.LatestLocationReading = args.Position.Coordinate.Point.Position;
+            _sensorSettings.LatestLocationReading = args.Position.Coordinate;
         } 
 
         #endregion
+    }
+
+    public static class GeocoordinateExtensions
+    {
+        public static List<String> ToDataDump([NotNull] this Geocoordinate geocoordinate)
+        {
+            if (geocoordinate == null) throw new ArgumentNullException("geocoordinate");
+
+            var results = new List<String>();
+            results.Add(String.Format("Position Source: {0}", geocoordinate.PositionSource));
+            results.Add(String.Format("Timestamp: {0:h:mm:ss tt}", geocoordinate.Timestamp));
+            results.Add(String.Format("Accuracy: {0} meters", geocoordinate.Accuracy));
+            results.Add(String.Format("Altitude Accuracy: {0} meters", geocoordinate.AltitudeAccuracy));
+            results.Add(String.Format("Speed: {0} meters/sec", geocoordinate.Speed));
+            results.Add(String.Format("Heading: {0} degrees", geocoordinate.Heading));
+            results.Add("Point:");
+            results.Add(String.Format("    GeoshapeType: {0}", geocoordinate.Point.GeoshapeType));
+            results.Add("    Position:");
+            results.Add(String.Format("        Latitude: {0} degrees", geocoordinate.Point.Position.Latitude));
+            results.Add(String.Format("        Longitude: {0} degrees", geocoordinate.Point.Position.Longitude));
+            results.Add(String.Format("        Altitude: {0}", geocoordinate.Point.Position.Altitude));
+            results.Add(String.Format("    Altitude Reference System: {0}", geocoordinate.Point.AltitudeReferenceSystem));
+            results.Add(String.Format("    SpatialReferenceId: {0}", geocoordinate.Point.SpatialReferenceId));
+            results.Add("Satellite Data:");
+            results.Add(String.Format("    HorizontalDilutionOfPrecision: {0}", geocoordinate.SatelliteData.HorizontalDilutionOfPrecision));
+            results.Add(String.Format("    VerticalDilutionOfPrecision: {0}", geocoordinate.SatelliteData.VerticalDilutionOfPrecision));
+            results.Add(String.Format("    PositionDilutionOfPrecision: {0}", geocoordinate.SatelliteData.PositionDilutionOfPrecision));
+
+            // Deprecated values: 
+            // geocoordinate.Latitude
+            // geocoordinate.Longitude
+            // geocoordinate.Altitude
+            
+
+            return results;
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using Windows.Devices.Sensors;
 using SensorsExample.Annotations;
 
@@ -34,14 +35,53 @@ namespace SensorsExample
             if (sensorSettings == null) throw new ArgumentNullException("sensorSettings");
 
             _sensorSettings = sensorSettings;
+            _sensorSettings.PropertyChanged += HandleSensorSettingsPropertyChanged;
 
             ConfigureSimpleOrientation();
             ConfigureCompass();
-            ConfigureLightSensor();
+            ConfigureInclinometer(); 
             ConfigureAccelerometer();
             ConfigureGyrometer();
-            ConfigureInclinometer();
             ConfigureOrientationSensor();
+            ConfigureLightSensor();
+        }
+
+        private void HandleSensorSettingsPropertyChanged(Object sender, PropertyChangedEventArgs args)
+        {
+            if (!"SensorReportInterval".Equals(args.PropertyName)) return;
+
+            // Update the reporting intervals, taking into account the existing minimum values
+            // Setting a value below the minimum value *may* throw an exception or have other unpredictable results
+            // Note that this is just a request.  Example - the sensor driver may honor other shorter values from other apps instead
+            if (_compass != null)
+            {
+                _compass.ReportInterval = Math.Max(_sensorSettings.SensorReportInterval, _compass.MinimumReportInterval);
+            }
+
+            if (_inclinometer != null)
+            {
+                _inclinometer.ReportInterval = Math.Max(_sensorSettings.SensorReportInterval, _inclinometer.MinimumReportInterval);
+            }
+
+            if (_accelerometer != null)
+            {
+                _accelerometer.ReportInterval = Math.Max(_sensorSettings.SensorReportInterval, _accelerometer.MinimumReportInterval);
+            }
+
+            if (_gyrometer != null)
+            {
+                _gyrometer.ReportInterval = Math.Max(_sensorSettings.SensorReportInterval, _gyrometer.MinimumReportInterval);
+            }
+
+            if (_orientationSensor != null)
+            {
+                _orientationSensor.ReportInterval = Math.Max(_sensorSettings.SensorReportInterval, _orientationSensor.MinimumReportInterval);
+            }
+
+            if (_lightSensor != null)
+            {
+                _lightSensor.ReportInterval = Math.Max(_sensorSettings.SensorReportInterval, _lightSensor.MinimumReportInterval);
+            }
         }
 
         #endregion
@@ -50,20 +90,22 @@ namespace SensorsExample
 
         private void ConfigureSimpleOrientation()
         {
+            // Get the reference to the sensor and see if it is available
             _simpleOrientation = SimpleOrientationSensor.GetDefault();
-            if (_simpleOrientation != null)
-            {
-                _sensorSettings.IsSimpleOrientationAvailable = true;
+            if (_simpleOrientation == null) return;
 
-                // NOTE - Simple Orientation does not offer a minimum interval setting
-                _simpleOrientation.OrientationChanged += SimpleOrientationOnOrientationChanged;
+            _sensorSettings.IsSimpleOrientationAvailable = true;
 
-                // Read the initial sensor value
-                _sensorSettings.LatestSimpleOrientationReading = GetSimpleOrientationReaading();
-            }
+            // NOTE - Simple Orientation does not offer a minimum interval setting
+            _simpleOrientation.OrientationChanged 
+                += SimpleOrientationOnOrientationChanged;
+
+            // Read the initial sensor value
+            _sensorSettings.LatestSimpleOrientationReading 
+                = _simpleOrientation.GetCurrentOrientation();
         }
 
-        public SimpleOrientation GetSimpleOrientationReaading()
+        public SimpleOrientation GetSimpleOrientationReading()
         {
             if (_simpleOrientation == null) throw new InvalidOperationException("The simple orientation sensor is either not present or has not been initialized");
 
@@ -85,18 +127,21 @@ namespace SensorsExample
 
         private void ConfigureCompass()
         {
+            // Get the reference to the sensor and see if it is available
             _compass = Compass.GetDefault();
-            if (_compass != null)   // Null if not present/supported
-            {
-                _sensorSettings.IsCompassAvailable = true;
+            if (_compass == null) return;
+            
+            _sensorSettings.IsCompassAvailable = true;
 
-                var minInterval = _compass.MinimumReportInterval;
-                _compass.ReportInterval = Math.Max(_sensorSettings.CompassReportInterval, minInterval);
-                _compass.ReadingChanged += CompassOnReadingChanged;
+            // Set the minimum report interval.  Care must be taken to ensure 
+            // it is not set to a value smaller than the device minimum
+            var minInterval = _compass.MinimumReportInterval;
+            _compass.ReportInterval 
+                = Math.Max(_sensorSettings.SensorReportInterval, minInterval);
+            _compass.ReadingChanged += CompassOnReadingChanged;
 
-                // Read the initial sensor value
-                _sensorSettings.LatestCompassReading = GetCompassReading();
-            }
+            // Read the initial sensor value
+            _sensorSettings.LatestCompassReading = _compass.GetCurrentReading();
         }
 
         public CompassReading GetCompassReading()
@@ -108,6 +153,7 @@ namespace SensorsExample
             // Available reading values include:
             // reading.HeadingMagneticNorth
             // reading.HeadingTrueNorth
+            // reading.HeadingAccuracy
             // reading.Timestamp
 
             // NOTE: 
@@ -130,18 +176,21 @@ namespace SensorsExample
 
         private void ConfigureInclinometer()
         {
+            // Get the reference to the sensor and see if it is available
             _inclinometer = Inclinometer.GetDefault();
-            if (_inclinometer != null)   // Null if not present/supported
-            {
-                _sensorSettings.IsInclinometerAvailable = true;
+            if (_inclinometer == null) return;
+            
+            _sensorSettings.IsInclinometerAvailable = true;
 
-                var minInterval = _inclinometer.MinimumReportInterval;
-                _inclinometer.ReportInterval = Math.Max(_sensorSettings.InclinometerReportInterval, minInterval);
-                _inclinometer.ReadingChanged += InclinometerOnReadingChanged;
+            // Set the minimum report interval.  Care must be taken to ensure 
+            // it is not set to a value smaller than the device minimum
+            var minInterval = _inclinometer.MinimumReportInterval;
+            _inclinometer.ReportInterval 
+                = Math.Max(_sensorSettings.SensorReportInterval, minInterval);
+            _inclinometer.ReadingChanged += InclinometerOnReadingChanged;
 
-                // Read the initial sensor value
-                _sensorSettings.LatestInclinometerReading = GetInclinometerReading();
-            }
+            // Read the initial sensor value
+            _sensorSettings.LatestInclinometerReading = GetInclinometerReading();
         }
 
         public InclinometerReading GetInclinometerReading()
@@ -154,7 +203,7 @@ namespace SensorsExample
             // reading.PitchDegrees
             // reading.RollDegrees
             // reading.YawDegrees
-            // reading.YawAccuracy
+            // reading.YawAccuracy - See Magnetometer accuracy in Compass
             // reading.Timestamp
         }
 
@@ -175,7 +224,7 @@ namespace SensorsExample
                 _sensorSettings.IsAccelerometerAvailable = true;
 
                 var minInterval = _accelerometer.MinimumReportInterval;
-                _accelerometer.ReportInterval = Math.Max(_sensorSettings.AccelerometerReportInterval, minInterval);
+                _accelerometer.ReportInterval = Math.Max(_sensorSettings.SensorReportInterval, minInterval);
                 _accelerometer.ReadingChanged += AccelerometerOnReadingChanged;
                 _accelerometer.Shaken += AccelerometerOnShaken;
 
@@ -219,7 +268,7 @@ namespace SensorsExample
                 _sensorSettings.IsGyrometerAvailable = true;
 
                 var minInterval = _gyrometer.MinimumReportInterval;
-                _gyrometer.ReportInterval = Math.Max(_sensorSettings.GyrometerReportInterval, minInterval);
+                _gyrometer.ReportInterval = Math.Max(_sensorSettings.SensorReportInterval, minInterval);
                 _gyrometer.ReadingChanged += GyrometerOnReadingChanged;
 
                 // Read the initial sensor value
@@ -258,7 +307,7 @@ namespace SensorsExample
                 _sensorSettings.IsOrientationSensorAvailable = true;
 
                 var minInterval = _orientationSensor.MinimumReportInterval;
-                _orientationSensor.ReportInterval = Math.Max(_sensorSettings.OrientationSensorReportInterval, minInterval);
+                _orientationSensor.ReportInterval = Math.Max(_sensorSettings.SensorReportInterval, minInterval);
                 _orientationSensor.ReadingChanged += OrientationSensorOnReadingChanged;
 
                 // Read the initial sensor value
@@ -296,7 +345,7 @@ namespace SensorsExample
                 _sensorSettings.IsLightSensorAvailable = true;
 
                 var minInterval = _lightSensor.MinimumReportInterval;
-                _lightSensor.ReportInterval = Math.Max(_sensorSettings.LightSensorReportInterval, minInterval);
+                _lightSensor.ReportInterval = Math.Max(_sensorSettings.SensorReportInterval, minInterval);
                 _lightSensor.ReadingChanged += LightSensorOnReadingChanged;
 
                 // Read the initial sensor value
