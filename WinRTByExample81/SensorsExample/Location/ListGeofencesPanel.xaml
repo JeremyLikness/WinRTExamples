@@ -1,0 +1,71 @@
+﻿<UserControl
+    x:Class="SensorsExample.ListGeofencesPanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SensorsExample"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:sensorsExample="using:SensorsExample"
+    mc:Ignorable="d"
+    Height="300"
+    Width="400">
+
+    <Grid d:DataContext="{d:DesignInstance Type=sensorsExample:SampleGeofenceListingViewModel, IsDesignTimeCreatable=true}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.Resources>
+            <Style TargetType="TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="5"/>
+            </Style>
+            <Style TargetType="TextBlock" BasedOn="{StaticResource BodyTextBlockStyle}" x:Key="BlockHeaderTextBlockStyle">
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="FontWeight" Value="Bold"></Setter>
+            </Style>
+            <Style TargetType="TextBox">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="5"/>
+            </Style>
+        </Grid.Resources>
+        <TextBlock Grid.Row="0" Text="Geofence Listing" HorizontalAlignment="Center" Style="{StaticResource BlockHeaderTextBlockStyle}"/>
+        <ListView Grid.Row="1" ItemsSource="{Binding CurrentGeofences}" SelectionMode="Single" SelectedItem="{Binding SelectedGeofence, Mode=TwoWay}">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderBrush="{ThemeResource ButtonBorderThemeBrush}" BorderThickness="{ThemeResource ButtonBorderThemeThickness}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.Resources>
+                                <local:BasicGeopositionDescriptionTextValueConverter x:Key="GeopositionTextConverter"/>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Margin" Value="5,0"/>
+                                </Style>
+                            </Grid.Resources>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Id}" FontWeight="Bold"/>
+                            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                                <TextBlock Text="Center: "/>
+                                <TextBlock Text="{Binding Geoshape.Center, Converter={StaticResource GeopositionTextConverter}}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Row="2" Orientation="Horizontal">
+                                <TextBlock Text="Radius (meters):"/>
+                                <TextBlock Text="{Binding Geoshape.Radius}"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Button Grid.Row="2" Content="Remove Selected" HorizontalAlignment="Center" Command="{Binding RemoveSelectedItemCommand}"/>
+    </Grid>
+</UserControl>

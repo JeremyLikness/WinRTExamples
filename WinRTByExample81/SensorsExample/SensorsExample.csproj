@@ -125,11 +125,22 @@
     <Compile Include="..\Common\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Location\AddGeofencePanel.xaml.cs">
+      <DependentUpon>AddGeofencePanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SensorExtensions.cs" />
-    <Compile Include="SensorSettingsFlyout.xaml.cs">
+    <Compile Include="Location\BasicGeopositionDescriptionTextValueConverter.cs" />
+    <Compile Include="Location\GeocoordinateExtensions.cs" />
+    <Compile Include="Location\GeofenceHelper.cs" />
+    <Compile Include="Location\GeofenceItemViewModel.cs" />
+    <Compile Include="Location\GeofenceListingViewModel.cs" />
+    <Compile Include="Location\ListGeofencesPanel.xaml.cs">
+      <DependentUpon>ListGeofencesPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sensors\SensorExtensions.cs" />
+    <Compile Include="Sensors\SensorSettingsFlyout.xaml.cs">
       <DependentUpon>SensorSettingsFlyout.xaml</DependentUpon>
     </Compile>
     <Compile Include="SensorsExamplePage.xaml.cs">
@@ -139,13 +150,12 @@
     <Compile Include="Common\ObservableDictionary.cs" />
     <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
-    <Compile Include="GeolocationHelper.cs" />
-    <Compile Include="MapExtensions.cs" />
+    <Compile Include="Location\GeolocationHelper.cs" />
+    <Compile Include="Location\MapExtensions.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReadingDisplayExtensions.cs" />
-    <Compile Include="SensorSettings.cs" />
-    <Compile Include="SensorHelper.cs" />
+    <Compile Include="Sensors\SensorSettings.cs" />
+    <Compile Include="Sensors\SensorHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -158,7 +168,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="SensorSettingsFlyout.xaml">
+    <Page Include="Location\AddGeofencePanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Location\ListGeofencesPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Sensors\SensorSettingsFlyout.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
