@@ -318,7 +318,7 @@ namespace SensorsExample
             get
             {
                 if (LatestLightSensorReading == null) return "No Reading Available.";
-                return LatestLightSensorReading.DisplayText();
+                return GetLightSensorDisplayText(LatestLightSensorReading);
             }
         }
 
@@ -354,7 +354,7 @@ namespace SensorsExample
             get
             {
                 if (LatestOrientationSensorReading == null) return "No Reading Available.";
-                return LatestOrientationSensorReading.DisplayText();
+                return GetOrientationSensorDisplayText(LatestOrientationSensorReading);
             }
         }
 
@@ -402,7 +402,7 @@ namespace SensorsExample
             {
                 return LatestLocationReading == null
                     ? "No Reading"
-                    : LatestLocationReading.Point.Position.DisplayText();
+                    : LatestLocationReading.Point.Position.DisplayText(true);
             }
         }
 
@@ -505,6 +505,25 @@ namespace SensorsExample
                 adjustedAngularVelocityY,
                 adjustedAngularVelocityZ);
         }
+
+        public String GetOrientationSensorDisplayText(OrientationSensorReading reading)
+        {
+            if (reading == null) return "No Reading Available.";
+
+            return String.Format("Q(x)= {0} Q(y)={1} Q(z)={2} Q(w)={3}",
+                reading.Quaternion.X,
+                reading.Quaternion.Y,
+                reading.Quaternion.Z,
+                reading.Quaternion.W);
+        }
+
+        public String GetLightSensorDisplayText(LightSensorReading reading)
+        {
+            if (reading == null) return "No Reading Available.";
+
+            return String.Format("Illuminance(Lux): {0}",
+                reading.IlluminanceInLux);
+        }  
 
         #endregion
     }

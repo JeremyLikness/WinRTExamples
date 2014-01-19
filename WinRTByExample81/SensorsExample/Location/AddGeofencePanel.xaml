@@ -1,0 +1,51 @@
+﻿<UserControl
+    x:Class="SensorsExample.AddGeofencePanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SensorsExample"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Height="250" Width="300">
+
+    <Grid d:DataContext="{d:DesignInstance Type=local:SampleGeofenceItemViewModel, IsDesignTimeCreatable=true}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.Resources>
+            <Style TargetType="TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="5"/>
+            </Style>
+            <Style TargetType="TextBlock" BasedOn="{StaticResource BodyTextBlockStyle}" x:Key="BlockHeaderTextBlockStyle">
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="FontWeight" Value="Bold"></Setter>
+            </Style>
+            <Style TargetType="TextBox">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="5"/>
+            </Style>
+        </Grid.Resources>
+        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Add Geofence" HorizontalAlignment="Center" Style="{StaticResource BlockHeaderTextBlockStyle}"/>
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Name: " VerticalAlignment="Center"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding GeofenceName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Latitude: "/>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Latitude}" IsReadOnly="True"/>
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Longitude: "/>
+        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Longitude}" IsReadOnly="True"/>
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="Radius: "/>
+        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding RadiusMiles}" IsReadOnly="True"/>
+        <Button Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Content="Add Fence" HorizontalAlignment="Center" Command="{Binding AddFenceCommand}"/>
+    </Grid>
+
+</UserControl>

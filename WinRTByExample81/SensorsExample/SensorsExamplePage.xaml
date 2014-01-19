@@ -10,6 +10,9 @@
     xmlns:maps="using:Bing.Maps"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     mc:Ignorable="d">
+    <Page.Resources>
+        <local:BasicGeopositionDescriptionTextValueConverter x:Key="PositionToTextConverter"/>
+    </Page.Resources>
 
     <!--
         This grid acts as a root panel for the page that defines two rows:
@@ -78,13 +81,17 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="10"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="10"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" Text="Location" Style="{StaticResource BlockHeaderTextBlockStyle}"/>
                             <TextBox Grid.Row="1" IsReadOnly="true" Text="{Binding LatestLocationReadingText}"/>
                             <CheckBox Grid.Row="2" Content="Request High Accuracy" IsChecked="{Binding IsLocationRequestingHighAccuracy, Mode=TwoWay}"/>
-                            <Button Grid.Row="3" Content="Show Current" IsEnabled="{Binding IsLocationAvailable}" HorizontalAlignment="Stretch" Click="HandleShowCurentLocationRequest">
+                            <Button Grid.Row="4" Content="Show Current Device Location" IsEnabled="{Binding IsLocationAvailable}" HorizontalAlignment="Stretch" Click="HandleShowCurentLocationRequest">
                                 <Button.Flyout>
                                     <Flyout Placement="Right">
                                         <Grid Height="300" Width="250">
@@ -98,7 +105,21 @@
                                     </Flyout>
                                 </Button.Flyout>
                             </Button>
-                            <Button Grid.Row="4" Content="Center Map on Current" IsEnabled="{Binding IsLocationAvailable}" HorizontalAlignment="Stretch" Click="HandleCenterOnLocationRequest"/>
+                            <Button Grid.Row="5" Content="Center Map on Device Location" IsEnabled="{Binding IsLocationAvailable}" HorizontalAlignment="Stretch" Click="HandleCenterOnLocationRequest"/>
+                            <Button Grid.Row="7" Content="List Fences"  IsEnabled="{Binding IsLocationAvailable}" HorizontalAlignment="Stretch" Click="HandleFenceListingRequest">
+                                <FlyoutBase.AttachedFlyout>
+                                    <Flyout Placement="Right">
+                                        <local:ListGeofencesPanel/>
+                                    </Flyout>
+                                </FlyoutBase.AttachedFlyout>
+                            </Button>
+                            <Button Grid.Row="8" Content="Add Fence at Map Center"  IsEnabled="{Binding IsLocationAvailable}" HorizontalAlignment="Stretch" Click="HandleFenceLocationRequest">
+                                <FlyoutBase.AttachedFlyout>
+                                    <Flyout Placement="Right">
+                                        <local:AddGeofencePanel/>
+                                    </Flyout>
+                                </FlyoutBase.AttachedFlyout>
+                            </Button>
                         </Grid>
                     </Border>
 
@@ -134,11 +155,29 @@
                 </StackPanel>
             </Grid>
             <Grid Grid.Column="1">
-                <maps:Map Credentials="{StaticResource MapKey}" x:Name="ExampleMap"> 
-                    <interactivity:Interaction.Behaviors>
-                        <local:MapExtensions Position="{Binding Position, Mode=TwoWay}" Heading="{Binding Heading, Mode=TwoWay}"/>
-                    </interactivity:Interaction.Behaviors>
-                </maps:Map>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <maps:Map Grid.Row="0" Credentials="{StaticResource MapKey}" x:Name="ExampleMap">
+                        <interactivity:Interaction.Behaviors>
+                            <local:MapExtensions Position="{Binding Position, Mode=TwoWay}" Heading="{Binding Heading, Mode=TwoWay}" ZoomLevel="{Binding ZoomLevel, Mode=TwoWay}"/>
+                        </interactivity:Interaction.Behaviors>
+                    </maps:Map>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Center: "/>
+                        <TextBox Grid.Column="1" Text="{Binding Position, Converter={StaticResource PositionToTextConverter}}" IsReadOnly="True" Margin="5"/>
+                        <TextBlock Grid.Column="2" Text="Zoom Level: "/>
+                        <TextBox Grid.Column="3" Text="{Binding ZoomLevel}" IsReadOnly="True" Margin="5"/>
+                    </Grid>
+                </Grid>
             </Grid>
             <Grid Grid.Column="2" Width="320">
                 <StackPanel DataContext="{Binding SensorSettings}" d:DataContext="{d:DesignInstance Type=local:SensorSettings, IsDesignTimeCreatable=true}">
