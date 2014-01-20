@@ -47,7 +47,7 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <Grid.Resources>
-                                <local:BasicGeopositionDescriptionTextValueConverter x:Key="GeopositionTextConverter"/>
+                                <local:BasicGeopositionDisplayTextValueConverter x:Key="PositionToTextConverter"/>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Margin" Value="5,0"/>
                                 </Style>
@@ -55,7 +55,7 @@
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Id}" FontWeight="Bold"/>
                             <StackPanel Grid.Row="1" Orientation="Horizontal">
                                 <TextBlock Text="Center: "/>
-                                <TextBlock Text="{Binding Geoshape.Center, Converter={StaticResource GeopositionTextConverter}}"/>
+                                <TextBlock Text="{Binding Geoshape.Center, Converter={StaticResource PositionToTextConverter}}"/>
                             </StackPanel>
                             <StackPanel Grid.Row="2" Orientation="Horizontal">
                                 <TextBlock Text="Radius (meters):"/>

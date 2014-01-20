@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Windows.Devices.Geolocation;
 using Windows.Devices.Geolocation.Geofencing;
-using SensorsExample.Annotations;
 
 namespace SensorsExample
 {
@@ -21,41 +20,43 @@ namespace SensorsExample
 
         #endregion
 
-        public Geofence AddGeofence([NotNull] String fenceId, BasicGeoposition fenceCenter)
+        public Geofence AddGeofence(
+            String fenceId, 
+            BasicGeoposition fenceCenter, 
+            Double radiusInMeters)
         {
-            if (String.IsNullOrWhiteSpace(fenceId)) throw new ArgumentException("A fence id is required.", "fenceId");
-            if (fenceId.Length > 64) throw new ArgumentException("Fence id must be 64 chars or less.", "fenceId");
+            if (String.IsNullOrWhiteSpace(fenceId)) 
+                throw new ArgumentException("A fence id is required.", "fenceId");
+            if (fenceId.Length > 64) 
+                throw new ArgumentException("The fence id must be <= 64 chars.", "fenceId");
 
-            const Double radiusInMeters = 20.0 * 1000; // 20KM
             var fenceCircle = new Geocircle(fenceCenter, radiusInMeters);
 
             // Default (omitted in ctor) = Entered/Exited
-            var states =
+            const MonitoredGeofenceStates states =
                 MonitoredGeofenceStates.Entered |
                 MonitoredGeofenceStates.Exited |
                 MonitoredGeofenceStates.Removed;
 
-            // Default (omitted in ctor) = false
-            var isSingleUse = false;
-           
-            // Default (omitted in ctor) = 10 seconds
-            var dwellingTime = TimeSpan.FromSeconds(10);
-
-            // Default (omitted in ctor) = immediate
-            var monitoringStartTime = DateTimeOffset.Now;
-
-            // Default (omitted in ctor) = 0 seconds/indefinite
-            var monitoringDuration = TimeSpan.FromSeconds(0);
-
-            var fence = new Geofence(fenceId, fenceCircle, states, isSingleUse, dwellingTime, monitoringStartTime, monitoringDuration);
+            // Create the fence with the desired states and not single-use
+            var fence = new Geofence(fenceId, fenceCircle, states, false);
             GeofenceMonitor.Current.Geofences.Add(fence);
             return fence;
-            // List of fences
-            //monitor.Geofences
-            //monitor.LastKnownGeoposition
-            //monitor.ReadReports()
-            //monitor.Status GeofenceMonitorStatus.Ready//.NotInitialized //.NotAvailable//.NoData//.Initializing// .Disabled, 
-            //monitor.StatusChanged += (sender, args) => 
+
+            // MORE EXPLICIT GEOFENCE OPTIONS
+            // Default (omitted in ctor) = false
+            // var isSingleUse = false;
+
+            // Default (omitted in ctor) = 10 seconds
+            // var dwellingTime = TimeSpan.FromSeconds(10);
+
+            // Default (omitted in ctor) = immediate
+            // var monitoringStartTime = DateTimeOffset.Now;
+
+            // Default (omitted in ctor) = 0 seconds/indefinite
+            // var monitoringDuration = TimeSpan.Zero;
+
+            //var fence = new Geofence(fenceId, fenceCircle, states, isSingleUse, dwellingTime, monitoringStartTime, monitoringDuration);
         }
 
         public void RemoveGeofence(String idToRemove)
@@ -85,9 +86,9 @@ namespace SensorsExample
             if (handler != null) handler(this, args);
         }
 
-        private void HandleGeofenceStateChanged(GeofenceMonitor monitor, Object args)
+        private void HandleGeofenceStateChanged(GeofenceMonitor monitor, Object o)
         {
-            // Pull a list of all geofence events that have occurred since the last time this was called
+            // Iterate over and process the accumulated reports
             var reports = monitor.ReadReports();
             foreach (var report in reports)
             {
@@ -99,8 +100,8 @@ namespace SensorsExample
                         {
                             FenceId = report.Geofence.Id,
                             Reason = report.NewState.ToString(),
-                            Timestamp = report.Geoposition.Coordinate.Timestamp,
-                            Position = report.Geoposition.Coordinate.Point.Position
+                            Position = report.Geoposition.Coordinate.Point.Position,
+                            Timestamp = report.Geoposition.Coordinate.Timestamp
                         };
                         OnFenceUpdated(updateArgs);
                         break;
@@ -111,6 +112,7 @@ namespace SensorsExample
                             WhyRemoved = report.RemovalReason.ToString()
                         };
                         OnFenceRemoved(removedArgs);
+
                         break;
                 }
             }
