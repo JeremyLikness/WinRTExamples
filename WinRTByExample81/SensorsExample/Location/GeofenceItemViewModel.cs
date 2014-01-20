@@ -75,7 +75,7 @@ namespace SensorsExample
         private void AddFence()
         {
             if (String.IsNullOrWhiteSpace(GeofenceName)) throw new InvalidOperationException("A geofence name is required.");
-            var geofence = _geofenceHelper.AddGeofence(GeofenceName, _fenceCenter);
+            var geofence = _geofenceHelper.AddGeofence(GeofenceName, _fenceCenter, RadiusMiles);
             if (geofence != null)
             {
                 OnFenceAdded(geofence);    

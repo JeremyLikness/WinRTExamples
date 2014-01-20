@@ -11,7 +11,7 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     mc:Ignorable="d">
     <Page.Resources>
-        <local:BasicGeopositionDescriptionTextValueConverter x:Key="PositionToTextConverter"/>
+        <local:BasicGeopositionDisplayTextValueConverter x:Key="PositionToTextConverter"/>
     </Page.Resources>
 
     <!--

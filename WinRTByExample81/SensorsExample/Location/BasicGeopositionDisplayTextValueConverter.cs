@@ -4,7 +4,7 @@ using Windows.UI.Xaml.Data;
 
 namespace SensorsExample
 {
-    public class BasicGeopositionDescriptionTextValueConverter : IValueConverter
+    public class BasicGeopositionDisplayTextValueConverter : IValueConverter
     {
         /// <summary>
         /// Modifies the source data before passing it to the target for display in the UI.

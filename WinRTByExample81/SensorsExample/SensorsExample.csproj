@@ -131,7 +131,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Location\BasicGeopositionDescriptionTextValueConverter.cs" />
+    <Compile Include="Location\BasicGeopositionDisplayTextValueConverter.cs" />
     <Compile Include="Location\GeocoordinateExtensions.cs" />
     <Compile Include="Location\GeofenceHelper.cs" />
     <Compile Include="Location\GeofenceItemViewModel.cs" />
