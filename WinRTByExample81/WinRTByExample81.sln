@@ -184,9 +184,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThreadPoolExample", "Thread
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter14", "Chapter14", "{D85C2913-B30D-4285-9986-16408F062653}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrintingAndScanningExample", "PrintingAndScanningExample\PrintingAndScanningExample.csproj", "{94959793-05A7-457F-BCB1-D9068D528A88}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 71
+		SccNumberOfProjects = 72
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs04
 		SccLocalPath0 = .
@@ -470,6 +472,10 @@ Global
 		SccProjectTopLevelParentUniqueName70 = WinRTByExample81.sln
 		SccProjectName70 = ThreadPoolExample
 		SccLocalPath70 = ThreadPoolExample
+		SccProjectUniqueName71 = PrintingAndScanningExample\\PrintingAndScanningExample.csproj
+		SccProjectTopLevelParentUniqueName71 = WinRTByExample81.sln
+		SccProjectName71 = PrintingAndScanningExample
+		SccLocalPath71 = PrintingAndScanningExample
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1998,6 +2004,30 @@ Global
 		{C4399B19-62E6-47CE-A377-97783F995353}.Release|x86.ActiveCfg = Release|x86
 		{C4399B19-62E6-47CE-A377-97783F995353}.Release|x86.Build.0 = Release|x86
 		{C4399B19-62E6-47CE-A377-97783F995353}.Release|x86.Deploy.0 = Release|x86
+		{94959793-05A7-457F-BCB1-D9068D528A88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94959793-05A7-457F-BCB1-D9068D528A88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94959793-05A7-457F-BCB1-D9068D528A88}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{94959793-05A7-457F-BCB1-D9068D528A88}.Debug|ARM.ActiveCfg = Debug|ARM
+		{94959793-05A7-457F-BCB1-D9068D528A88}.Debug|ARM.Build.0 = Debug|ARM
+		{94959793-05A7-457F-BCB1-D9068D528A88}.Debug|ARM.Deploy.0 = Debug|ARM
+		{94959793-05A7-457F-BCB1-D9068D528A88}.Debug|x64.ActiveCfg = Debug|x64
+		{94959793-05A7-457F-BCB1-D9068D528A88}.Debug|x64.Build.0 = Debug|x64
+		{94959793-05A7-457F-BCB1-D9068D528A88}.Debug|x64.Deploy.0 = Debug|x64
+		{94959793-05A7-457F-BCB1-D9068D528A88}.Debug|x86.ActiveCfg = Debug|x86
+		{94959793-05A7-457F-BCB1-D9068D528A88}.Debug|x86.Build.0 = Debug|x86
+		{94959793-05A7-457F-BCB1-D9068D528A88}.Debug|x86.Deploy.0 = Debug|x86
+		{94959793-05A7-457F-BCB1-D9068D528A88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94959793-05A7-457F-BCB1-D9068D528A88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94959793-05A7-457F-BCB1-D9068D528A88}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{94959793-05A7-457F-BCB1-D9068D528A88}.Release|ARM.ActiveCfg = Release|ARM
+		{94959793-05A7-457F-BCB1-D9068D528A88}.Release|ARM.Build.0 = Release|ARM
+		{94959793-05A7-457F-BCB1-D9068D528A88}.Release|ARM.Deploy.0 = Release|ARM
+		{94959793-05A7-457F-BCB1-D9068D528A88}.Release|x64.ActiveCfg = Release|x64
+		{94959793-05A7-457F-BCB1-D9068D528A88}.Release|x64.Build.0 = Release|x64
+		{94959793-05A7-457F-BCB1-D9068D528A88}.Release|x64.Deploy.0 = Release|x64
+		{94959793-05A7-457F-BCB1-D9068D528A88}.Release|x86.ActiveCfg = Release|x86
+		{94959793-05A7-457F-BCB1-D9068D528A88}.Release|x86.Build.0 = Release|x86
+		{94959793-05A7-457F-BCB1-D9068D528A88}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -2073,5 +2103,6 @@ Global
 		{6BD2AFE4-4D77-484F-BD01-93D07F5F7810} = {864AEE38-7D67-4F30-A864-EE0AEBC1F236}
 		{E4CFB957-7C2F-4DD4-A6F9-699E76DADFA6} = {864AEE38-7D67-4F30-A864-EE0AEBC1F236}
 		{C4399B19-62E6-47CE-A377-97783F995353} = {864AEE38-7D67-4F30-A864-EE0AEBC1F236}
+		{94959793-05A7-457F-BCB1-D9068D528A88} = {D85C2913-B30D-4285-9986-16408F062653}
 	EndGlobalSection
 EndGlobal
