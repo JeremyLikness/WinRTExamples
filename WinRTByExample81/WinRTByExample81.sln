@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30110.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorldGridApp", "HelloWorldGridApp\HelloWorldGridApp.csproj", "{B270835A-3249-4284-9399-E885C80229E9}"
 EndProject
@@ -181,6 +181,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PushNotificationExample", "PushNotificationExample\PushNotificationExample.csproj", "{273CC9D9-1833-4F46-8011-5F72F95E61E7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThreadPoolExample", "ThreadPoolExample\ThreadPoolExample.csproj", "{C4399B19-62E6-47CE-A377-97783F995353}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter14", "Chapter14", "{D85C2913-B30D-4285-9986-16408F062653}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
