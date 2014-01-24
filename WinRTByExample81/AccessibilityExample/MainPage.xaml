@@ -1,0 +1,90 @@
+﻿<Page
+    x:Class="AccessibilityExample.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AccessibilityExample"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <Grid x:Name="LayoutRoot" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" RequestedTheme="{Binding Path=CurrentTheme, Mode=OneWay}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Button Grid.Row="0" Content="Change Theme" Click="ChangeThemeOnClick"></Button>
+        <Grid Grid.Row="1" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="White">
+            <Grid.Resources>
+                <Style x:Name="GreenStackPanelStyle" TargetType="StackPanel">
+                    <Setter Property="Background" Value="Green"/>
+                </Style>
+                <Style x:Name="GreenBlockStyle" BasedOn="{StaticResource SubheaderTextBlockStyle}" TargetType="TextBlock">
+                    <Setter Property="Foreground" Value="LightGreen"/>
+                    <Setter Property="SelectionHighlightColor" Value="Green"/>
+                    <Setter Property="IsTextSelectionEnabled" Value="True"/>
+                </Style>
+            </Grid.Resources>
+            <Grid.RowDefinitions>
+                
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="10"></ColumnDefinition>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Non-Accessible" Style="{StaticResource SubheaderTextBlockStyle}"/>
+            <StackPanel Grid.Column="2" Style="{StaticResource GreenStackPanelStyle}">
+                <TextBlock Text="Here is some text that you can highlight, perhaps to copy." Style="{StaticResource GreenBlockStyle}"></TextBlock>
+            </StackPanel>           
+        </Grid>
+        <Grid Grid.Row="2" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+            <Grid.Resources>
+                <ResourceDictionary>
+                    <ResourceDictionary.ThemeDictionaries>
+                        <!-- When not in high contrast mode, use a colorful look. 
+                                        Note that this is defining an implicit style that is scoped to this StackPanel. -->
+
+                        <ResourceDictionary x:Key="Default">
+                            <Style x:Key="GreenStackPanelAccessibleStyle" TargetType="StackPanel">
+                                <Setter Property="Background" Value="Green"/>
+                            </Style>
+                            <Style x:Key="GreenBlockAccessibleStyle" BasedOn="{StaticResource SubheaderTextBlockStyle}" TargetType="TextBlock">
+                                <Setter Property="Foreground" Value="LightGreen"/>
+                                <Setter Property="SelectionHighlightColor" Value="Green"/>
+                                <Setter Property="IsTextSelectionEnabled" Value="True"/>
+                            </Style>
+                        </ResourceDictionary>
+
+                        <ResourceDictionary x:Key="HighContrastBlack">
+                            <Style x:Key="GreenStackPanelAccessibleStyle" TargetType="StackPanel"/>
+                            <Style x:Key="GreenBlockAccessibleStyle" BasedOn="{StaticResource SubheaderTextBlockStyle}" TargetType="TextBlock"/>
+                        </ResourceDictionary>
+                    
+                        <ResourceDictionary x:Key="HighContrastWhite">
+                            <Style x:Key="GreenStackPanelAccessibleStyle" TargetType="StackPanel"/>
+                            <Style x:Key="GreenBlockAccessibleStyle" BasedOn="{StaticResource SubheaderTextBlockStyle}" TargetType="TextBlock"/>
+                        </ResourceDictionary>
+
+                        <ResourceDictionary x:Key="HighContrastCustom">
+                            <Style x:Key="GreenStackPanelAccessibleStyle" TargetType="StackPanel"/>
+                            <Style x:Key="GreenBlockAccessibleStyle" BasedOn="{StaticResource SubheaderTextBlockStyle}" TargetType="TextBlock"/>
+                        </ResourceDictionary>
+
+                    </ResourceDictionary.ThemeDictionaries>
+                </ResourceDictionary>                
+            </Grid.Resources>
+            <Grid.RowDefinitions>
+
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="10"></ColumnDefinition>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Accessible" Style="{StaticResource SubheaderTextBlockStyle}"/>
+            <StackPanel Grid.Column="2" Style="{StaticResource GreenStackPanelAccessibleStyle}">
+                <TextBlock Text="Here is some text that you can highlight, perhaps to copy." Style="{StaticResource GreenBlockAccessibleStyle}"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Page>
