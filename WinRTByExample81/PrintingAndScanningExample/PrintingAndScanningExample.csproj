@@ -107,7 +107,23 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <Page Include="ItemDetailPage1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PrintTemplates\PictureModelLayout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PrintTemplates\Template1x1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PrintTemplates\Template2x2.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -123,10 +139,31 @@
     <Compile Include="Common\ObservableDictionary.cs" />
     <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
+    <Compile Include="CustomPrintLayoutOptionHelper.cs" />
+    <Compile Include="ItemDetailPage1.xaml.cs">
+      <DependentUpon>ItemDetailPage1.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PictureModel.cs" />
+    <Compile Include="PicturesViewModel.cs" />
+    <Compile Include="PrintHelper.cs" />
+    <Compile Include="PrintTemplates\BooleanToVisibilityConverter.cs" />
+    <Compile Include="PrintTemplates\PrintLayout.cs" />
+    <Compile Include="PrintTemplates\PictureModelLayout.xaml.cs">
+      <DependentUpon>PictureModelLayout.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PrintTemplates\PrintTemplateViewModel.cs" />
+    <Compile Include="PrintTemplates\Template1x1.xaml.cs">
+      <DependentUpon>Template1x1.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PrintTemplates\Template2x2.xaml.cs">
+      <DependentUpon>Template2x2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScannerHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

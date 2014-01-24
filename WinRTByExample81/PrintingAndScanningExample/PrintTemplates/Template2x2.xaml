@@ -1,0 +1,33 @@
+﻿<UserControl
+    x:Class="PrintingAndScanningExample.Template2x2"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PrintingAndScanningExample"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignWidth="850"
+    d:DesignHeight="1100"
+    d:DataContext="{d:DesignInstance Type=local:DesignPrintTemplate2x2ViewModel, IsDesignTimeCreatable=True}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.Resources>
+            <Style TargetType="local:PictureModelLayout">
+                <Setter Property="Margin" Value="10"></Setter>
+            </Style>
+        </Grid.Resources>
+        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding PageTitle}" HorizontalAlignment="Center" FontSize="18"/>
+        <local:PictureModelLayout Grid.Row="1" Grid.Column="0" DataContext="{Binding Pictures[0]}"/>
+        <local:PictureModelLayout Grid.Row="1" Grid.Column="1" DataContext="{Binding Pictures[1]}"/>
+        <local:PictureModelLayout Grid.Row="2" Grid.Column="0" DataContext="{Binding Pictures[2]}"/>
+        <local:PictureModelLayout Grid.Row="2" Grid.Column="1" DataContext="{Binding Pictures[3]}"/>
+    </Grid>
+</UserControl>

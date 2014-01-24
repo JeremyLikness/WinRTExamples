@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using PrintingAndScanningExample.Common;
@@ -12,34 +13,29 @@ namespace PrintingAndScanningExample
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        #region Fields
 
+        private readonly PrintHelper _printHelper = new PrintHelper();
+        private readonly ScannerHelper _scannerHelper = new ScannerHelper();
+        
         private readonly NavigationHelper _navigationHelper;
-        private readonly ObservableDictionary _defaultViewModel = new ObservableDictionary();
+        private readonly PicturesViewModel _viewModel;
+
+        #endregion
+
+        #region Constructor(s) and Initialization
 
         /// <summary>
-        /// This can be changed to a strongly typed view model.
+        /// Initializes a new instance of the <see cref="MainPage"/> class.
         /// </summary>
-        public ObservableDictionary DefaultViewModel
-        {
-            get { return _defaultViewModel; }
-        }
-
-        /// <summary>
-        /// NavigationHelper is used on each page to aid in navigation and 
-        /// process lifetime management
-        /// </summary>
-        public NavigationHelper NavigationHelper
-        {
-            get { return _navigationHelper; }
-        }
-
-
         public MainPage()
         {
+            _viewModel = new PicturesViewModel(_printHelper, _scannerHelper);
+
             InitializeComponent();
             _navigationHelper = new NavigationHelper(this);
-            _navigationHelper.LoadState += navigationHelper_LoadState;
-            _navigationHelper.SaveState += navigationHelper_SaveState;
+            _navigationHelper.LoadState += HandleNavigationHelperLoadState;
+            _navigationHelper.SaveState += HandleNavigationHelperSaveState;
         }
 
         /// <summary>
@@ -53,7 +49,7 @@ namespace PrintingAndScanningExample
         /// <see cref="Frame.Navigate(Type, Object)"/> when this page was initially requested and
         /// a dictionary of state preserved by this page during an earlier
         /// session. The state will be null the first time a page is visited.</param>
-        private void navigationHelper_LoadState(object sender, LoadStateEventArgs e)
+        private void HandleNavigationHelperLoadState(Object sender, LoadStateEventArgs e)
         {
         }
 
@@ -65,9 +61,29 @@ namespace PrintingAndScanningExample
         /// <param name="sender">The source of the event; typically <see cref="NavigationHelper"/></param>
         /// <param name="e">Event data that provides an empty dictionary to be populated with
         /// serializable state.</param>
-        private void navigationHelper_SaveState(object sender, SaveStateEventArgs e)
+        private void HandleNavigationHelperSaveState(Object sender, SaveStateEventArgs e)
         {
         }
+
+
+        /// <summary>
+        /// This can be changed to a strongly typed view model.
+        /// </summary>
+        public PicturesViewModel ViewModel
+        {
+            get { return _viewModel; }
+        }
+
+        /// <summary>
+        /// NavigationHelper is used on each page to aid in navigation and 
+        /// process lifetime management
+        /// </summary>
+        public NavigationHelper NavigationHelper
+        {
+            get { return _navigationHelper; }
+        } 
+
+        #endregion
 
         #region NavigationHelper registration
 
@@ -79,14 +95,20 @@ namespace PrintingAndScanningExample
         /// and <see cref="Common.NavigationHelper.SaveState"/>.
         /// The navigation parameter is available in the LoadState method 
         /// in addition to page state preserved during an earlier session.
-
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             _navigationHelper.OnNavigatedTo(e);
+            _printHelper.ConfigurePrinting(_viewModel.Pictures);
         }
 
+        /// <summary>
+        /// Invoked immediately after the Page is unloaded and is no longer the current source of a parent Frame.
+        /// </summary>
+        /// <param name="e">Event data that can be examined by overriding code. The event data is representative of the navigation that has unloaded the current Page.</param>
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
+            _printHelper.DetachPrinting();
+
             _navigationHelper.OnNavigatedFrom(e);
         }
 
