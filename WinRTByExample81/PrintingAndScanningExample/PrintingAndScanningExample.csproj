@@ -107,10 +107,6 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <Page Include="ItemDetailPage1.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -127,6 +123,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Scanning\ScanningControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Common\CommonAssemblyInfo.cs">
@@ -139,16 +139,13 @@
     <Compile Include="Common\ObservableDictionary.cs" />
     <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
-    <Compile Include="CustomPrintLayoutOptionHelper.cs" />
-    <Compile Include="ItemDetailPage1.xaml.cs">
-      <DependentUpon>ItemDetailPage1.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="Printing\CustomPrintLayoutOptionHelper.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="PictureModel.cs" />
     <Compile Include="PicturesViewModel.cs" />
-    <Compile Include="PrintHelper.cs" />
+    <Compile Include="Printing\PrintHelper.cs" />
     <Compile Include="PrintTemplates\BooleanToVisibilityConverter.cs" />
     <Compile Include="PrintTemplates\PrintLayout.cs" />
     <Compile Include="PrintTemplates\PictureModelLayout.xaml.cs">
@@ -163,7 +160,12 @@
     </Compile>
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ScannerHelper.cs" />
+    <Compile Include="Scanning\ScannerHelper.cs" />
+    <Compile Include="Scanning\ScannerModel.cs" />
+    <Compile Include="Scanning\ScanningControl.xaml.cs">
+      <DependentUpon>ScanningControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Scanning\ScanningControlViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

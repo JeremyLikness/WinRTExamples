@@ -1,0 +1,68 @@
+﻿<UserControl
+    x:Class="PrintingAndScanningExample.ScanningControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PrintingAndScanningExample"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Height="500"
+    Width="400"
+    d:DataContext="{d:DesignInstance local:DesignScanningControlViewModel, d:IsDesignTimeCreatable=True}">
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Scanners: " VerticalAlignment="Center" FontSize="{ThemeResource ControlContentThemeFontSize}" Margin="5" />
+            <ComboBox Grid.Column="1" Margin="5" ItemsSource="{Binding Scanners}" SelectedItem="{Binding SelectedScanner, Mode=TwoWay}" DisplayMemberPath="Name"/>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Sources: " VerticalAlignment="Center" FontSize="{ThemeResource ControlContentThemeFontSize}" Margin="5" />
+            <ComboBox Grid.Column="1" Margin="5" ItemsSource="{Binding ScanSources}" SelectedItem="{Binding SelectedScanSource, Mode=TwoWay}" DisplayMemberPath="SourceType"/>
+        </Grid>
+        <Grid Grid.Row="2" Margin="5" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Slider Grid.Row="1" Grid.Column="0" Orientation="Vertical" 
+                    Minimum="0" Maximum="1" LargeChange="0.1" SmallChange="0.01" StepFrequency="0.01" 
+                    IsDirectionReversed="True"
+                    IsEnabled ="{Binding IsPreviewLoaded}"
+                    Value="{Binding VerticalScanPercentage, Mode=TwoWay}" />
+            <Slider Grid.Row="0" Grid.Column="1" Orientation="Horizontal" 
+                    Minimum="0" Maximum="1" LargeChange="0.1" SmallChange="0.01" StepFrequency="0.01" 
+                    IsEnabled ="{Binding IsPreviewLoaded}"
+                    Value="{Binding HorizontalScanPercentage, Mode=TwoWay}"/>
+            <Grid Grid.Row="1" Grid.Column="1" Background="LightGray">
+                <Image Source="{Binding PreviewImage}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Content="Preview" HorizontalAlignment="Stretch" Command="{Binding ScanPreviewCommand}" Margin="5" />
+            <Button Grid.Column="1" Content="Scan and Open" HorizontalAlignment="Stretch" Command="{Binding ScanPictureCommand}" Margin="5" />
+        </Grid>
+    </Grid>
+</UserControl>
