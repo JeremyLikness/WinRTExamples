@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
@@ -19,13 +20,11 @@ namespace PrintingAndScanningExample
         #region Fields
 
         private readonly PrintHelper _printHelper;
-        private readonly ScannerHelper _scannerHelper;
 
         private readonly ObservableCollection<PictureModel> _pictures = new ObservableCollection<PictureModel>();
         private PictureModel _currentPicture;
 
         private RelayCommand _addPictureCommand;
-        private RelayCommand _scanPictureCommand;
         private RelayCommand _printPreviewCommand;
         private RelayCommand _deleteCurrentPictureCommand;
 
@@ -37,19 +36,17 @@ namespace PrintingAndScanningExample
         /// Initializes a new instance of the <see cref="PicturesViewModel"/> class.
         /// </summary>
         /// <param name="printHelper">The print helper.</param>
-        /// <param name="scannerHelper">The scanner helper.</param>
         /// <exception cref="System.ArgumentNullException">
         /// printHelper
         /// or
         /// scannerHelper
         /// </exception>
-        public PicturesViewModel([NotNull] PrintHelper printHelper, [NotNull] ScannerHelper scannerHelper)
+        public PicturesViewModel([NotNull] PrintHelper printHelper)
         {
             if (printHelper == null) throw new ArgumentNullException("printHelper");
-            if (scannerHelper == null) throw new ArgumentNullException("scannerHelper");
 
             _printHelper = printHelper;
-            _scannerHelper = scannerHelper;
+            _pictures.CollectionChanged += (sender, args) => PrintPreviewCommand.RaiseCanExecuteChanged();
         }
 
         /// <summary>
@@ -79,22 +76,17 @@ namespace PrintingAndScanningExample
             }
         }
 
-        public ICommand AddPictureCommand
+        public RelayCommand AddPicturesCommand
         {
-            get { return _addPictureCommand ?? (_addPictureCommand = new RelayCommand(AddPicture)); }
+            get { return _addPictureCommand ?? (_addPictureCommand = new RelayCommand(AddPictures)); }
         }
 
-        public ICommand ScanPictureCommand
-        {
-            get { return _scanPictureCommand ?? (_scanPictureCommand = new RelayCommand(ScanPicture)); }
-        }
-
-        public ICommand PrintPreviewCommand
+        public RelayCommand PrintPreviewCommand
         {
             get { return _printPreviewCommand ?? (_printPreviewCommand = new RelayCommand(ShowPrintPreview, CanShowPrintPreview)); }
         }
 
-        public ICommand DeleteCurrentPictureCommand
+        public RelayCommand DeleteCurrentPictureCommand
         {
             get
             {
@@ -103,15 +95,11 @@ namespace PrintingAndScanningExample
             }
         }
 
-        private async void AddPicture()
+        public async Task AddPicturesFromFiles([NotNull] IEnumerable<StorageFile> files)
         {
-            var picker = new FileOpenPicker
-                         {
-                             FileTypeFilter = { ".jpg", ".jpeg", ".bmp", ".png" },
-                             SuggestedStartLocation = PickerLocationId.PicturesLibrary,
-                             ViewMode = PickerViewMode.Thumbnail
-                         };
-            var files = await picker.PickMultipleFilesAsync();
+            if (files == null) throw new ArgumentNullException("files");
+
+            PictureModel pictureModel = null;
             foreach (var file in files)
             {
                 var bitmap = new BitmapImage();
@@ -121,21 +109,29 @@ namespace PrintingAndScanningExample
                 var thumbnail = new BitmapImage();
                 var thumbnailStream = await file.GetThumbnailAsync(ThumbnailMode.PicturesView);
                 thumbnail.SetSource(thumbnailStream);
-                var pictureModel = new PictureModel
-                                   {
-                                       Caption = file.DisplayName,
-                                       Picture = bitmap,
-                                       Thumbnail = thumbnail
-                                   };
+                pictureModel = new PictureModel
+                {
+                    Caption = file.DisplayName,
+                    Picture = bitmap,
+                    Thumbnail = thumbnail
+                };
                 _pictures.Add(pictureModel);
-                CurrentPicture = pictureModel;
             }
-            _printPreviewCommand.RaiseCanExecuteChanged();
+
+            // Set the current picture once all of the pictures have been added
+            if (pictureModel != null) CurrentPicture = pictureModel;
         }
 
-        private void ScanPicture()
+        private async void AddPictures()
         {
-            _scannerHelper.ScanPicture();
+            var picker = new FileOpenPicker
+                         {
+                             FileTypeFilter = { ".jpg", ".jpeg", ".bmp", ".png" },
+                             SuggestedStartLocation = PickerLocationId.PicturesLibrary,
+                             ViewMode = PickerViewMode.Thumbnail
+                         };
+            var files = await picker.PickMultipleFilesAsync();
+            await AddPicturesFromFiles(files);
         }
 
         private async void ShowPrintPreview()
@@ -158,6 +154,8 @@ namespace PrintingAndScanningExample
             return _currentPicture != null;
         }
 
+        #region INotifyPropertyChanged Implementation
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
@@ -165,7 +163,10 @@ namespace PrintingAndScanningExample
         {
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
-        }
+        } 
+
+        #endregion
+
     }
 
     public class SamplePicturesViewModel : PicturesViewModel

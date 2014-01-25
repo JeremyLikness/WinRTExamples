@@ -1,6 +1,9 @@
 ﻿using System;
-using System.Linq;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Navigation;
 using PrintingAndScanningExample.Common;
 
@@ -30,7 +33,7 @@ namespace PrintingAndScanningExample
         /// </summary>
         public MainPage()
         {
-            _viewModel = new PicturesViewModel(_printHelper, _scannerHelper);
+            _viewModel = new PicturesViewModel(_printHelper);
 
             InitializeComponent();
             _navigationHelper = new NavigationHelper(this);
@@ -113,5 +116,28 @@ namespace PrintingAndScanningExample
         }
 
         #endregion
+
+        private void HandleScanButtonClicked(Object sender, RoutedEventArgs args)
+        {
+            var flyout = (Flyout)FlyoutBase.GetAttachedFlyout((FrameworkElement)sender);
+            var flyoutContent = (FrameworkElement)flyout.Content;
+            var scanningControlViewModel = new ScanningControlViewModel(_scannerHelper);
+            scanningControlViewModel.GetScanners();
+
+            // Subscribe to receive scanned pics and then close the dialog
+            scanningControlViewModel.ScanCompleted += async (o, e) =>
+            {
+                await _viewModel.AddPicturesFromFiles(e.ScannedFiles);
+                flyout.Hide();
+            };
+
+            scanningControlViewModel.ScanProgressChanged += (o, e) =>
+                                                            {
+                                                                Debug.WriteLine("Scan Progress: {0}", e.ScanProgress);
+                                                            };
+            
+            flyoutContent.DataContext = scanningControlViewModel;
+            flyout.ShowAt((FrameworkElement)sender);
+        }
     }
 }

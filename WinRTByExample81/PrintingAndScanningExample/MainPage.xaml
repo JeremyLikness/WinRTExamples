@@ -13,8 +13,14 @@
     <Page.BottomAppBar>
         <CommandBar>
             <AppBarButton Icon="Preview" Label="Print Preview" Command="{Binding PrintPreviewCommand}"/>
-            <AppBarButton Icon="Scan" Label="Scan" Command="{Binding ScanPictureCommand}"/>
-            <AppBarButton Icon="Camera" Label="Add Picture" Command="{Binding AddPictureCommand}"/>
+            <AppBarButton Icon="Scan" Label="Scan" Click="HandleScanButtonClicked">
+                <FlyoutBase.AttachedFlyout>
+                    <Flyout>
+                        <local:ScanningControl/>
+                    </Flyout>
+                </FlyoutBase.AttachedFlyout>
+            </AppBarButton>
+            <AppBarButton Icon="Camera" Label="Add Pictures" Command="{Binding AddPicturesCommand}"/>
             <!--<AppBarButton Icon="OpenFile" Label="Add Picture"/>-->
             
             <CommandBar.SecondaryCommands>
