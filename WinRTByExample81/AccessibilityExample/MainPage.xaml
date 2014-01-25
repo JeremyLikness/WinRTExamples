@@ -13,7 +13,7 @@
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <Button Grid.Row="0" Content="Change Theme" Click="ChangeThemeOnClick"></Button>
-        <Grid Grid.Row="1" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="White">
+        <Grid Grid.Row="1" Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="White">
             <Grid.Resources>
                 <Style x:Name="GreenStackPanelStyle" TargetType="StackPanel">
                     <Setter Property="Background" Value="Green"/>
@@ -25,7 +25,8 @@
                 </Style>
             </Grid.Resources>
             <Grid.RowDefinitions>
-                
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="200"/>
@@ -33,11 +34,37 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <TextBlock Text="Non-Accessible" Style="{StaticResource SubheaderTextBlockStyle}"/>
-            <StackPanel Grid.Column="2" Style="{StaticResource GreenStackPanelStyle}">
-                <TextBlock Text="Here is some text that you can highlight, perhaps to copy." Style="{StaticResource GreenBlockStyle}"></TextBlock>
-            </StackPanel>           
+            <StackPanel Grid.Row="0" Grid.Column="2" Style="{StaticResource GreenStackPanelStyle}">
+                <TextBlock Text="Here is some text that you can highlight, perhaps to copy." Margin="10" Style="{StaticResource GreenBlockStyle}"></TextBlock>
+            </StackPanel>   
+            <Grid Grid.Row="1" Grid.Column="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Style="{StaticResource SubheaderTextBlockStyle}" Text="Name:" Margin="5"/>
+                <TextBlock Grid.Column="0" Grid.Row="1" Style="{StaticResource SubheaderTextBlockStyle}" Text="Age:" Margin="5"/>
+                <TextBox Grid.Row="0" x:Name="NameBox" Grid.Column="1" Margin="5"/>
+                <TextBlock x:Name="NameError" Text="Name is Required." Style="{StaticResource SubheaderTextBlockStyle}" Margin="5" Foreground="Red" Grid.Row="0" Grid.Column="2"/>
+                <TextBox Grid.Row="1" x:Name="AgeBox" Grid.Column="1" Margin="5"/>
+                <TextBlock x:Name="AgeError" Text="Age Must be Numeric Between 2 and 199." Style="{StaticResource SubheaderTextBlockStyle}" Foreground="Red" Grid.Row="1" Margin="5" Grid.Column="2"/>
+                <StackPanel Grid.Column="0" Grid.Row="2" Orientation="Vertical" Background="Black">
+                    <Image PointerPressed="ImageOnPointerPressed" Source="ms-appx:///Assets/Logo.png" Margin="5"/>
+                    <TextBlock Text="Example App" Foreground="White" Margin="10 -25 0 0"/>
+                </StackPanel>
+                <StackPanel Grid.Row="2" Orientation="Horizontal" Grid.Column="2">
+                    <Button Content="Reset" Click="NonAccessibleResetOnClick"></Button>
+                    <Button Content="Submit" Click="NonAccessibleSubmitOnClick"></Button>
+                </StackPanel>
+            </Grid>
         </Grid>
-        <Grid Grid.Row="2" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid Grid.Row="2" Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
             <Grid.Resources>
                 <ResourceDictionary>
                     <ResourceDictionary.ThemeDictionaries>
@@ -74,7 +101,8 @@
                 </ResourceDictionary>                
             </Grid.Resources>
             <Grid.RowDefinitions>
-
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="200"/>
@@ -82,9 +110,39 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <TextBlock Text="Accessible" Style="{StaticResource SubheaderTextBlockStyle}"/>
-            <StackPanel Grid.Column="2" Style="{StaticResource GreenStackPanelAccessibleStyle}">
-                <TextBlock Text="Here is some text that you can highlight, perhaps to copy." Style="{StaticResource GreenBlockAccessibleStyle}"/>
+            <StackPanel Grid.Row="0" Grid.Column="2" Style="{StaticResource GreenStackPanelAccessibleStyle}">
+                <TextBlock Text="Here is some text that you can highlight, perhaps to copy." Margin="10" Style="{StaticResource GreenBlockAccessibleStyle}"/>
             </StackPanel>
+            <Grid Grid.Row="1" Grid.Column="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock x:Name="NameLabel" Grid.Row="0" Style="{StaticResource SubheaderTextBlockStyle}" Text="Name:" Margin="10"/>
+                <TextBlock x:Name="AgeLabel" Grid.Column="0" Grid.Row="1" Style="{StaticResource SubheaderTextBlockStyle}" Text="Age:" Margin="10"/>
+                <TextBox TabIndex="1000" Grid.Row="0" x:Name="AccessibleNameBox" 
+                         Grid.Column="1" Margin="10" AutomationProperties.LabeledBy="{Binding ElementName=NameLabel}"/>
+                <TextBlock x:Name="AccessibleNameError" Text="Name is Required." Style="{StaticResource SubheaderTextBlockStyle}" Margin="10" Foreground="Red" Grid.Row="0" Grid.Column="2"/>
+                <TextBox TabIndex="2000" Grid.Row="1" 
+                         x:Name="AccessibleAgeBox" Grid.Column="1" Margin="10" AutomationProperties.LabeledBy="{Binding ElementName=AgeLabel}"/>
+                <TextBlock x:Name="AccessibleAgeError" Text="Age Must be Numeric Between 2 and 199." Style="{StaticResource SubheaderTextBlockStyle}" Foreground="Red" Grid.Row="1" Margin="10" Grid.Column="2"/>
+                <Button TabIndex="2500" Grid.Column="0" Grid.Row="2" Click="AccessibleImageButtonOnClick" AutomationProperties.LabeledBy="{Binding ElementName=ExampleAppCaption}">
+                    <StackPanel Orientation="Vertical" Background="Black">
+                        <Image Source="ms-appx:///Assets/Logo.png" Margin="10" AutomationProperties.LabeledBy="{Binding ElementName=ExampleAppCaption}" AutomationProperties.HelpText="An image of the book cover."/>
+                        <TextBlock Text="Example App" x:Name="ExampleAppCaption" Foreground="White" Margin="10 -25 0 0"/>
+                    </StackPanel>
+                </Button>
+                <StackPanel Grid.Row="2" Orientation="Horizontal" Grid.Column="2">
+                    <Button TabIndex="4000" Content="Reset" Click="AccessibleResetOnClick"></Button>
+                    <Button TabIndex="3000" Content="Submit" Click="AccessibleSubmitOnClick"></Button>
+                </StackPanel>
+            </Grid>
         </Grid>
     </Grid>
 </Page>
