@@ -179,20 +179,22 @@ namespace PrintingAndScanningExample
             {
                 Debug.WriteLine("Default format is {0}", formatConfiguration.DefaultFormat);
 
+                // NOTE: If your desired format isn't natively supported, it may be possible to generate
+                // the desired format post-process using image conversion, etc. libraries.
                 if (formatConfiguration.IsFormatSupported(ImageScannerFormat.Png))
                     formatConfiguration.Format = ImageScannerFormat.Png;
                 else if (formatConfiguration.IsFormatSupported(ImageScannerFormat.Jpeg))
                     formatConfiguration.Format = ImageScannerFormat.Jpeg;
-                else if (formatConfiguration.IsFormatSupported(ImageScannerFormat.Pdf))
-                    formatConfiguration.Format = ImageScannerFormat.Pdf;
+                else if (formatConfiguration.IsFormatSupported(ImageScannerFormat.DeviceIndependentBitmap))
+                    formatConfiguration.Format = ImageScannerFormat.DeviceIndependentBitmap;
                 //else if (formatConfiguration.IsFormatSupported(ImageScannerFormat.Tiff))
                 //    formatConfiguration.Format = ImageScannerFormat.Tiff;
+                //else if (formatConfiguration.IsFormatSupported(ImageScannerFormat.Pdf))
+                //    formatConfiguration.Format = ImageScannerFormat.Pdf;
                 //else if (formatConfiguration.IsFormatSupported(ImageScannerFormat.Xps))
                 //    formatConfiguration.Format = ImageScannerFormat.Xps;
                 //else if (formatConfiguration.IsFormatSupported(ImageScannerFormat.OpenXps))
                 //    formatConfiguration.Format = ImageScannerFormat.OpenXps;
-                // NOTE: If your desired format isn't natively supported, it may be possible to generate
-                // the desired format post-process using image conversion, etc. libraries.
 
                 Debug.WriteLine("Configured format is {0}", formatConfiguration.Format);
             }
