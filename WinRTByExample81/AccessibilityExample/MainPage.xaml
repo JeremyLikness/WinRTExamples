@@ -6,6 +6,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="GridBackgroundStyle" Color="White"/>
+    </UserControl.Resources>
     <Grid x:Name="LayoutRoot" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" RequestedTheme="{Binding Path=CurrentTheme, Mode=OneWay}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -13,7 +16,7 @@
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <Button Grid.Row="0" Content="Change Theme" Click="ChangeThemeOnClick"></Button>
-        <Grid Grid.Row="1" Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="White">
+        <Grid Grid.Row="1" Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{StaticResource GridBackgroundStyle}">
             <Grid.Resources>
                 <Style x:Name="GreenStackPanelStyle" TargetType="StackPanel">
                     <Setter Property="Background" Value="Green"/>

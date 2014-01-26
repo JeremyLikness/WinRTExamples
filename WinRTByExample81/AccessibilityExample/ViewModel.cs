@@ -3,6 +3,7 @@
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
 
+    using Windows.Storage;
     using Windows.UI.Xaml;
 
     public class ViewModel : INotifyPropertyChanged
@@ -25,7 +26,8 @@
 
         public void ToggleTheme()
         {
-            this.CurrentTheme = this.currentTheme == ElementTheme.Dark ? ElementTheme.Light : ElementTheme.Dark;            
+            this.CurrentTheme = this.currentTheme == ElementTheme.Dark ? ElementTheme.Light : ElementTheme.Dark;
+            ApplicationData.Current.RoamingSettings.Values["Theme"] = this.CurrentTheme == ElementTheme.Light ? "Light" : "Dark";
         }
 
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
