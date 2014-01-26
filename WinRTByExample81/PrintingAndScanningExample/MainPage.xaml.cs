@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -101,7 +100,7 @@ namespace PrintingAndScanningExample
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             _navigationHelper.OnNavigatedTo(e);
-            _printHelper.ConfigurePrinting(_viewModel.Pictures);
+            _printHelper.ConfigurePrinting(() => _viewModel.Pictures);
         }
 
         /// <summary>
@@ -111,7 +110,6 @@ namespace PrintingAndScanningExample
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             _printHelper.DetachPrinting();
-
             _navigationHelper.OnNavigatedFrom(e);
         }
 
@@ -132,9 +130,9 @@ namespace PrintingAndScanningExample
             };
 
             scanningControlViewModel.ScanProgressChanged += (o, e) =>
-                                                            {
-                                                                Debug.WriteLine("Scan Progress: {0}", e.ScanProgress);
-                                                            };
+            {
+                Debug.WriteLine("Scan Progress: {0}", e.ScanProgress);
+            };
             
             flyoutContent.DataContext = scanningControlViewModel;
             flyout.ShowAt((FrameworkElement)sender);

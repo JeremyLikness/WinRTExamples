@@ -53,7 +53,7 @@
                     IsEnabled ="{Binding IsPreviewLoaded}"
                     Value="{Binding HorizontalScanPercentage, Mode=TwoWay}"/>
             <Grid Grid.Row="1" Grid.Column="1" Background="LightGray">
-                <Image Source="{Binding PreviewImage}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <Image Source="{Binding PreviewImage}" Stretch="Fill" HorizontalAlignment="Left" VerticalAlignment="Top"/>
             </Grid>
         </Grid>
         <Grid Grid.Row="3">

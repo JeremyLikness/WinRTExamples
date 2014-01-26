@@ -6,7 +6,7 @@ using PrintingAndScanningExample.Annotations;
 
 namespace PrintingAndScanningExample
 {
-    public class CustomPrintLayoutOptionHelper
+    public class CustomPrintOptionsHelper
     {
         private const String LayoutOptionId = "PageLayout";
         private const String PreviewTypeOptionId = "PreviewType";
@@ -24,10 +24,12 @@ namespace PrintingAndScanningExample
             selectedLayoutOption.AddItem(PrintLayoutId.LayoutOneByOne.ToString(), PrintLayout.PrintLayouts[PrintLayoutId.LayoutOneByOne].LayoutName);
             selectedLayoutOption.AddItem(PrintLayoutId.LayoutTwoByTwo.ToString(), PrintLayout.PrintLayouts[PrintLayoutId.LayoutTwoByTwo].LayoutName);
 
+            // Create the list of options for choosing whether the preview should use thumbnails or full-res images
             var previewTypeOption = printDetailedOptions.CreateItemListOption(PreviewTypeOptionId, "Preview Type");
             previewTypeOption.AddItem(PreviewTypeOption.Thumbnails.ToString(), "Thumbnails");
             previewTypeOption.AddItem(PreviewTypeOption.FullRes.ToString(), "Full Res");
 
+            // Create the option that allows users to provide a page title for the printout
             var pageTitleOption = printDetailedOptions.CreateTextOption(PageTitleOptionId, "Page Title");
             pageTitleOption.TrySetValue("Windows Runtime by Example");
 
@@ -88,13 +90,17 @@ namespace PrintingAndScanningExample
             }
         }
 
+        #region CustomPrintOptionChanged event
+
         public event EventHandler CustomPrintOptionChanged;
 
         protected virtual void OnCustomPrintOptionChanged()
         {
             EventHandler handler = CustomPrintOptionChanged;
             if (handler != null) handler(this, EventArgs.Empty);
-        }
+        } 
+
+        #endregion
     }
 
     public enum PreviewTypeOption
