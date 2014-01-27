@@ -61,28 +61,36 @@
                         IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,30,40"/>
         </Grid>
         <Grid Grid.Row="1" Margin="40,0,40,40">
-            <FlipView ItemsSource="{Binding Pictures}" SelectedItem="{Binding CurrentPicture, Mode=TwoWay}">
-                <FlipView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <Image Grid.Row="0" Grid.Column="0" Source="{Binding Thumbnail}" VerticalAlignment="Center" HorizontalAlignment="Center" Width="100"/>
-                            <Image Grid.Row="0" Grid.Column="1" Source="{Binding Picture}"/>
-                            <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <TextBlock Text="Caption: " VerticalAlignment="Center" FontSize="16"/>
-                                <TextBox Text="{Binding Caption}" Margin="5"/>
-                            </StackPanel>
-                        </Grid>
-                    </DataTemplate>
-                </FlipView.ItemTemplate>
-            </FlipView>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Select some pictures to print by using the options available from the app bar, below." Style="{StaticResource SubheaderTextBlockStyle}" Margin="0,0,0,10"></TextBlock>
+                <FlipView Grid.Row="1" ItemsSource="{Binding Pictures}" SelectedItem="{Binding CurrentPicture, Mode=TwoWay}">
+                    <FlipView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Image Grid.Row="0" Grid.Column="0" Source="{Binding Thumbnail}"
+                                       VerticalAlignment="Center" HorizontalAlignment="Center" Width="100" />
+                                <Image Grid.Row="0" Grid.Column="1" Source="{Binding Picture}" />
+                                <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal"
+                                            HorizontalAlignment="Center">
+                                    <TextBlock Text="Caption: " VerticalAlignment="Center" FontSize="16" />
+                                    <TextBox Text="{Binding Caption}" Margin="5" />
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </FlipView.ItemTemplate>
+                </FlipView></Grid>
         </Grid>
     </Grid>
 </Page>

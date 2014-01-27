@@ -6,7 +6,7 @@ namespace PrintingAndScanningExample
 {
     public class PrintLayout
     {
-        public static Dictionary<PrintLayoutId, PrintLayout> PrintLayouts = new Dictionary<PrintLayoutId, PrintLayout>
+        public static Dictionary<PrintLayoutId, PrintLayout> Layouts = new Dictionary<PrintLayoutId, PrintLayout>
         {
             {PrintLayoutId.LayoutOneByOne, new PrintLayout
                                         {

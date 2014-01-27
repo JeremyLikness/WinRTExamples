@@ -5,9 +5,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Graphics.Printing;
+using Windows.Graphics.Printing.OptionDetails;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Printing;
-using PrintingAndScanningExample.Annotations;
 
 namespace PrintingAndScanningExample
 {
@@ -18,9 +18,8 @@ namespace PrintingAndScanningExample
         private readonly SynchronizationContext _syncContext = SynchronizationContext.Current;
 
         private readonly PrintDocument _printDocument;
-        private readonly CustomPrintOptionsHelper _customPrintOptionsHelper;
 
-        private Func<IEnumerable<PictureModel>> _pictureProvider;
+        private readonly Func<IEnumerable<PictureModel>> _pictureProvider;
 
         #endregion
 
@@ -29,8 +28,13 @@ namespace PrintingAndScanningExample
         /// <summary>
         /// Initializes a new instance of the <see cref="PrintHelper"/> class.
         /// </summary>
-        public PrintHelper()
+        public PrintHelper(Func<IEnumerable<PictureModel>> pictureProvider)
         {
+            if (pictureProvider == null) throw new ArgumentNullException("pictureProvider");
+            
+            // Store the callback to use to obtain the list of pictures to print
+            _pictureProvider = pictureProvider;
+
             // Set up the Print Document
             _printDocument = new PrintDocument();
 
@@ -42,55 +46,36 @@ namespace PrintingAndScanningExample
 
             // This is called when the system is ready to start printing and provides the final pages
             _printDocument.AddPages += HandleAddPages;
-
-            // Set up the custom options helper
-            _customPrintOptionsHelper = new CustomPrintOptionsHelper();
-
-            // Event raised when a change is made to the the custom print option 
-            _customPrintOptionsHelper.CustomPrintOptionChanged += (sender, args) =>
-            {
-                // Called to inform that the custom template setting has changed
-                // Refresh all of teh content by invalidating the current preview
-                // This has to happen on the UI thread, though the call is originating elsewhere.
-                _syncContext.Post(x => _printDocument.InvalidatePreview(), null);
-            };
         } 
 
         #endregion
 
-        #region Public Interface
+        #region Interacting with the Print Manager
 
         /// <summary>
         /// Attaches to the printing process and configures the various event handlers.
         /// </summary>
-        /// <param name="pictureProvider">A callback function to use to retrieve the pictures to be printed.</param>
         /// <exception cref="System.ArgumentNullException">pictureCollection</exception>
-        public void ConfigurePrinting([NotNull] Func<IEnumerable<PictureModel>> pictureProvider)
+        public void ConfigurePrinting()
         {
-            if (pictureProvider == null) throw new ArgumentNullException("pictureProvider");
-            _pictureProvider = pictureProvider;
-
-            // Actually connect to the PrintManager and let it know that the app now supports printing
-            // If this handler is declared, printers are shown when the Device Charm is
-            // invoked and "Printing" is selected.  Put another way, when there is a handler, 
-            // there is an expectation that printing is currently possible.
-            // Important note: If this is handler is subscribed to twice, an exception is thrown
+            // Connect to the PrintManager and so the app will be notified of requests to print
             var printManager = PrintManager.GetForCurrentView();
             printManager.PrintTaskRequested += HandlePrintTaskRequested;
 
+            //// Important note: If this is handler is subscribed to more than once, an exception is thrown
             //try
             //{
             //    printManager.PrintTaskRequested += HandlePrintTaskRequested;
             //}
-            //catch (Exception e)
+            //catch (InvalidOperationException e)
             //{
-            //    System.Diagnostics.Debug.WriteLine("Double-Tap: {0}",e);
+            //    Debug.WriteLine("Printing configuration error: {0}", e);
             //}
         }
 
         public void DetachPrinting()
         {
-            // Detach from the PrintManager's PrintTaskRequested event to remove the expectation that printing is available
+            // Detach from the PrintManager's PrintTaskRequested event
             var printManager = PrintManager.GetForCurrentView();
             printManager.PrintTaskRequested -= HandlePrintTaskRequested;
         }
@@ -104,13 +89,22 @@ namespace PrintingAndScanningExample
         
         #region Print Task (Job) Configuration
 
-        private void HandlePrintTaskRequested(PrintManager sender, PrintTaskRequestedEventArgs args)
+        private void HandlePrintTaskRequested
+            (PrintManager sender, PrintTaskRequestedEventArgs args)
         {
             // Called when printing is first requested (Device Charm / Printing or programmatically)
             Debug.WriteLine("PrintTask Requested");
 
+            // Make sure there actually are some pictures to be printed.  Returning without defining a task will
+            // inform the user the app is not currently ready to print before even letting them choose a printer.
+            var picturesToBePrinted = _pictureProvider();
+            if (!picturesToBePrinted.Any()) return;
+
             // Create the task, which includes a name and a callback handler for what to do when a printer is actually selected
-            var printTask = args.Request.CreatePrintTask("Windows Runtime By Example Printing", HandlePrintTaskSourceRequested);
+            // If a task is created in this way, there is an expectation that printing is currently possible.
+            var printTask = args.Request.CreatePrintTask(
+                "WinRT Printing Example", 
+                HandlePrintTaskSourceRequested);
 
             // Subscribe to lifecycle events for the current task/job 
             // Note - Unsubscribe in "completed", which will always be called
@@ -121,17 +115,16 @@ namespace PrintingAndScanningExample
 
             // Define the list of print options to be shown for the current task/job
             // Indicate which standard options should be included/not included
-            var previewDisplayedOptions = printTask.Options.DisplayedOptions;
-            previewDisplayedOptions.Clear();
-            previewDisplayedOptions.Add(StandardPrintTaskOptions.Copies);
-            previewDisplayedOptions.Add(StandardPrintTaskOptions.Orientation);
+            var printOptions = printTask.Options.DisplayedOptions;
+            printOptions.Clear();
+            printOptions.Add(StandardPrintTaskOptions.Copies);
+            printOptions.Add(StandardPrintTaskOptions.Orientation);
 
-            // Add/incorporate the app's custom print options into the list of print options, above
-            var customOptions = _customPrintOptionsHelper.ConfigureCustomOptions(printTask.Options);
-            foreach (var customOption in customOptions)
-            {
-                previewDisplayedOptions.Add(customOption.OptionId);
-            }
+            // Change the default orienation to Landscape
+            printTask.Options.Orientation = PrintOrientation.Landscape;
+
+            // Add/incorporate the app's custom print options into the list of print options
+            ConfigureCustomOptions(printTask.Options);
             
             // If the work done to pull together the PrintTask is asynchronous, need to work with a deferral
             // var deferral = args.Request.GetDeferral();
@@ -139,26 +132,166 @@ namespace PrintingAndScanningExample
             // deferral.Complete();
         }
 
-        private void HandlePrintTaskSourceRequested(PrintTaskSourceRequestedArgs args)
+        private void HandlePrintTaskSourceRequested
+            (PrintTaskSourceRequestedArgs args)
         {
+            // Called when a printer is selected from the printers list panel 
             Debug.WriteLine("PrintTask Source Requested");
-            // Called when a printer device is selected
+
+            // Request a deferral to accommodate the async operation
             var deferral = args.GetDeferral();
 
-            // Set the document source for the current print request.  This MUST happen on the UI thread.
+            // Set the document source for the current print job.
+            // This MUST happen on the UI thread.
             _syncContext.Post(x =>
             {
                 args.SetSource(_printDocument.DocumentSource);
 
-                // Complete the deferral to indicate that all related async operations have completed
+                // Complete the deferral to indicate completion
                 deferral.Complete();
             }, null);
         }
 
         #endregion
 
+        #region Custom Print Options
+
+        private const String LayoutOptionId = "PageLayout";
+        private const String PreviewTypeOptionId = "PreviewType";
+        private const String PageTitleOptionId = "PageTitle";
+        private const PrintLayoutId DefaultPrintLayoutId = PrintLayoutId.LayoutOneByOne;
+        private const PreviewTypeOption DefaultPreviewTypeOption = PreviewTypeOption.Thumbnails;
+        private const String DefaultPageTitle = "WinRT by Example";
+
+        private enum PreviewTypeOption
+        {
+            Thumbnails,
+            FullRes
+        }
+
+        private void ConfigureCustomOptions(PrintTaskOptions printTaskOptions)
+        {
+            if (printTaskOptions == null) 
+                throw new ArgumentNullException("printTaskOptions");
+            
+            var detailedOptions = 
+                PrintTaskOptionDetails.GetFromPrintTaskOptions(printTaskOptions);
+            
+            // Create the list of options for choosing a layout
+            var selectedLayoutOption = detailedOptions.CreateItemListOption(
+                LayoutOptionId, "Layout");
+            selectedLayoutOption.AddItem(
+                PrintLayoutId.LayoutOneByOne.ToString(), 
+                PrintLayout.Layouts[PrintLayoutId.LayoutOneByOne].LayoutName);
+
+            selectedLayoutOption.AddItem(
+                PrintLayoutId.LayoutTwoByTwo.ToString(), 
+                PrintLayout.Layouts[PrintLayoutId.LayoutTwoByTwo].LayoutName);
+
+            selectedLayoutOption.TrySetValue(DefaultPrintLayoutId.ToString());
+            detailedOptions.DisplayedOptions.Add(LayoutOptionId);
+
+            // Create the list of options for choosing whether the preview 
+            // should use thumbnails or full-res images
+            var previewTypeOption = detailedOptions.CreateItemListOption(
+                PreviewTypeOptionId, "Preview Type");
+            previewTypeOption.AddItem(
+                PreviewTypeOption.Thumbnails.ToString(), 
+                "Thumbnails");
+            previewTypeOption.AddItem(
+                PreviewTypeOption.FullRes.ToString(), 
+                "Full Res");
+
+            previewTypeOption.TrySetValue(DefaultPreviewTypeOption.ToString());
+            detailedOptions.DisplayedOptions.Add(PreviewTypeOptionId);
+
+            // Create the option that allows users to provide a page title 
+            // for the printout
+            var pageTitleOption = detailedOptions.CreateTextOption(
+                PageTitleOptionId, "Page Title");
+            pageTitleOption.TrySetValue(DefaultPageTitle);
+            detailedOptions.DisplayedOptions.Add(PageTitleOptionId);
+
+            detailedOptions.OptionChanged += HandleCustomOptionsOptionChanged;
+
+        }
+
+        private void HandleCustomOptionsOptionChanged
+            (PrintTaskOptionDetails sender, PrintTaskOptionChangedEventArgs args)
+        {
+            // Called in response to a setting being changed.  
+            // Determine if it was a custom setting and react accordingly
+            var optionId = args.OptionId as String;
+
+            if (LayoutOptionId.Equals(optionId) 
+                || PreviewTypeOptionId.Equals(optionId) 
+                || PageTitleOptionId.Equals(optionId))
+            {
+                // Invalidate the preview content to force it to refresh.
+                // This has to happen on the UI thread.
+                _syncContext.Post(x => _printDocument.InvalidatePreview(), null);
+            }
+        }
+
+        private PrintLayout GetSelectedPrintLayout(PrintTaskOptions printTaskOptions)
+        {
+            if (printTaskOptions == null) throw new ArgumentNullException("printTaskOptions");
+
+            var detailedOptions = 
+                PrintTaskOptionDetails.GetFromPrintTaskOptions(printTaskOptions);
+            var result = PrintLayout.Layouts[DefaultPrintLayoutId];
+            IPrintOptionDetails option;
+            if (detailedOptions.Options.TryGetValue(LayoutOptionId, out option))
+            {
+                var selectedValueText = option.Value as String;
+                if (!String.IsNullOrWhiteSpace(selectedValueText))
+                {
+                    var selectedLayout = (PrintLayoutId)Enum.Parse(typeof(PrintLayoutId), selectedValueText);
+                    result = PrintLayout.Layouts[selectedLayout];
+                }
+            }
+
+            return result;
+        }
+
+        private PreviewTypeOption GetSelectedPreviewType(PrintTaskOptions printTaskOptions)
+        {
+            if (printTaskOptions == null) throw new ArgumentNullException("printTaskOptions");
+
+            var detailedOptions = 
+                PrintTaskOptionDetails.GetFromPrintTaskOptions(printTaskOptions);
+            var result = DefaultPreviewTypeOption;
+            IPrintOptionDetails option;
+            if (detailedOptions.Options.TryGetValue(PreviewTypeOptionId, out option))
+            {
+                var selectedValueText = option.Value as String;
+                if (!String.IsNullOrWhiteSpace(selectedValueText))
+                {
+                    result = (PreviewTypeOption)Enum.Parse(typeof(PreviewTypeOption), selectedValueText);
+                }
+            }
+            return result;
+        }
+
+        public String GetPageTitle(PrintTaskOptions printTaskOptions)
+        {
+            if (printTaskOptions == null) throw new ArgumentNullException("printTaskOptions");
+
+            var detailedOptions = 
+                PrintTaskOptionDetails.GetFromPrintTaskOptions(printTaskOptions);
+            var result = DefaultPageTitle;
+            IPrintOptionDetails option;
+            if (detailedOptions.Options.TryGetValue(PageTitleOptionId, out option))
+            {
+                result = option.Value as String;
+            }
+            return result;
+        }
+
+        #endregion
+
         #region Print Task (Job) Lifecycle Events
-        
+
         private void HandlePrintTaskPreviewing(PrintTask task, Object args)
         {
             Debug.WriteLine("PrintTask Previewing - {0} ", task.Properties.Title);
@@ -209,9 +342,9 @@ namespace PrintingAndScanningExample
             var printOptions = args.PrintTaskOptions;
 
             // Record the current options driving the current pagingation calculations
-            _currentPreviewOptions.PageTitle = _customPrintOptionsHelper.GetPageTitle(printOptions);
-            _currentPreviewOptions.SelectedLayout = _customPrintOptionsHelper.GetSelectedPrintLayout(printOptions);
-            _currentPreviewOptions.PreviewType = _customPrintOptionsHelper.GetSelectedPreviewType(printOptions);
+            _currentPreviewOptions.PageTitle = GetPageTitle(printOptions);
+            _currentPreviewOptions.SelectedLayout = GetSelectedPrintLayout(printOptions);
+            _currentPreviewOptions.PreviewType = GetSelectedPreviewType(printOptions);
 
             var picturesPerPage = _currentPreviewOptions.SelectedLayout.PicturesPerPage;
             var picturesToPrint = _pictureProvider();
@@ -263,11 +396,11 @@ namespace PrintingAndScanningExample
             var options = args.PrintTaskOptions;
 
             // Get the page title selection
-            var pageTitle = _customPrintOptionsHelper.GetPageTitle(args.PrintTaskOptions);
+            var pageTitle = GetPageTitle(args.PrintTaskOptions);
             var picturesToPrint = _pictureProvider();
 
             // Determine the value of the layout template setting
-            var selectedLayout = _customPrintOptionsHelper.GetSelectedPrintLayout(options);
+            var selectedLayout = GetSelectedPrintLayout(options);
 
             // args.PrintTaskOptions.GetPageDescription(); DpiX, DpiY, ImageableRect, PageSize
             var pageCount = Math.Ceiling(picturesToPrint.Count() / (Double)selectedLayout.PicturesPerPage);
@@ -282,7 +415,7 @@ namespace PrintingAndScanningExample
             printDocument.AddPagesComplete();
         }
 
-        private UIElement BuildPicturePage(Int32 pageNumber, [NotNull] PrintLayout printLayout, Boolean useThumbnail, String pageTitle)
+        private UIElement BuildPicturePage(Int32 pageNumber, PrintLayout printLayout, Boolean useThumbnail, String pageTitle)
         {
             if (printLayout == null) throw new ArgumentNullException("printLayout");
 
