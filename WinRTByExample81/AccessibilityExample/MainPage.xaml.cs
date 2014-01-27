@@ -2,8 +2,10 @@
 {
     using System;
 
+    using Windows.System;
     using Windows.UI.Popups;
     using Windows.UI.Xaml;
+    using Windows.UI.Xaml.Controls;
     using Windows.UI.Xaml.Input;
 
     /// <summary>
@@ -12,6 +14,8 @@
     public sealed partial class MainPage
     {
         private ViewModel viewModel;
+
+        private bool isCtrlPressed;
 
         public MainPage()
         {
@@ -87,22 +91,28 @@
             AccessibleAgeError.Visibility = Visibility.Collapsed;
         }
 
+        private void SetError(Control control, FrameworkElement error)
+        {
+            error.Visibility = Visibility.Visible;
+            control.Focus(FocusState.Programmatic);
+        }
+
         private async void AccessibleSubmitOnClick(object sender, RoutedEventArgs e)
         {
             var error = false;
             if (string.IsNullOrWhiteSpace(AccessibleNameBox.Text))
             {
-                AccessibleNameError.Visibility = Visibility.Visible;
                 error = true;
+                this.SetError(AccessibleNameBox, AccessibleNameError);                
             }
             else
             {
                 AccessibleNameError.Visibility = Visibility.Collapsed;
             }
 
-            if (string.IsNullOrWhiteSpace(AgeBox.Text))
+            if (string.IsNullOrWhiteSpace(AccessibleAgeBox.Text))
             {
-                AccessibleAgeError.Visibility = Visibility.Visible;
+                this.SetError(error ? AccessibleNameBox : AccessibleAgeBox, AccessibleAgeError);
                 error = true;
             }
             else
@@ -110,12 +120,20 @@
                 int age;
                 if (!int.TryParse(AccessibleAgeBox.Text, out age))
                 {
-                    AccessibleAgeError.Visibility = Visibility.Visible;
+                    this.SetError(error ? AccessibleNameBox : AccessibleAgeBox, AccessibleAgeError);
                     error = true;
                 }
                 else
                 {
-                    AccessibleAgeError.Visibility = Visibility.Collapsed;
+                    if (age < 2 || age > 199)
+                    {
+                        this.SetError(error ? AccessibleNameBox : AccessibleAgeBox, AccessibleAgeError);
+                        error = true;
+                    }
+                    else
+                    {
+                        AccessibleAgeError.Visibility = Visibility.Collapsed;
+                    }
                 }
             }
 
@@ -123,8 +141,11 @@
             {
                 return;
             }
+
             var dialog = new MessageDialog("Looks good!");
             await dialog.ShowAsync();
+            this.AccessibleResetOnClick(this, e);
+            AccessibleNameBox.Focus(FocusState.Programmatic);
         }
 
         private async void ImageOnPointerPressed(object sender, PointerRoutedEventArgs e)
@@ -137,6 +158,37 @@
         {
             var messageDialog = new MessageDialog("Thanks for checking out these accessible samples.");
             await messageDialog.ShowAsync();
+        }
+
+        private void AccessibleGridOnKeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == VirtualKey.Control)
+            {
+                isCtrlPressed = false;
+            }
+        }
+
+        private void AccessibleGridOnKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == VirtualKey.Control)
+            {
+                isCtrlPressed = true;
+            }
+
+            if (!this.isCtrlPressed)
+            {
+                return;
+            }
+
+            switch (e.Key)
+            {
+                case VirtualKey.S:
+                    this.AccessibleSubmitOnClick(this, e);
+                    break;
+                case VirtualKey.R:
+                    this.AccessibleResetOnClick(this, e);
+                    break;
+            }
         }
     }
 }
