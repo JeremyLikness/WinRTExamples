@@ -17,7 +17,7 @@ namespace PrintingAndScanningExample
     {
         #region Fields
 
-        private readonly PrintHelper _printHelper = new PrintHelper();
+        private readonly PrintHelper _printHelper;
         private readonly ScannerHelper _scannerHelper = new ScannerHelper();
         
         private readonly NavigationHelper _navigationHelper;
@@ -32,6 +32,10 @@ namespace PrintingAndScanningExample
         /// </summary>
         public MainPage()
         {
+            // Create the print helper.  Set the picture provider to be the view model's list of pictures, if the view model is defined when they are requested.
+            _printHelper = new PrintHelper(() => _viewModel == null ? new PictureModel[]{} : _viewModel.Pictures);
+
+            // Create the view model.
             _viewModel = new PicturesViewModel(_printHelper);
 
             InitializeComponent();
@@ -100,7 +104,7 @@ namespace PrintingAndScanningExample
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             _navigationHelper.OnNavigatedTo(e);
-            _printHelper.ConfigurePrinting(() => _viewModel.Pictures);
+            _printHelper.ConfigurePrinting();
         }
 
         /// <summary>
