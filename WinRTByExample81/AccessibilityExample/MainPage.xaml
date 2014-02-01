@@ -9,7 +9,8 @@
     <UserControl.Resources>
         <SolidColorBrush x:Key="GridBackgroundStyle" Color="White"/>
     </UserControl.Resources>
-    <Grid x:Name="LayoutRoot" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" RequestedTheme="{Binding Path=CurrentTheme, Mode=OneWay}">
+    <Grid x:Name="LayoutRoot" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" RequestedTheme="{Binding Path=CurrentTheme, Mode=OneWay}"
+          d:DataContext="{d:DesignInstance Type=local:ViewModel, IsDesignTimeCreatable=True}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="1*"/>
@@ -60,6 +61,13 @@
                 <StackPanel Grid.Column="0" Grid.Row="2" Orientation="Vertical" Background="Black">
                     <Image PointerPressed="ImageOnPointerPressed" Source="ms-appx:///Assets/Logo.png" Margin="5"/>
                     <TextBlock Text="Example App" Foreground="White" Margin="10 -25 0 0"/>
+                </StackPanel>
+                <StackPanel Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" Orientation="Vertical" VerticalAlignment="Top">
+                    <ComboBox HorizontalAlignment="Center" VerticalAlignment="Top" 
+                          ItemsSource="{Binding Path=Items}"
+                          DisplayMemberPath="Description"
+                          SelectedItem="{Binding Path=CurrentItem, Mode=TwoWay}"/>
+                    <TextBlock Text="{Binding CurrentItem.Description}" Style="{StaticResource SubheaderTextBlockStyle}"/>
                 </StackPanel>
                 <StackPanel Grid.Row="2" Orientation="Horizontal" Grid.Column="2">
                     <Button Content="Reset" Click="NonAccessibleResetOnClick"></Button>
@@ -133,21 +141,43 @@
                 <TextBlock x:Name="NameLabel" Grid.Row="0" Style="{StaticResource SubheaderTextBlockStyle}" Text="Name:" Margin="10"/>
                 <TextBlock x:Name="AgeLabel" Grid.Column="0" Grid.Row="1" Style="{StaticResource SubheaderTextBlockStyle}" Text="Age:" Margin="10"/>
                 <TextBox TabIndex="1000" Grid.Row="0" x:Name="AccessibleNameBox" 
-                         Grid.Column="1" Margin="10" AutomationProperties.LabeledBy="{Binding ElementName=NameLabel}"/>
+                         AutomationProperties.AutomationId="NameTextBox"
+                         Grid.Column="1" Margin="10" AutomationProperties.LabeledBy="{Binding ElementName=NameLabel}" AutomationProperties.IsRequiredForForm="True"/>
                 <TextBlock x:Name="AccessibleNameError" Text="Name is Required." Style="{StaticResource SubheaderTextBlockStyle}" Margin="10" Foreground="Red" Grid.Row="0" Grid.Column="2"/>
                 <TextBox TabIndex="2000" Grid.Row="1" 
-                         x:Name="AccessibleAgeBox" Grid.Column="1" Margin="10" AutomationProperties.LabeledBy="{Binding ElementName=AgeLabel}"/>
+                         AutomationProperties.AutomationId="AgeTextBox"
+                         x:Name="AccessibleAgeBox" Grid.Column="1" Margin="10" AutomationProperties.LabeledBy="{Binding ElementName=AgeLabel}" AutomationProperties.IsRequiredForForm="True"/>
                 <TextBlock x:Name="AccessibleAgeError" Text="Age Must be Numeric Between 2 and 199." Style="{StaticResource SubheaderTextBlockStyle}" Foreground="Red" Grid.Row="1" Margin="10" Grid.Column="2"/>
-                <Button TabIndex="2500" Grid.Column="0" Grid.Row="2" Click="AccessibleImageButtonOnClick" AutomationProperties.LabeledBy="{Binding ElementName=ExampleAppCaption}">
+                <Button TabIndex="2500" Grid.Column="0" Grid.Row="2" Click="AccessibleImageButtonOnClick" 
+                        AutomationProperties.AutomationId="ButtonWithImage"
+                        AutomationProperties.LabeledBy="{Binding ElementName=ExampleAppCaption}">
                     <StackPanel Orientation="Vertical" Background="Black">
                         <Image Source="ms-appx:///Assets/Logo.png" Margin="10" AutomationProperties.LabeledBy="{Binding ElementName=ExampleAppCaption}" AutomationProperties.HelpText="An image of the book cover."/>
                         <TextBlock Text="Example App" x:Name="ExampleAppCaption" Foreground="White" Margin="10 -25 0 0"/>
                     </StackPanel>
                 </Button>
+                <StackPanel Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" Orientation="Vertical" VerticalAlignment="Top">
+                    <local:AccessibleItemComboBox 
+                        TabIndex="2750"
+                        AutomationProperties.AutomationId="ComboBoxForItems"
+                        AutomationProperties.Name="Selection of Items"
+                        HorizontalAlignment="Center" VerticalAlignment="Top" 
+                          ItemsSource="{Binding Path=Items}"
+                          SelectedItem="{Binding Path=CurrentItem2, Mode=TwoWay}">
+                        <local:AccessibleItemComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Description}"/>
+                            </DataTemplate>
+                        </local:AccessibleItemComboBox.ItemTemplate>
+                    </local:AccessibleItemComboBox>
+                    <TextBlock x:Name="DynamicTextBlock" Text="{Binding CurrentItem2.Description}" Style="{StaticResource SubheaderTextBlockStyle}" AutomationProperties.LiveSetting="Assertive"/>
+                </StackPanel>
                 <StackPanel Grid.Row="2" Orientation="Horizontal" Grid.Column="2">
                     <Button TabIndex="4000" Content="Reset" Click="AccessibleResetOnClick"
+                            AutomationProperties.AutomationId="ButtonRest"
                             AutomationProperties.AcceleratorKey="Control R"></Button>
                     <Button TabIndex="3000" Content="Submit" Click="AccessibleSubmitOnClick"
+                            AutomationProperties.AutomationId="ButtonSubmit"
                             AutomationProperties.AcceleratorKey="Control S"></Button>
                 </StackPanel>
             </Grid>

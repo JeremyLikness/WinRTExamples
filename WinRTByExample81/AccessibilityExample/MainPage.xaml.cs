@@ -5,6 +5,7 @@
     using Windows.System;
     using Windows.UI.Popups;
     using Windows.UI.Xaml;
+    using Windows.UI.Xaml.Automation.Peers;
     using Windows.UI.Xaml.Controls;
     using Windows.UI.Xaml.Input;
 
@@ -27,6 +28,20 @@
                     AgeError.Visibility = Visibility.Collapsed;
                     AccessibleNameError.Visibility = Visibility.Collapsed;
                     AccessibleAgeError.Visibility = Visibility.Collapsed;
+                    var peer = FrameworkElementAutomationPeer.FromElement(DynamicTextBlock);
+
+                    if (peer == null)
+                    {
+                        return;
+                    }
+
+                    viewModel.PropertyChanged += (sender, args) =>
+                    {
+                        if (args.PropertyName.Equals("CurrentItem2"))
+                        {
+                            peer.RaiseAutomationEvent(AutomationEvents.LiveRegionChanged);
+                        }
+                    };
                 };
         }
 
@@ -189,6 +204,6 @@
                     this.AccessibleResetOnClick(this, e);
                     break;
             }
-        }
+        }        
     }
 }
