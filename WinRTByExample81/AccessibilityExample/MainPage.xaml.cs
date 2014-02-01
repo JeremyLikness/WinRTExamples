@@ -61,9 +61,19 @@
         private async void NonAccessibleSubmitOnClick(object sender, RoutedEventArgs e)
         {
             var error = false;
+            var nameAutomationPeer = FrameworkElementAutomationPeer.FromElement(this.NameError);
+            var ageAutomationPeer = FrameworkElementAutomationPeer.FromElement(this.AgeError);
+                
             if (string.IsNullOrWhiteSpace(NameBox.Text))
             {
-                NameError.Visibility = Visibility.Visible;
+                if (NameError.Visibility != Visibility.Visible)
+                {
+                    NameError.Visibility = Visibility.Visible;
+                    if (nameAutomationPeer != null)
+                    {
+                        nameAutomationPeer.RaiseAutomationEvent(AutomationEvents.LiveRegionChanged);
+                    }
+                }
                 error = true;
             }
             else
@@ -73,7 +83,14 @@
 
             if (string.IsNullOrWhiteSpace(AgeBox.Text))
             {
-                AgeError.Visibility = Visibility.Visible;
+                if (AgeError.Visibility != Visibility.Visible)
+                {
+                    AgeError.Visibility = Visibility.Visible;
+                    if (ageAutomationPeer != null)
+                    {
+                        ageAutomationPeer.RaiseAutomationEvent(AutomationEvents.LiveRegionChanged);
+                    }
+                }
                 error = true;
             }
             else
@@ -81,7 +98,14 @@
                 int age;
                 if (!int.TryParse(AgeBox.Text, out age))
                 {
-                    AgeError.Visibility = Visibility.Visible;
+                    if (AgeError.Visibility != Visibility.Visible)
+                    {
+                        AgeError.Visibility = Visibility.Visible;
+                        if (ageAutomationPeer != null)
+                        {
+                            ageAutomationPeer.RaiseAutomationEvent(AutomationEvents.LiveRegionChanged);
+                        }
+                    }
                     error = true;
                 }
                 else

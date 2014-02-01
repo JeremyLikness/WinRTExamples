@@ -143,11 +143,17 @@
                 <TextBox TabIndex="1000" Grid.Row="0" x:Name="AccessibleNameBox" 
                          AutomationProperties.AutomationId="NameTextBox"
                          Grid.Column="1" Margin="10" AutomationProperties.LabeledBy="{Binding ElementName=NameLabel}" AutomationProperties.IsRequiredForForm="True"/>
-                <TextBlock x:Name="AccessibleNameError" Text="Name is Required." Style="{StaticResource SubheaderTextBlockStyle}" Margin="10" Foreground="Red" Grid.Row="0" Grid.Column="2"/>
+                <TextBlock x:Name="AccessibleNameError" 
+                           AutomationProperties.AutomationId="NameError"
+                           AutomationProperties.LiveSetting="Assertive"
+                           Text="Name is Required." Style="{StaticResource SubheaderTextBlockStyle}" Margin="10" Foreground="Red" Grid.Row="0" Grid.Column="2"/>
                 <TextBox TabIndex="2000" Grid.Row="1" 
                          AutomationProperties.AutomationId="AgeTextBox"
                          x:Name="AccessibleAgeBox" Grid.Column="1" Margin="10" AutomationProperties.LabeledBy="{Binding ElementName=AgeLabel}" AutomationProperties.IsRequiredForForm="True"/>
-                <TextBlock x:Name="AccessibleAgeError" Text="Age Must be Numeric Between 2 and 199." Style="{StaticResource SubheaderTextBlockStyle}" Foreground="Red" Grid.Row="1" Margin="10" Grid.Column="2"/>
+                <TextBlock x:Name="AccessibleAgeError" 
+                           AutomationProperties.AutomationId="AgeError"
+                           AutomationProperties.LiveSetting="Assertive"
+                           Text="Age Must be Numeric Between 2 and 199." Style="{StaticResource SubheaderTextBlockStyle}" Foreground="Red" Grid.Row="1" Margin="10" Grid.Column="2"/>
                 <Button TabIndex="2500" Grid.Column="0" Grid.Row="2" Click="AccessibleImageButtonOnClick" 
                         AutomationProperties.AutomationId="ButtonWithImage"
                         AutomationProperties.LabeledBy="{Binding ElementName=ExampleAppCaption}">
