@@ -190,9 +190,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter17", "Chapter17", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccessibilityExample", "AccessibilityExample\AccessibilityExample.csproj", "{AC1BD42A-1A32-44ED-9443-25039199FA66}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccessibilityTestProject", "AccessibilityTestProject\AccessibilityTestProject.csproj", "{813E0936-8249-4E68-B936-D29CED55456D}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 73
+		SccNumberOfProjects = 74
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs04
 		SccLocalPath0 = .
@@ -484,6 +486,10 @@ Global
 		SccProjectTopLevelParentUniqueName72 = WinRTByExample81.sln
 		SccProjectName72 = AccessibilityExample
 		SccLocalPath72 = AccessibilityExample
+		SccProjectUniqueName73 = AccessibilityTestProject\\AccessibilityTestProject.csproj
+		SccProjectTopLevelParentUniqueName73 = WinRTByExample81.sln
+		SccProjectName73 = AccessibilityTestProject
+		SccLocalPath73 = AccessibilityTestProject
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -2060,6 +2066,16 @@ Global
 		{AC1BD42A-1A32-44ED-9443-25039199FA66}.Release|x86.ActiveCfg = Release|x86
 		{AC1BD42A-1A32-44ED-9443-25039199FA66}.Release|x86.Build.0 = Release|x86
 		{AC1BD42A-1A32-44ED-9443-25039199FA66}.Release|x86.Deploy.0 = Release|x86
+		{813E0936-8249-4E68-B936-D29CED55456D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{813E0936-8249-4E68-B936-D29CED55456D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{813E0936-8249-4E68-B936-D29CED55456D}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{813E0936-8249-4E68-B936-D29CED55456D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{813E0936-8249-4E68-B936-D29CED55456D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{813E0936-8249-4E68-B936-D29CED55456D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{813E0936-8249-4E68-B936-D29CED55456D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{813E0936-8249-4E68-B936-D29CED55456D}.Release|ARM.ActiveCfg = Release|Any CPU
+		{813E0936-8249-4E68-B936-D29CED55456D}.Release|x64.ActiveCfg = Release|Any CPU
+		{813E0936-8249-4E68-B936-D29CED55456D}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -2137,5 +2153,6 @@ Global
 		{C4399B19-62E6-47CE-A377-97783F995353} = {864AEE38-7D67-4F30-A864-EE0AEBC1F236}
 		{94959793-05A7-457F-BCB1-D9068D528A88} = {D85C2913-B30D-4285-9986-16408F062653}
 		{AC1BD42A-1A32-44ED-9443-25039199FA66} = {781F4475-C732-4B5F-8E4F-3603DF6FA954}
+		{813E0936-8249-4E68-B936-D29CED55456D} = {781F4475-C732-4B5F-8E4F-3603DF6FA954}
 	EndGlobalSection
 EndGlobal
