@@ -192,9 +192,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccessibilityExample", "Acc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccessibilityTestProject", "AccessibilityTestProject\AccessibilityTestProject.csproj", "{813E0936-8249-4E68-B936-D29CED55456D}"
 EndProject
+Project("{262852C6-CD72-467D-83FE-5EEB1973A190}") = "SplitWordsJavaScript", "SplitWordsJavaScript\SplitWordsJavaScript.jsproj", "{653A1C5A-00B0-4E2C-9252-58181AB24FA1}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 74
+		SccNumberOfProjects = 75
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs04
 		SccLocalPath0 = .
@@ -490,6 +492,10 @@ Global
 		SccProjectTopLevelParentUniqueName73 = WinRTByExample81.sln
 		SccProjectName73 = AccessibilityTestProject
 		SccLocalPath73 = AccessibilityTestProject
+		SccProjectUniqueName74 = SplitWordsJavaScript\\SplitWordsJavaScript.jsproj
+		SccProjectTopLevelParentUniqueName74 = WinRTByExample81.sln
+		SccProjectName74 = SplitWordsJavaScript
+		SccLocalPath74 = SplitWordsJavaScript
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -2076,6 +2082,30 @@ Global
 		{813E0936-8249-4E68-B936-D29CED55456D}.Release|ARM.ActiveCfg = Release|Any CPU
 		{813E0936-8249-4E68-B936-D29CED55456D}.Release|x64.ActiveCfg = Release|Any CPU
 		{813E0936-8249-4E68-B936-D29CED55456D}.Release|x86.ActiveCfg = Release|Any CPU
+		{653A1C5A-00B0-4E2C-9252-58181AB24FA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{653A1C5A-00B0-4E2C-9252-58181AB24FA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{653A1C5A-00B0-4E2C-9252-58181AB24FA1}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{653A1C5A-00B0-4E2C-9252-58181AB24FA1}.Debug|ARM.ActiveCfg = Debug|ARM
+		{653A1C5A-00B0-4E2C-9252-58181AB24FA1}.Debug|ARM.Build.0 = Debug|ARM
+		{653A1C5A-00B0-4E2C-9252-58181AB24FA1}.Debug|ARM.Deploy.0 = Debug|ARM
+		{653A1C5A-00B0-4E2C-9252-58181AB24FA1}.Debug|x64.ActiveCfg = Debug|x64
+		{653A1C5A-00B0-4E2C-9252-58181AB24FA1}.Debug|x64.Build.0 = Debug|x64
+		{653A1C5A-00B0-4E2C-9252-58181AB24FA1}.Debug|x64.Deploy.0 = Debug|x64
+		{653A1C5A-00B0-4E2C-9252-58181AB24FA1}.Debug|x86.ActiveCfg = Debug|x86
+		{653A1C5A-00B0-4E2C-9252-58181AB24FA1}.Debug|x86.Build.0 = Debug|x86
+		{653A1C5A-00B0-4E2C-9252-58181AB24FA1}.Debug|x86.Deploy.0 = Debug|x86
+		{653A1C5A-00B0-4E2C-9252-58181AB24FA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{653A1C5A-00B0-4E2C-9252-58181AB24FA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{653A1C5A-00B0-4E2C-9252-58181AB24FA1}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{653A1C5A-00B0-4E2C-9252-58181AB24FA1}.Release|ARM.ActiveCfg = Release|ARM
+		{653A1C5A-00B0-4E2C-9252-58181AB24FA1}.Release|ARM.Build.0 = Release|ARM
+		{653A1C5A-00B0-4E2C-9252-58181AB24FA1}.Release|ARM.Deploy.0 = Release|ARM
+		{653A1C5A-00B0-4E2C-9252-58181AB24FA1}.Release|x64.ActiveCfg = Release|x64
+		{653A1C5A-00B0-4E2C-9252-58181AB24FA1}.Release|x64.Build.0 = Release|x64
+		{653A1C5A-00B0-4E2C-9252-58181AB24FA1}.Release|x64.Deploy.0 = Release|x64
+		{653A1C5A-00B0-4E2C-9252-58181AB24FA1}.Release|x86.ActiveCfg = Release|x86
+		{653A1C5A-00B0-4E2C-9252-58181AB24FA1}.Release|x86.Build.0 = Release|x86
+		{653A1C5A-00B0-4E2C-9252-58181AB24FA1}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -2100,6 +2130,7 @@ Global
 		{319F9ABA-B07D-4384-A78B-B625C73F2466} = {BC048F5D-8C83-412F-B11C-C2A5D9C98ADC}
 		{B0AF3E1D-F3B2-4168-BC52-C085BF706F6B} = {BC048F5D-8C83-412F-B11C-C2A5D9C98ADC}
 		{8318B515-5105-43EA-B062-B4EC8EBECB45} = {BC048F5D-8C83-412F-B11C-C2A5D9C98ADC}
+		{653A1C5A-00B0-4E2C-9252-58181AB24FA1} = {BC048F5D-8C83-412F-B11C-C2A5D9C98ADC}
 		{4450A134-48F7-45CF-B806-8819183E9786} = {4FE2E422-6D3C-48C2-8EE3-186F0E6AA6CD}
 		{AF2FF59A-8D30-4F04-B747-88A442C6FF1B} = {4FE2E422-6D3C-48C2-8EE3-186F0E6AA6CD}
 		{978B986F-6C0E-4A26-A6CC-15CB2E8C2A68} = {4FE2E422-6D3C-48C2-8EE3-186F0E6AA6CD}
