@@ -5,9 +5,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using System.Windows.Input;
-using Windows.Devices.Scanners;
 using Windows.Storage;
+using Windows.Storage.Pickers;
 using Windows.UI.Xaml.Media.Imaging;
 using PrintingAndScanningExample.Annotations;
 using PrintingAndScanningExample.Common;
@@ -56,11 +55,10 @@ namespace PrintingAndScanningExample
                 _scanners.Add(scanner);
             }
 
-            var defaultScanner = _scanners.FirstOrDefault(x => x.IsDefault);
-            if (defaultScanner != null)
-            {
-                SelectedScanner = defaultScanner;
-            }
+            // Choose the first scanner marked as system default, or just the first one period
+            var defaultScanner = _scanners.FirstOrDefault(x => x.IsDefault) ??
+                                 _scanners.FirstOrDefault();
+            SelectedScanner = defaultScanner;
         }
 
         #endregion
@@ -77,8 +75,8 @@ namespace PrintingAndScanningExample
                 OnPropertyChanged();
                 _scanSources.Clear();
                 ResetAvailableScanSources();
-                _scanPreviewCommand.RaiseCanExecuteChanged();
-                _scanPictureCommand.RaiseCanExecuteChanged();
+                ScanPreviewCommand.RaiseCanExecuteChanged();
+                ScanPictureCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -92,8 +90,8 @@ namespace PrintingAndScanningExample
                 if (Equals(value, _selectedScanSource)) return;
                 _selectedScanSource = value;
                 OnPropertyChanged();
-                _scanPreviewCommand.RaiseCanExecuteChanged();
-                _scanPictureCommand.RaiseCanExecuteChanged();
+                ScanPreviewCommand.RaiseCanExecuteChanged();
+                ScanPictureCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -106,7 +104,7 @@ namespace PrintingAndScanningExample
                 _previewImage = value;
                 OnPropertyChanged();
                 OnPropertyChanged("IsPreviewLoaded");
-                _scanPictureCommand.RaiseCanExecuteChanged();
+                ScanPictureCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -153,12 +151,12 @@ namespace PrintingAndScanningExample
             if (handler != null) handler(this, new ScanCompletedResultEventArgs { ScannedFiles = scannedFiles });
         }
 
-        public ICommand ScanPreviewCommand
+        public RelayCommand ScanPreviewCommand
         {
             get { return _scanPreviewCommand ?? (_scanPreviewCommand = new RelayCommand(ScanPreview, CanScanPreview)); }
         }
 
-        public ICommand ScanPictureCommand
+        public RelayCommand ScanPictureCommand
         {
             get { return _scanPictureCommand ?? (_scanPictureCommand = new RelayCommand(ScanPicture, CanScanPicture)); }
         }
@@ -181,7 +179,7 @@ namespace PrintingAndScanningExample
 
             if (SelectedScanner != null)
             {
-                var scanSourceDetails = await _scannerHelper.GetSupportedScannerSources(SelectedScanner.Id);
+                var scanSourceDetails = await _scannerHelper.GetSupportedScanSources(SelectedScanner.Id);
                 foreach (var supportedSource in scanSourceDetails.SupportedScanSources)
                 {
                     _scanSources.Add(supportedSource);
@@ -195,9 +193,16 @@ namespace PrintingAndScanningExample
         {
             //var cancellationTokenSource = new CancellationTokenSource();
             //var scannedPictures = await _scannerHelper.ScanPictureAsync(SelectedScanner.Id, HorizontalScanPercentage, VerticalScanPercentage, progress, cancellationTokenSource.Token);
-            var progress = new Progress<UInt32>(ScanProgressHandler);
-            var scannedPictures = await _scannerHelper.ScanPictureAsync(SelectedScanner.Id, SelectedScanSource.SourceType, HorizontalScanPercentage, VerticalScanPercentage, progress);
-            OnScanCompleted(scannedPictures);
+
+            var picker = new FolderPicker {SuggestedStartLocation = PickerLocationId.PicturesLibrary};
+            picker.FileTypeFilter.Add("*");
+            var destinationFolder = await picker.PickSingleFolderAsync();
+            if (destinationFolder != null)
+            {
+                var scannedPictures =
+                    await _scannerHelper.ScanPicturesAsync(SelectedScanner.Id, SelectedScanSource.SourceType, destinationFolder, HorizontalScanPercentage, VerticalScanPercentage);
+                OnScanCompleted(scannedPictures);
+            }
         }
 
         private Boolean CanScanPicture()

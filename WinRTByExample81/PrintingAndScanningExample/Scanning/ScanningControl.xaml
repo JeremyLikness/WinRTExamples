@@ -13,28 +13,25 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         
         <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Text="Scanners: " VerticalAlignment="Center" FontSize="{ThemeResource ControlContentThemeFontSize}" Margin="5" />
-            <ComboBox Grid.Column="1" Margin="5" ItemsSource="{Binding Scanners}" SelectedItem="{Binding SelectedScanner, Mode=TwoWay}" DisplayMemberPath="Name"/>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Scanners: " VerticalAlignment="Center" FontSize="{ThemeResource ControlContentThemeFontSize}" Margin="5" />
+            <ComboBox Grid.Row="0" Grid.Column="1" Margin="5" ItemsSource="{Binding Scanners}" SelectedItem="{Binding SelectedScanner, Mode=TwoWay}" DisplayMemberPath="Name"/>
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Scan Sources: " VerticalAlignment="Center" FontSize="{ThemeResource ControlContentThemeFontSize}" Margin="5" />
+            <ComboBox Grid.Row="1" Grid.Column="1" Margin="5" ItemsSource="{Binding ScanSources}" SelectedItem="{Binding SelectedScanSource, Mode=TwoWay}" DisplayMemberPath="SourceType"/>
         </Grid>
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Text="Sources: " VerticalAlignment="Center" FontSize="{ThemeResource ControlContentThemeFontSize}" Margin="5" />
-            <ComboBox Grid.Column="1" Margin="5" ItemsSource="{Binding ScanSources}" SelectedItem="{Binding SelectedScanSource, Mode=TwoWay}" DisplayMemberPath="SourceType"/>
-        </Grid>
-        <Grid Grid.Row="2" Margin="5" >
+        <Grid Grid.Row="1" Margin="5" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
@@ -43,20 +40,23 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Slider Grid.Row="1" Grid.Column="0" Orientation="Vertical" 
+            <Slider x:Name="HorizontalSlider"
+                    Grid.Row="0" Grid.Column="1" 
+                    Orientation="Horizontal" HorizontalAlignment="Left"
+                    Minimum="0" Maximum="1" LargeChange="0.1" SmallChange="0.01" StepFrequency="0.01" 
+                    IsEnabled ="{Binding IsPreviewLoaded}"
+                    Value="{Binding HorizontalScanPercentage, Mode=TwoWay}"/>
+            <Slider x:Name="VerticalSlider"
+                    Grid.Row="1" Grid.Column="0" Orientation="Vertical" 
                     Minimum="0" Maximum="1" LargeChange="0.1" SmallChange="0.01" StepFrequency="0.01" 
                     IsDirectionReversed="True"
                     IsEnabled ="{Binding IsPreviewLoaded}"
                     Value="{Binding VerticalScanPercentage, Mode=TwoWay}" />
-            <Slider Grid.Row="0" Grid.Column="1" Orientation="Horizontal" 
-                    Minimum="0" Maximum="1" LargeChange="0.1" SmallChange="0.01" StepFrequency="0.01" 
-                    IsEnabled ="{Binding IsPreviewLoaded}"
-                    Value="{Binding HorizontalScanPercentage, Mode=TwoWay}"/>
             <Grid Grid.Row="1" Grid.Column="1" Background="LightGray">
-                <Image Source="{Binding PreviewImage}" Stretch="Fill" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <Image x:Name="PreviewImage" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Top" Source="{Binding PreviewImage}"  LayoutUpdated="HandlePreviewImageLayoutUpdated"/>
             </Grid>
         </Grid>
-        <Grid Grid.Row="3">
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>

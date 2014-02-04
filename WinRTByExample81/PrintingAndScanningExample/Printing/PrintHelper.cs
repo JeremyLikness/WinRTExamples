@@ -327,50 +327,43 @@ namespace PrintingAndScanningExample
         private class PreviewOptions
         {
             public String PageTitle { get; set; }
-            public PrintLayout SelectedLayout { get; set; }
+            public PrintLayout Layout { get; set; }
             public PreviewTypeOption PreviewType { get; set; }
         }
 
-        private readonly PreviewOptions _currentPreviewOptions = new PreviewOptions();
+        private readonly PreviewOptions _previewOptions = new PreviewOptions();
 
         private void HandlePagination(Object sender, PaginateEventArgs args)
         {
-            // Given the curren toptions, determine the number of pages to be printed
+            // Given the current options, determine the # of pages to be printed
             Debug.WriteLine("PrintDocument - Pagination");
 
             var printDocument = (PrintDocument)sender;
-            var printOptions = args.PrintTaskOptions;
+            var options = args.PrintTaskOptions;
+            options.DebugPrintTaskOptionDetails(args.CurrentPreviewPageNumber);
 
-            // Record the current options driving the current pagingation calculations
-            _currentPreviewOptions.PageTitle = GetPageTitle(printOptions);
-            _currentPreviewOptions.SelectedLayout = GetSelectedPrintLayout(printOptions);
-            _currentPreviewOptions.PreviewType = GetSelectedPreviewType(printOptions);
+            // Record the options driving the current pagination calculations
+            _previewOptions.PageTitle = GetPageTitle(options);
+            _previewOptions.Layout = GetSelectedPrintLayout(options);
+            _previewOptions.PreviewType = GetSelectedPreviewType(options);
 
-            var picturesPerPage = _currentPreviewOptions.SelectedLayout.PicturesPerPage;
-            var picturesToPrint = _pictureProvider();
+            var picturesPerPage = _previewOptions.Layout.PicturesPerPage;
+            var picturesToPrint = _pictureProvider().Count();
 
-            // Calculate the total page count based on number of pictures per page and total number of selected pictures
-            var totalPageCount = (Int32)Math.Ceiling(picturesToPrint.Count() / (Double)picturesPerPage);
+            // Calculate the total page count based on number of pictures 
+            // per page and total number of selected pictures
+            var totalPageCount =
+                (Int32)Math.Ceiling(picturesToPrint / (Double)picturesPerPage);
 
-            // Set the page count to be intermediate if the number of pages is not 100% known at this point, Final if it is certain
-            printDocument.SetPreviewPageCount(totalPageCount, PreviewPageCountType.Intermediate);
-
-            // TODO - look into dumping out (debug?) these values (or optionally printing them?)
-            // printOptions.ColorMode == // Greyscale, etc.
-            // printOptions.Orientation == PrintOrientation.Default
-            // printOptions.PrintQuality == 
-            // printOptions.Binding == 
-            // printOptions.Collation
-            // printOptions.Duplex
-            // printOptions.  etc, etc
-
-            // Get the page description
-            // var previewPageNumber = args.CurrentPreviewPageNumber;
-            // var pageDescription = printOptions.GetPageDescription(previewPageNumber);
-            // pageDescription.PageSize // .ImageableRect .DpiX//, DpiY
+            // Set the page count to be intermediate if the number of pages 
+            // is not 100% known at this point, Final if it is certain.
+            printDocument.SetPreviewPageCount(
+                totalPageCount, 
+                PreviewPageCountType.Final);
         }
 
-        private void HandleGetPreviewPage(Object sender, GetPreviewPageEventArgs args)
+        private void HandleGetPreviewPage
+            (Object sender, GetPreviewPageEventArgs args)
         {
             // Provide the print preview content for the requested page
             Debug.WriteLine("PrintDocument - Get Preview Page - Page {0}", args.PageNumber);
@@ -381,9 +374,9 @@ namespace PrintingAndScanningExample
             // Get the visual to be displayed for the currently requested page
             var pageVisual = BuildPicturePage(
                 currentPageNumber,
-                _currentPreviewOptions.SelectedLayout, 
-                _currentPreviewOptions.PreviewType == PreviewTypeOption.Thumbnails, 
-                _currentPreviewOptions.PageTitle);
+                _previewOptions.Layout, 
+                _previewOptions.PreviewType == PreviewTypeOption.Thumbnails, 
+                _previewOptions.PageTitle);
             printDocument.SetPreviewPage(currentPageNumber, pageVisual);
         }
 
@@ -394,24 +387,29 @@ namespace PrintingAndScanningExample
 
             var printDocument = (PrintDocument)sender;
             var options = args.PrintTaskOptions;
+            options.DebugPrintTaskOptionDetails();
 
             // Get the page title selection
             var pageTitle = GetPageTitle(args.PrintTaskOptions);
-            var picturesToPrint = _pictureProvider();
 
             // Determine the value of the layout template setting
             var selectedLayout = GetSelectedPrintLayout(options);
 
-            // args.PrintTaskOptions.GetPageDescription(); DpiX, DpiY, ImageableRect, PageSize
-            var pageCount = Math.Ceiling(picturesToPrint.Count() / (Double)selectedLayout.PicturesPerPage);
+            // Determine how many pages total will be printed
+            var picturesPerPage = selectedLayout.PicturesPerPage;
+            var picturesToPrint = _pictureProvider().Count();
+            var pageCount = 
+                Math.Ceiling(picturesToPrint / (Double)picturesPerPage);
+
+            // Calculate the pages (being sure to use high resolution images)
             for (var i = 1; i <= pageCount; i++)
             {
-                var pageVisual = BuildPicturePage(i, selectedLayout, false, pageTitle);
-                {
-                    printDocument.AddPage(pageVisual);
-                }
+                var pageVisual 
+                    = BuildPicturePage(i, selectedLayout, false, pageTitle);
+                printDocument.AddPage(pageVisual);
             }
 
+            // Indicate that the page calculation has completed.
             printDocument.AddPagesComplete();
         }
 
@@ -433,5 +431,26 @@ namespace PrintingAndScanningExample
         }
 
         #endregion
+    }
+
+    public static class Extensions
+    {
+        public static void DebugPrintTaskOptionDetails(this PrintTaskOptions options, Int32 currentPreviewPageNumber)
+        {
+            options.DebugPrintTaskOptionDetails();
+            var pageDescription = options.GetPageDescription((UInt32)currentPreviewPageNumber);
+            Debug.WriteLine("Page Description - DPI X={0}, Y={1}", pageDescription.DpiX, pageDescription.DpiY);
+            Debug.WriteLine("Page Description - Page Size Width={0}, Height={1} (Device Independent Pixels)", pageDescription.PageSize.Width, pageDescription.PageSize.Height);
+            Debug.WriteLine("Page Description - Imageable Rect={0} (Device Independent Pixels)", pageDescription.ImageableRect);
+        }        
+        
+        public static void DebugPrintTaskOptionDetails(this PrintTaskOptions options)
+        {
+            var optionDetails = PrintTaskOptionDetails.GetFromPrintTaskOptions(options);
+            foreach (var option in optionDetails.Options)
+            {
+                Debug.WriteLine("{0} - {1}", option.Key, option.Value.Value);
+            }
+        }
     }
 }
