@@ -7,10 +7,8 @@ using Windows.Devices.Enumeration;
 using Windows.Devices.Scanners;
 using Windows.Foundation;
 using Windows.Storage;
-using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
-using PrintingAndScanningExample.Annotations;
 
 namespace PrintingAndScanningExample
 {
@@ -18,7 +16,7 @@ namespace PrintingAndScanningExample
     {
         public async Task<IEnumerable<ScannerModel>> GetScannersAsync()
         {
-            // String to be used to enumerate scanners;
+            // String to be used to enumerate scanners
             var deviceSelector = ImageScanner.GetDeviceSelector();
 
             var scanners = await DeviceInformation.FindAllAsync(deviceSelector);
@@ -29,44 +27,41 @@ namespace PrintingAndScanningExample
                     Name = x.Name,
                     IsDefault = x.IsDefault,
                     IsEnabled = x.IsEnabled,
-                    //Thumbnail = await x.GetThumbnailAsync()
                 })
                 .ToList();
             return result;
+
+            // Alternatively, a watcher can be used, which raises events as items are located/added/removed/updated:
+            //var watcher = DeviceInformation.CreateWatcher(deviceSelector);
+            //watcher.EnumerationCompleted += (sender, args) => Debug.WriteLine("Scanners enumerated");
+            //watcher.Added += (sender, args) => Debug.WriteLine("Scanner added - {0}", args.Name);
+            //watcher.Removed += (sender, args) => Debug.WriteLine("Scanner removed - {0}", args.Id);
+            //watcher.Updated += (sender, args) => Debug.WriteLine("Scanner updated - {0}", args.Id);
+            //watcher.Start();
         }
 
-        public async Task<ScanSourceDetails> GetSupportedScannerSources(String scannerDeviceId)
+        public async Task<ScanSourceDetails> GetSupportedScanSources
+            (String deviceId)
         {
-            var scanner = await ImageScanner.FromIdAsync(scannerDeviceId);
+            // Check whether each of the known scan sources is available
+            // for the scanner with the provided ID
+            var scanSources = new[]
+                              {
+                                  ImageScannerScanSource.Flatbed,
+                                  ImageScannerScanSource.Feeder,
+                                  ImageScannerScanSource.AutoConfigured
+                              };
 
-            var supportedSources = new List<ScanSourceDetailsItem>();
-            if (scanner.IsScanSourceSupported(ImageScannerScanSource.Flatbed))
-            {
+            var scanner = await ImageScanner.FromIdAsync(deviceId);
 
-                supportedSources.Add(new ScanSourceDetailsItem
-                                     {
-                                         SourceType = ImageScannerScanSource.Flatbed,
-                                         SupportsPreview = scanner.IsPreviewSupported(ImageScannerScanSource.Flatbed)
-                                     });
-            }
-            if (scanner.IsScanSourceSupported(ImageScannerScanSource.Feeder))
-            {
-
-                supportedSources.Add(new ScanSourceDetailsItem
-                {
-                    SourceType = ImageScannerScanSource.Feeder,
-                    SupportsPreview = scanner.IsPreviewSupported(ImageScannerScanSource.Feeder)
-                });
-            }
-            if (scanner.IsScanSourceSupported(ImageScannerScanSource.AutoConfigured))
-            {
-
-                supportedSources.Add(new ScanSourceDetailsItem
-                {
-                    SourceType = ImageScannerScanSource.AutoConfigured,
-                    SupportsPreview = scanner.IsPreviewSupported(ImageScannerScanSource.AutoConfigured)
-                });
-            } 
+            var supportedSources = scanSources
+                .Where(x => scanner.IsScanSourceSupported(x))
+                .Select(x => new ScanSourceDetailsItem
+                             {
+                                 SourceType = x,
+                                 SupportsPreview = scanner.IsPreviewSupported(x)
+                             })
+                .ToList();
 
             var results = new ScanSourceDetails
                           {
@@ -76,13 +71,15 @@ namespace PrintingAndScanningExample
             return results;
         }
 
-        public async Task<BitmapImage> ScanPicturePreviewAsync(String scannerDeviceId, ImageScannerScanSource scanSource)
+        public async Task<BitmapImage> ScanPicturePreviewAsync
+            (String scannerDeviceId, ImageScannerScanSource scanSource)
         {
             var scanner = await ImageScanner.FromIdAsync(scannerDeviceId);
             if (scanner.IsPreviewSupported(scanSource))
             {
                 var stream = new InMemoryRandomAccessStream();
-                var result = await scanner.ScanPreviewToStreamAsync(scanSource, stream);
+                var result = 
+                    await scanner.ScanPreviewToStreamAsync(scanSource, stream);
                 if (result.Succeeded)
                 {
                     var thumbnail = new BitmapImage();
@@ -93,110 +90,113 @@ namespace PrintingAndScanningExample
             return null;
         }
 
-        //public async Task<IEnumerable<StorageFile>> ScanPictureAsync(String scannerDeviceId, Double horizontalScanPercentage, Double verticalScanPercentage, Progress<UInt32> progressHandler, CancellationToken cancellationToken)
-        public async Task<IEnumerable<StorageFile>> ScanPictureAsync(String scannerDeviceId, ImageScannerScanSource scanSource, Double horizontalScanPercentage, Double verticalScanPercentage, Progress<UInt32> progressHandler)
+        public async Task<IEnumerable<StorageFile>> ScanPicturesAsync(
+            String scannerDeviceId, ImageScannerScanSource source, 
+            StorageFolder destinationFolder,
+            Double hScanPercent, Double vScanPercent)
         {
             var scanner = await ImageScanner.FromIdAsync(scannerDeviceId);
-            if (scanner.IsScanSourceSupported(scanSource))
+            if (scanner.IsScanSourceSupported(source))
             {
-                var picker = new FolderPicker {SuggestedStartLocation = PickerLocationId.PicturesLibrary };
-                picker.FileTypeFilter.Add("*");
-                var destinationFolder = await picker.PickSingleFolderAsync();
-                if (destinationFolder != null)
+                ConfigureScanner(scanner, source, hScanPercent, vScanPercent);
+
+                var scanResult = await scanner
+                    .ScanFilesToFolderAsync(source, destinationFolder);
+                
+                var results = new List<StorageFile>();
+                // Caution - enumerating this list (foreach) will result in a 
+                // COM exception.  Instead, just walk the collection by index 
+                // and build a new list.
+                for (var i = 0; i < scanResult.ScannedFiles.Count; i++)
                 {
-                    ConfigureScanner(scanner, scanSource, horizontalScanPercentage, verticalScanPercentage);
-
-                    var scanResult = await scanner
-                        .ScanFilesToFolderAsync(scanSource, destinationFolder)
-                        .AsTask(progressHandler);
-                        //.AsTask(cancellationToken, progressHandler);
-
-                    var results = new List<StorageFile>();
-                    // Caution - do NOT try to enumerate this list (foreach) - you'll get a nasty COM exception.
-                    // Instead, just walking the array and building a parallel list works fine.
-                    for (var i = 0; i < scanResult.ScannedFiles.Count; i++)
-                    {
-                        results.Add(scanResult.ScannedFiles[i]);
-                    }
-                    return results;
+                    results.Add(scanResult.ScannedFiles[i]);
                 }
+                return results;
             }
             return null;
         }
 
-        private static void ConfigureScanner([NotNull] ImageScanner scanner, ImageScannerScanSource scanSource, Double horizontalScanPercentage, Double verticalScanPercentage)
+        private static void ConfigureScanner(
+            ImageScanner scanner, ImageScannerScanSource source,
+            Double hScanPercent, Double vScanPercent)
         {
             if (scanner == null) throw new ArgumentNullException("scanner");
 
-            IImageScannerSourceConfiguration sourceConfiguration = null;
-            IImageScannerFormatConfiguration formatConfiguration = null;
+            IImageScannerSourceConfiguration sourceConfig = null;
+            IImageScannerFormatConfiguration formatConfig = null;
 
-            if (scanSource == ImageScannerScanSource.Flatbed)
+            switch (source)
             {
-                sourceConfiguration = scanner.FlatbedConfiguration;
-                formatConfiguration = scanner.FlatbedConfiguration;
-            }
-            else if (scanSource == ImageScannerScanSource.Feeder)
-            {
-                sourceConfiguration = scanner.FeederConfiguration;
-                formatConfiguration = scanner.FeederConfiguration;
-                //Additional feeder-specific settings:
-                    //scanner.FeederConfiguration.AutoDetectPageSize
-                    //scanner.FeederConfiguration.CanAutoDetectPageSize
-                    //scanner.FeederConfiguration.CanScanAhead
-                    //scanner.FeederConfiguration.ScanAhead
+                case ImageScannerScanSource.Flatbed:
+                    sourceConfig = scanner.FlatbedConfiguration;
+                    formatConfig = scanner.FlatbedConfiguration;
+                    break;
+                case ImageScannerScanSource.Feeder:
+                    sourceConfig = scanner.FeederConfiguration;
+                    formatConfig = scanner.FeederConfiguration;
+                    //Additional feeder-specific settings:
                     //scanner.FeederConfiguration.CanScanDuplex
                     //scanner.FeederConfiguration.Duplex
-                    //scanner.FeederConfiguration.PageOrientation
+                    //scanner.FeederConfiguration.CanScanAhead
+                    //scanner.FeederConfiguration.ScanAhead
+                    //scanner.FeederConfiguration.AutoDetectPageSize
+                    //scanner.FeederConfiguration.CanAutoDetectPageSize
                     //scanner.FeederConfiguration.PageSize
                     //scanner.FeederConfiguration.PageSizeDimensions
-            }
-            else if (scanSource == ImageScannerScanSource.AutoConfigured)
-            {
-                formatConfiguration = scanner.AutoConfiguration;
+                    //scanner.FeederConfiguration.PageOrientation
+                    break;
+                case ImageScannerScanSource.AutoConfigured:
+                    formatConfig = scanner.AutoConfiguration;
+                    break;
             }
 
             // Potentially update the scanner configuration
-            if (sourceConfiguration != null)
+            if (sourceConfig != null)
             {
-                var maxScanArea = sourceConfiguration.MaxScanArea; // Size, with Width, Height in Inches    // MinScanArea
-                sourceConfiguration.SelectedScanRegion = new Rect(
+                var maxScanArea = sourceConfig.MaxScanArea; // Size, with Width, Height in Inches    // MinScanArea
+                sourceConfig.SelectedScanRegion = new Rect(
                     0,
                     0,
-                    maxScanArea.Width*horizontalScanPercentage,
-                    maxScanArea.Height*verticalScanPercentage); // In inches
+                    maxScanArea.Width * hScanPercent,
+                    maxScanArea.Height * vScanPercent); // In inches
                 // Additional Configuration settings
-                    // sourceConfiguration.AutoCroppingMode
-                    // sourceConfiguration.ColorMode    // DefaultColorMode
-                    // sourceConfiguration.Brightness   // DefaultBrightness    //MaxBrightness     // MinBrightness
-                    // sourceConfiguration.Contrast     // DefaultContrast      // MaxContrast      // MinContrast
-                    // sourceConfiguration.DesiredResolution = resolution;      // MaxResolution    // MinResolution
-                    // var actualResolution = sourceConfiguration.ActualResolution;
+                    // sourceConfig.AutoCroppingMode
+                    // sourceConfig.ColorMode ==     // DefaultColorMode
+                    // sourceConfig.Brightness   // DefaultBrightness    //MaxBrightness     // MinBrightness
+                    // sourceConfig.Contrast     // DefaultContrast      // MaxContrast      // MinContrast
+                    // sourceConfig.DesiredResolution = resolution;      // MaxResolution    // MinResolution
+                    // var actualResolution = sourceConfig.ActualResolution;
             }
 
             // Potentially update the format that the end product is saved to
-            if (formatConfiguration != null)
+            if (formatConfig != null)
             {
-                Debug.WriteLine("Default format is {0}", formatConfiguration.DefaultFormat);
+                Debug.WriteLine("Default format is {0}", formatConfig.DefaultFormat);
 
-                // NOTE: If your desired format isn't natively supported, it may be possible to generate
-                // the desired format post-process using image conversion, etc. libraries.
-                if (formatConfiguration.IsFormatSupported(ImageScannerFormat.Png))
-                    formatConfiguration.Format = ImageScannerFormat.Png;
-                else if (formatConfiguration.IsFormatSupported(ImageScannerFormat.Jpeg))
-                    formatConfiguration.Format = ImageScannerFormat.Jpeg;
-                else if (formatConfiguration.IsFormatSupported(ImageScannerFormat.DeviceIndependentBitmap))
-                    formatConfiguration.Format = ImageScannerFormat.DeviceIndependentBitmap;
-                //else if (formatConfiguration.IsFormatSupported(ImageScannerFormat.Tiff))
-                //    formatConfiguration.Format = ImageScannerFormat.Tiff;
-                //else if (formatConfiguration.IsFormatSupported(ImageScannerFormat.Pdf))
-                //    formatConfiguration.Format = ImageScannerFormat.Pdf;
-                //else if (formatConfiguration.IsFormatSupported(ImageScannerFormat.Xps))
-                //    formatConfiguration.Format = ImageScannerFormat.Xps;
-                //else if (formatConfiguration.IsFormatSupported(ImageScannerFormat.OpenXps))
-                //    formatConfiguration.Format = ImageScannerFormat.OpenXps;
+                // NOTE: If your desired format isn't natively supported, it may 
+                // be possible to generate the desired format post-process 
+                // using image conversion, etc. libraries.
+                var desiredFormats = new[]
+                {
+                    ImageScannerFormat.Png,
+                    ImageScannerFormat.Jpeg,
+                    ImageScannerFormat.DeviceIndependentBitmap,
+                    //ImageScannerFormat.Tiff,
+                    //ImageScannerFormat.Xps,
+                    //ImageScannerFormat.OpenXps,
+                    //ImageScannerFormat.Pdf
+                };
 
-                Debug.WriteLine("Configured format is {0}", formatConfiguration.Format);
+                foreach (var format in desiredFormats)
+                {
+                    if (formatConfig.IsFormatSupported(format))
+                    {
+                        formatConfig.Format = format;
+                        break;
+                    }
+                }
+
+                Debug.WriteLine("Configured format is {0}", formatConfig.Format);
             }
         }
     }
