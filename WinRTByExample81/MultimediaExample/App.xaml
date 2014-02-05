@@ -1,0 +1,10 @@
+﻿<Application
+    x:Class="MultimediaExample.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MultimediaExample"
+    RequestedTheme="Light">
+    <Application.Resources>
+        <x:String x:Key="AppName">Multimedia</x:String>
+    </Application.Resources>
+</Application>
