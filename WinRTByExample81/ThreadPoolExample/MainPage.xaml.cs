@@ -1,6 +1,7 @@
 ﻿namespace ThreadPoolExample
 {
     using System;
+    using System.Threading;
 
     using Windows.Foundation;
     using Windows.System.Threading;
@@ -85,15 +86,16 @@
         private void CalculatePi(IAsyncAction action)
         {
             var random = new Random();
-            while (iterations++ < int.MaxValue && action.Status != AsyncStatus.Canceled)
+            while (iterations < int.MaxValue && action.Status != AsyncStatus.Canceled)
             {
                 var x = random.NextDouble() * 2.0 - 1.0;
                 var y = random.NextDouble() * 2.0 - 1.0;
                 var distance = Math.Sqrt(Math.Pow(x, 2.0) + Math.Pow(y, 2.0));
                 if (distance < 1.0)
                 {
-                    hits++;
-                }                                
+                    Interlocked.Increment(ref hits);
+                }
+                Interlocked.Increment(ref iterations);
             }
         }
 
