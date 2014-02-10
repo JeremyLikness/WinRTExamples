@@ -29,8 +29,222 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.Resources>
+                <Style TargetType="TextBlock" BasedOn="{StaticResource BodyTextBlockStyle}">
+                    <Setter Property="Margin" Value="3,0,5,10"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                </Style>
+                <Style TargetType="TextBlock" BasedOn="{StaticResource BodyTextBlockStyle}" x:Key="BlockHeaderTextBlockStyle">
+                    <Setter Property="Margin" Value="3,0,5,10"/>
+                    <Setter Property="FontWeight" Value="Bold"></Setter>
+                </Style>
+                <Style TargetType="Border" x:Key="BlockBorderStyle">
+                    <Setter Property="BorderThickness" Value="{StaticResource FlyoutBorderThemeThickness}"/>
+                    <Setter Property="BorderBrush" Value="{StaticResource FlyoutBorderThemeBrush}"/>
+                    <Setter Property="Padding" Value="5"/>
+                    <Setter Property="Margin" Value="5"/>
+                </Style>
+                <Style TargetType="Button" x:Key="BlockButtonStyle">
+                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                </Style>
+            </Grid.Resources>
+            <Grid Grid.Column="0" Width="320">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.Resources>
+                    <Style TargetType="Border" BasedOn="{StaticResource BlockBorderStyle}"/>
+                    <Style TargetType="Button" BasedOn="{StaticResource BlockButtonStyle}"/>
+                </Grid.Resources>
+                <Border Grid.Row="0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="Playback Files" Style="{StaticResource BlockHeaderTextBlockStyle}"/>
+                        <ListView Grid.Row="1" ItemsSource="{Binding PlaybackFiles}" SelectedItem="{Binding CurrentPlaybackFile, Mode=TwoWay}" DisplayMemberPath="Name"/>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="1">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="Markers" Style="{StaticResource BlockHeaderTextBlockStyle}"/>
+                        <!--<ListView Grid.Row="1" ItemsSource="{Binding PlaybackFiles}" SelectedItem="{Binding CurrentPlaybackFile, Mode=TwoWay}" DisplayMemberPath="Name"/>-->
+                    </Grid>
+                </Border>
+            </Grid>
+            <Grid Grid.Column="1">
+                <Border Style="{StaticResource BlockBorderStyle}">
+                    <MediaElement x:Name="PlaybackWindow" AutoPlay="False" AreTransportControlsEnabled="True" PosterSource="Assets/SplashScreen.png"/>
+                </Border>
+            </Grid>
+            <Grid Grid.Column="2" Width="320">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.Resources>
+                    <Style TargetType="Border" BasedOn="{StaticResource BlockBorderStyle}"/>
+                    <Style TargetType="Button" BasedOn="{StaticResource BlockButtonStyle}"/>
+                    <local:EnumTextValueConverter x:Key="EnumTextValueConverter"/>
+                </Grid.Resources>
+                <Border Grid.Row="0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Playback Behavior" Style="{StaticResource BlockHeaderTextBlockStyle}"/>
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Show Controls:"/>
+                        <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding AreTransportControlsEnabled, ElementName=PlaybackWindow, Mode=TwoWay}" />
+                        <TextBlock Grid.Row="1" Grid.Column="2" Text="Full Screen:"/>
+                        <CheckBox Grid.Row="1" Grid.Column="3" IsChecked="{Binding IsFullWindow, ElementName=PlaybackWindow, Mode=TwoWay}" />
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="AutoPlay:"/>
+                        <CheckBox Grid.Row="2" Grid.Column="1" IsChecked="{Binding AutoPlay, ElementName=PlaybackWindow, Mode=TwoWay}" />
+                        <TextBlock Grid.Row="2" Grid.Column="2" Text="Loop Current:"/>
+                        <CheckBox Grid.Row="2" Grid.Column="3" IsChecked="{Binding IsLooping, ElementName=PlaybackWindow, Mode=TwoWay}" />
+
+                        <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="5">
+                           <Grid.ColumnDefinitions>
+                               <ColumnDefinition Width="*"/>
+                               <ColumnDefinition Width="*"/>
+                               <ColumnDefinition Width="*"/>
+                           </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" Content="Play" Click="HandlePlayClicked"/>
+                            <Button Grid.Column="1" Content="Pause" IsEnabled="{Binding CanPause, ElementName=PlaybackWindow, Mode=TwoWay}" Click="HandlePauseClicked"/>
+                            <Button Grid.Column="2" Content="Stop" Click="HandleStopClicked"/>
+                        </Grid>
+                        
+                        <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" Content="Back 5 sec" Click="HandleBack5Clicked" IsEnabled="{Binding CanSeek, ElementName=PlaybackWindow, Mode=OneWay}"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <TextBlock Text="Slo-Mo:"/>
+                                <CheckBox Checked="HandleSloMoCheckChanged" Unchecked="HandleSloMoCheckChanged"/>
+                            </StackPanel>
+                            <Button Grid.Column="2" Content="Fwd 5 sec" Click="HandleForward5Clicked" IsEnabled="{Binding CanSeek, ElementName=PlaybackWindow, Mode=OneWay}"/>
+                        </Grid>
+                        <Grid Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="State:"/>
+                            <TextBlock Grid.Column="1" Text="{Binding CurrentState, ElementName=PlaybackWindow, Mode=OneWay, Converter={StaticResource EnumTextValueConverter}}"/>
+                        </Grid>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="1">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Audio" Style="{StaticResource BlockHeaderTextBlockStyle}"/>
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Is Audio Only:"/>
+                        <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding IsAudioOnly, ElementName=PlaybackWindow, Mode=OneWay}" IsEnabled="False"/>
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Category:"/>
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding AudioCategory, ElementName=PlaybackWindow, Mode=OneWay, Converter={StaticResource EnumTextValueConverter}}"/>
+                        <TextBlock Grid.Row="2" Grid.Column="2" Text="Device Type:"/>
+                        <TextBlock Grid.Row="2" Grid.Column="3" Text="{Binding AudioCategory, ElementName=PlaybackWindow, Mode=OneWay, Converter={StaticResource EnumTextValueConverter}}"/>
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Stream Count:"/>
+                        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding AudioStreamCount, ElementName=PlaybackWindow, Mode=OneWay}"/>
+                        <TextBlock Grid.Row="3" Grid.Column="2" Text="Stream Index:"/>
+                        <TextBlock Grid.Row="3" Grid.Column="3" Text="{Binding AudioStreamIndex, ElementName=PlaybackWindow, Mode=OneWay}"/>
+                        <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Vol:"/>
+                            <Slider Grid.Row="0" Grid.Column="1" Minimum="0" Maximum="1" SmallChange="0.01" StepFrequency="0.1" LargeChange="0.1" Value="{Binding Volume, ElementName=PlaybackWindow, Mode=TwoWay}"/>
+                            <TextBlock Grid.Row="0" Grid.Column="2" Text="Muted:" VerticalAlignment="Bottom"/>
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Bal:"/>
+                            <Slider Grid.Row="1" Grid.Column="1" Minimum="-1" Maximum="1" SmallChange="0.02" StepFrequency="0.2" LargeChange="0.2" Value="{Binding Balance, ElementName=PlaybackWindow, Mode=TwoWay}"/>
+                            <CheckBox Grid.Row="1" Grid.Column="2" IsChecked="{Binding IsMuted, ElementName=PlaybackWindow, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                        </Grid>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="Video" Style="{StaticResource BlockHeaderTextBlockStyle}"/>
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Aspect Ratio:"/>
+                        <StackPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal">
+                            <TextBlock Text="{Binding AspectRatioWidth, ElementName=PlaybackWindow, Mode=OneWay}"/>
+                            <TextBlock Text="x"/>
+                            <TextBlock Text="{Binding AspectRatioHeight, ElementName=PlaybackWindow, Mode=OneWay}"/>
+                        </StackPanel>
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Width:"/>
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding NaturalVideoWidth, ElementName=PlaybackWindow, Mode=OneWay}"/>
+                        <TextBlock Grid.Row="2" Grid.Column="2" Text="Height:"/>
+                        <TextBlock Grid.Row="2" Grid.Column="3" Text="{Binding NaturalVideoHeight, ElementName=PlaybackWindow, Mode=OneWay}"/>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+        
         <!-- Back button and page title -->
-        <Grid>
+        <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="120"/>
                 <ColumnDefinition Width="*"/>
@@ -45,4 +259,14 @@
                         IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,30,40"/>
         </Grid>
     </Grid>
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton Icon="Add" Label="Choose Files" Command="{Binding ChooseFilesCommand}"/>
+            <AppBarButton Icon="Camera" Label="Advanced Capture" Command="{Binding ShowCameraCaptureCommand}"/>
+            <AppBarButton Icon="Camera" Label="Basic Capture" Command="{Binding ShowCameraCaptureCommand}"/>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Icon="Clear" Label="Remove Selected"/>
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
 </Page>
