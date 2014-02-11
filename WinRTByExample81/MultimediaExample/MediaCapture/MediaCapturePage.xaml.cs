@@ -1,8 +1,7 @@
-﻿using Windows.Media.Capture;
-using MultimediaExample.Common;
-using System;
+﻿using System;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using MultimediaExample.Common;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
 
@@ -11,36 +10,38 @@ namespace MultimediaExample
     /// <summary>
     /// A basic page that provides characteristics common to most applications.
     /// </summary>
-    public sealed partial class CameraCapturePage : Page
+    public sealed partial class MediaCapturePage : Page
     {
-
         #region Fields
 
         private readonly NavigationHelper _navigationHelper;
-        private readonly ObservableDictionary _defaultViewModel = new ObservableDictionary(); 
-        private readonly CaptureHelper _captureHelper = new CaptureHelper();
+        private readonly MediaCaptureViewModel _viewModel; 
 
         #endregion
 
         #region Constructor(s) and Initialization
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CameraCapturePage"/> class.
+        /// Initializes a new instance of the <see cref="MediaCapturePage"/> class.
         /// </summary>
-        public CameraCapturePage()
+        public MediaCapturePage()
         {
+            var mediaCaptureHelper = new MediaCaptureHelper();
+            _viewModel = new MediaCaptureViewModel(mediaCaptureHelper);
+            _viewModel.UpdateCaptureDevices();
+
+            mediaCaptureHelper.CaptureHasBeenReset += (sender, args) => mediaCaptureHelper.StartCapturePreview(CaptureElementItem);
+            //_viewModel.CaptureCompleted += (o, args) => Frame.GoBack();
+            
             InitializeComponent();
             _navigationHelper = new NavigationHelper(this);
             _navigationHelper.LoadState += navigationHelper_LoadState;
             _navigationHelper.SaveState += navigationHelper_SaveState;
         }
 
-        /// <summary>
-        /// This can be changed to a strongly typed view model.
-        /// </summary>
-        public ObservableDictionary DefaultViewModel
+        public MediaCaptureViewModel ViewModel
         {
-            get { return _defaultViewModel; }
+            get { return _viewModel; }
         }
 
         /// <summary>
@@ -63,7 +64,7 @@ namespace MultimediaExample
         /// <see cref="Frame.Navigate(Type, Object)"/> when this page was initially requested and
         /// a dictionary of state preserved by this page during an earlier
         /// session. The state will be null the first time a page is visited.</param>
-        private void navigationHelper_LoadState(object sender, LoadStateEventArgs e)
+        private void navigationHelper_LoadState(Object sender, LoadStateEventArgs e)
         {
         }
 
@@ -75,7 +76,7 @@ namespace MultimediaExample
         /// <param name="sender">The source of the event; typically <see cref="NavigationHelper"/></param>
         /// <param name="e">Event data that provides an empty dictionary to be populated with
         /// serializable state.</param>
-        private void navigationHelper_SaveState(object sender, SaveStateEventArgs e)
+        private void navigationHelper_SaveState(Object sender, SaveStateEventArgs e)
         {
         } 
 
@@ -104,5 +105,13 @@ namespace MultimediaExample
         }
 
         #endregion
+    }
+
+    public class DesignMediaCaptureViewModel : MediaCaptureViewModel
+    {
+        public DesignMediaCaptureViewModel()
+            : base(new MediaCaptureHelper())
+        {
+        }
     }
 }

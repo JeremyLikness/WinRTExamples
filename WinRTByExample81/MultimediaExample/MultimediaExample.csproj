@@ -128,10 +128,12 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CameraCapturePage.xaml.cs">
-      <DependentUpon>CameraCapturePage.xaml</DependentUpon>
+    <Compile Include="FilePickerHelper.cs" />
+    <Compile Include="MediaCapture\MediaCapturePage.xaml.cs">
+      <DependentUpon>MediaCapturePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CaptureHelper.cs" />
+    <Compile Include="CaptureUI\CaptureHelper.cs" />
+    <Compile Include="Common\BooleanToVisibilityConverter.cs" />
     <Compile Include="Common\NavigationHelper.cs" />
     <Compile Include="Common\ObservableDictionary.cs" />
     <Compile Include="Common\RelayCommand.cs" />
@@ -139,9 +141,8 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MediaCaptureControl.xaml.cs">
-      <DependentUpon>MediaCaptureControl.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="MediaCapture\MediaCaptureHelper.cs" />
+    <Compile Include="MediaCapture\MediaCaptureViewModel.cs" />
     <Compile Include="PlaybackViewModel.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -159,7 +160,7 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="CameraCapturePage.xaml">
+    <Page Include="MediaCapture\MediaCapturePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -167,11 +168,8 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MediaCaptureControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>
   </PropertyGroup>

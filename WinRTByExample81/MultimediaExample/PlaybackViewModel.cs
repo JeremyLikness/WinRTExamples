@@ -19,10 +19,12 @@ namespace MultimediaExample
         #region Fields
 
         private readonly Func<String, Boolean> _canAddFileCallback;
+        private readonly Action<Type> _navigationCallback;
 
         private readonly ObservableCollection<IStorageFile> _playbackFiles = new ObservableCollection<IStorageFile>();
         private IStorageFile _currentPlaybackFile;
         private RelayCommand _showCameraCaptureCommand;
+        private RelayCommand _showMediaCaptureCommand;
         private RelayCommand _chooseFilesCommand;  
 
         #endregion
@@ -30,14 +32,17 @@ namespace MultimediaExample
         #region Constructor(s) and Initialization
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PlaybackViewModel"/> class.
+        /// Initializes a new instance of the <see cref="PlaybackViewModel" /> class.
         /// </summary>
         /// <param name="canAddFileCallback">The can add file callback.</param>
+        /// <param name="navigationCallback">The navigation callback.</param>
         /// <exception cref="System.ArgumentNullException">canAddFileCallback</exception>
-        public PlaybackViewModel([NotNull] Func<String, Boolean> canAddFileCallback)
+        public PlaybackViewModel(Func<String, Boolean> canAddFileCallback, Action<Type> navigationCallback)
         {
             if (canAddFileCallback == null) throw new ArgumentNullException("canAddFileCallback");
+            if (navigationCallback == null) throw new ArgumentNullException("navigationCallback");
             _canAddFileCallback = canAddFileCallback;
+            _navigationCallback = navigationCallback;
         } 
 
         #endregion
@@ -109,28 +114,38 @@ namespace MultimediaExample
             get { return _showCameraCaptureCommand ?? (_showCameraCaptureCommand = new RelayCommand(ShowCameraCapture)); }
         }
 
+        public ICommand ShowMediaCaptureCommand
+        {
+            get { return _showMediaCaptureCommand ?? (_showMediaCaptureCommand = new RelayCommand(ShowMediaCapture)); }
+        }
+
         #endregion
 
         #region Command Implementations
 
         private async void ChooseFiles()
         {
-            var captureHelper = new CaptureHelper();
-            var selectedFiles = await captureHelper.SelectVideoFilesAsync();
+            var selectedFiles = await FilePickerHelper.SelectVideoFilesAsync();
             AddFiles(selectedFiles);
         }
 
         private async void ShowCameraCapture()
         {
-            var captureHelper = new CaptureHelper();
-            var capturedFile = await captureHelper.CameraUICaptureAsync(CameraCaptureUIMode.PhotoOrVideo);
+            var capturedFile = await CaptureUIHelper.CameraUICaptureAsync(CameraCaptureUIMode.PhotoOrVideo);
             if (capturedFile != null)
             {
                 AddFiles(new[] {capturedFile});
             }
         }
 
+        private void ShowMediaCapture()
+        {
+            _navigationCallback.Invoke(typeof(MediaCapturePage));
+        }
+
         #endregion
+
+        #region Adding Files
 
         private async void AddFiles(IEnumerable<IStorageFile> filesToAdd)
         {
@@ -164,6 +179,8 @@ namespace MultimediaExample
         {
             var result = _canAddFileCallback(fileToAdd.FileType);
             return result;
-        }
+        } 
+
+        #endregion
     }
 }

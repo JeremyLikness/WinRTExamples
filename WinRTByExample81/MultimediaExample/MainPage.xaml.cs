@@ -32,7 +32,7 @@ namespace MultimediaExample
         /// </summary>
         public MainPage()
         {
-            _defaultViewModel = new PlaybackViewModel(IsFileSupported);
+            _defaultViewModel = new PlaybackViewModel(IsFileSupported, x => Frame.Navigate(x));
 
             InitializeComponent();
 
