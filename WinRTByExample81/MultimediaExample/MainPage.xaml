@@ -262,8 +262,8 @@
     <Page.BottomAppBar>
         <CommandBar>
             <AppBarButton Icon="Add" Label="Choose Files" Command="{Binding ChooseFilesCommand}"/>
-            <AppBarButton Icon="Camera" Label="Advanced Capture" Command="{Binding ShowCameraCaptureCommand}"/>
-            <AppBarButton Icon="Camera" Label="Basic Capture" Command="{Binding ShowCameraCaptureCommand}"/>
+            <AppBarButton Icon="Camera" Label="MediaCapture" Command="{Binding ShowMediaCaptureCommand}"/>
+            <AppBarButton Icon="Camera" Label="CameraCaptureUI" Command="{Binding ShowCameraCaptureCommand}"/>
             <CommandBar.SecondaryCommands>
                 <AppBarButton Icon="Clear" Label="Remove Selected"/>
             </CommandBar.SecondaryCommands>
