@@ -11,6 +11,7 @@
     mc:Ignorable="d">
 
     <Page.Resources>
+        <common:EnumTextValueConverter x:Key="EnumTextValueConverter"/>
     </Page.Resources>
 
     <!--
@@ -68,9 +69,36 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" Text="Playback Files" Style="{StaticResource BlockHeaderTextBlockStyle}"/>
-                        <ListView Grid.Row="1" ItemsSource="{Binding PlaybackFiles}" SelectedItem="{Binding CurrentPlaybackFile, Mode=TwoWay}" DisplayMemberPath="Name"/>
+                        <ListView Grid.Row="1" ItemsSource="{Binding PlaybackFiles}" SelectedItem="{Binding CurrentPlaybackFile, Mode=TwoWay}" DisplayMemberPath="PlaybackFile.Name"/>
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" Content="Remove" Command="{Binding RemoveSelectedVideoCommand}"/>
+                            <Button Grid.Column="1" Content="Add Marker" Click="HandleAddMarkerClicked">
+                                <FlyoutBase.AttachedFlyout>
+                                    <Flyout >
+                                        <Grid Width="400" d:DataContext="{d:DesignInstance Type=local:DesignFileMarkerViewModel}">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            <Grid.Resources>
+                                                <Style TargetType="Button">
+                                                    <Setter Property="Margin" Value="5"/>
+                                                </Style>
+                                            </Grid.Resources>
+                                            <local:FileMarkerControl Grid.Row="0"/>
+                                            <Button Grid.Row="1" Content="Add" Command="{Binding PlaybackViewModel.AddMarkerCommand}" CommandParameter="{Binding FileMarker}" HorizontalAlignment="Stretch"/>
+                                        </Grid>
+                                    </Flyout>
+                                </FlyoutBase.AttachedFlyout>
+                            </Button> 
+                        </Grid>
                     </Grid>
                 </Border>
                 <Border Grid.Row="1">
@@ -78,9 +106,34 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" Text="Markers" Style="{StaticResource BlockHeaderTextBlockStyle}"/>
-                        <!--<ListView Grid.Row="1" ItemsSource="{Binding PlaybackFiles}" SelectedItem="{Binding CurrentPlaybackFile, Mode=TwoWay}" DisplayMemberPath="Name"/>-->
+                        <ListView Grid.Row="1" ItemsSource="{Binding CurrentPlaybackFile.FileMarkers}" SelectedItem="{Binding CurrentFileMarker, Mode=TwoWay}" DisplayMemberPath="Name"/>
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" Content="Remove" Command="{Binding RemoveSelectedMarkerCommand}"/>
+                            <Button Grid.Column="1" Content="Update" Click="HandleUpdateMarkerClicked">
+                                <FlyoutBase.AttachedFlyout>
+                                    <Flyout>
+                                        <Grid Width="400" d:DataContext="{d:DesignInstance Type=local:DesignFileMarkerViewModel}">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            <Grid.Resources>
+                                                <Style TargetType="Button">
+                                                    <Setter Property="Margin" Value="5"/>
+                                                </Style>
+                                            </Grid.Resources>
+                                            <local:FileMarkerControl Grid.Row="0"/>
+                                        </Grid>
+                                    </Flyout>
+                                </FlyoutBase.AttachedFlyout>
+                            </Button>
+                        </Grid>
                     </Grid>
                 </Border>
             </Grid>
@@ -98,7 +151,6 @@
                 <Grid.Resources>
                     <Style TargetType="Border" BasedOn="{StaticResource BlockBorderStyle}"/>
                     <Style TargetType="Button" BasedOn="{StaticResource BlockButtonStyle}"/>
-                    <local:EnumTextValueConverter x:Key="EnumTextValueConverter"/>
                 </Grid.Resources>
                 <Border Grid.Row="0">
                     <Grid>
@@ -133,9 +185,9 @@
                                <ColumnDefinition Width="*"/>
                                <ColumnDefinition Width="*"/>
                            </Grid.ColumnDefinitions>
-                            <Button Grid.Column="0" Content="Play" Click="HandlePlayClicked"/>
-                            <Button Grid.Column="1" Content="Pause" IsEnabled="{Binding CanPause, ElementName=PlaybackWindow, Mode=TwoWay}" Click="HandlePauseClicked"/>
-                            <Button Grid.Column="2" Content="Stop" Click="HandleStopClicked"/>
+                            <Button Grid.Column="0" Content="Play" Command="{Binding PlayCommand}"/>
+                            <Button Grid.Column="1" Content="Pause" Command="{Binding PauseCommand}"/>
+                            <Button Grid.Column="2" Content="Stop" Command="{Binding StopCommand}"/>
                         </Grid>
                         
                         <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="5">
@@ -144,12 +196,12 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Button Grid.Column="0" Content="Back 5 sec" Click="HandleBack5Clicked" IsEnabled="{Binding CanSeek, ElementName=PlaybackWindow, Mode=OneWay}"/>
+                            <Button Grid.Column="0" Content="Back 5 sec" Command="{Binding Minus5Command}"/>
                             <StackPanel Grid.Column="1" Orientation="Horizontal">
                                 <TextBlock Text="Slo-Mo:"/>
-                                <CheckBox Checked="HandleSloMoCheckChanged" Unchecked="HandleSloMoCheckChanged"/>
+                                <CheckBox IsChecked="{Binding IsSlowMotionPlayback, Mode=TwoWay}"/>
                             </StackPanel>
-                            <Button Grid.Column="2" Content="Fwd 5 sec" Click="HandleForward5Clicked" IsEnabled="{Binding CanSeek, ElementName=PlaybackWindow, Mode=OneWay}"/>
+                            <Button Grid.Column="2" Content="Fwd 5 sec" Command="{Binding Plus5Command}"/>
                         </Grid>
                         <Grid Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="5">
                             <Grid.ColumnDefinitions>

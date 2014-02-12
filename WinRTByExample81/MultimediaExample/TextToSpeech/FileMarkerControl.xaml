@@ -1,0 +1,55 @@
+﻿<UserControl
+    x:Class="MultimediaExample.FileMarkerControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MultimediaExample"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:multimediaExample="using:MultimediaExample"
+    Width="380"
+    Height="275"
+    mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=multimediaExample:DesignFileMarkerViewModel}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.Resources>
+            <Style TargetType="TextBlock">
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
+            <Style TargetType="TextBox">
+                <Setter Property="Margin" Value="5"/>
+            </Style>
+            <Style TargetType="ComboBox">
+                <Setter Property="Margin" Value="5"/>
+            </Style>
+            <Style TargetType="Button">
+                <Setter Property="Margin" Value="5"/>
+            </Style>
+        </Grid.Resources>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Name:"/>
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding FileMarker.Name, Mode=TwoWay}"/>
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Speech Text:" />
+        <TextBox Grid.Row="1" Grid.Column="1" Height="150" Text="{Binding FileMarker.TextToSpeechContent, Mode=TwoWay}" AcceptsReturn="True"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Is SSML?"/>
+        <CheckBox Grid.Row="2" Grid.Column="1" IsChecked="{Binding FileMarker.IsSsml, Mode=TwoWay}"/>
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Voice:"/>
+        <Grid Grid.Row="3" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <ComboBox Grid.Column="0" ItemsSource="{Binding Voices}" DisplayMemberPath="DisplayName" SelectedValue="{Binding FileMarker.SelectedVoiceId, Mode=TwoWay}" SelectedValuePath="Id"/>
+            <Button Grid.Column="1" Content="Speak" HorizontalAlignment="Stretch" Command="{Binding SpeakCommand}"/>
+        </Grid>
+    </Grid>
+</UserControl>
