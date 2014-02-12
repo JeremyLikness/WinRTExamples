@@ -2,13 +2,11 @@
 using System.Diagnostics;
 using System.Linq;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media;
 using MultimediaExample.Common;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-
-// The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
 
 namespace MultimediaExample
 {
@@ -32,9 +30,13 @@ namespace MultimediaExample
         /// </summary>
         public MainPage()
         {
-            _defaultViewModel = new PlaybackViewModel(IsFileSupported, x => Frame.Navigate(x));
+            var playbackWindowProxy = new PlaybackWindowProxy();
+            _defaultViewModel = new PlaybackViewModel(playbackWindowProxy, x => Frame.Navigate(x));
 
             InitializeComponent();
+
+            // Wait to pass the control until after the control has been created
+            playbackWindowProxy.Initialize(PlaybackWindow);
 
             _navigationHelper = new NavigationHelper(this);
             _navigationHelper.LoadState += navigationHelper_LoadState;
@@ -81,7 +83,7 @@ namespace MultimediaExample
         /// <param name="sender">The source of the event; typically <see cref="NavigationHelper"/></param>
         /// <param name="e">Event data that provides an empty dictionary to be populated with
         /// serializable state.</param>
-        private void navigationHelper_SaveState(object sender, SaveStateEventArgs e)
+        private void navigationHelper_SaveState(Object sender, SaveStateEventArgs e)
         {
         } 
 
@@ -102,8 +104,6 @@ namespace MultimediaExample
         {
             _navigationHelper.OnNavigatedTo(e);
 
-            DefaultViewModel.CurrentPlaybackFileChanged += HandleCurrentPlaybackFileChanged;
-
             PlaybackWindow.MediaOpened += (sender, args) => Debug.WriteLine("Media Opened");
             PlaybackWindow.MediaFailed += (sender, args) => Debug.WriteLine("Media Failed");
             PlaybackWindow.MediaEnded += HandlePlaybackWindowMediaEnded;
@@ -120,45 +120,8 @@ namespace MultimediaExample
         }
 
         #endregion
-        
-        // Frame.Navigate(typeof (CameraCapturePage));
 
-        private async void HandleCurrentPlaybackFileChanged(Object sender, EventArgs e)
-        {
-            var currentFile = DefaultViewModel.CurrentPlaybackFile;
-            if (currentFile != null)
-            {
-                var stream = await currentFile.OpenReadAsync();
-                PlaybackWindow.SetSource(stream, currentFile.ContentType);
-                //PlaybackWindow.SetMediaStreamSource();
-                //PlaybackWindow.SetSource(IRandomAccessStream, mimeType);
-                //PlaybackWindow.Source = Uri
-            }
-            
-            // Buffering and Download
-            //PlaybackWindow.DownloadProgress
-            //PlaybackWindow.DownloadProgressChanged
-            //PlaybackWindow.DownloadProgressOffset (relates to seek-ahead)
-            //PlaybackWindow.BufferingProgress (0-1)...percentage
-
-            // Markers
-            //PlaybackWindow.Markers --> TimelineMarkerCollection
-            //PlaybackWindow.MarkerReached
-
-            // PlayTo
-            //PlaybackWindow.PlayToPreferredSourceUri
-            //PlaybackWindow.PlayToSource
-
-            // Effects          
-            //PlaybackWindow.AddAudioEffect();
-            //PlaybackWindow.AddVideoEffect();
-            //PlaybackWindow.RemoveAllEffects();
-
-            // Other?
-            //PlaybackWindow.RealTimePlayback
-            //PlaybackWindow.ProtectionManager
-
-        }
+        #region Playback events
 
         private void HandlePlaybackWindowMediaEnded(Object sender, RoutedEventArgs routedEventArgs)
         {
@@ -174,114 +137,76 @@ namespace MultimediaExample
 
         private void HandlePlaybackWindowMarkerReached(Object sender, TimelineMarkerRoutedEventArgs e)
         {
-            Debug.WriteLine("Marker reached: {0}", e.Marker.Text);
-        }
-
-        private void HandlePlayClicked(Object sender, RoutedEventArgs e)
-        {
-            PlaybackWindow.Play();
-        }
-
-        private void HandlePauseClicked(Object sender, RoutedEventArgs e)
-        {
             PlaybackWindow.Pause();
-        }
+            var matchingMarker = DefaultViewModel.CurrentPlaybackFile.FileMarkers.FirstOrDefault(x => x.Time == e.Marker.Time);
+            DefaultViewModel.CurrentFileMarker = matchingMarker;
+            TextToSpeechHelper.PlayContentAsync(matchingMarker.TextToSpeechContent, matchingMarker.IsSsml, matchingMarker.SelectedVoiceId);
+        } 
 
-        private void HandleStopClicked(Object sender, RoutedEventArgs e)
+        #endregion
+
+        // Buffering and Download
+        //PlaybackWindow.DownloadProgress
+        //PlaybackWindow.DownloadProgressChanged
+        //PlaybackWindow.DownloadProgressOffset (relates to seek-ahead)
+        //PlaybackWindow.BufferingProgress (0-1)...percentage
+
+        // Markers
+        //PlaybackWindow.Markers --> TimelineMarkerCollection
+        //PlaybackWindow.MarkerReached
+
+        // PlayTo
+        //PlaybackWindow.PlayToPreferredSourceUri
+        //PlaybackWindow.PlayToSource
+
+        // Effects          
+        //PlaybackWindow.AddAudioEffect();
+        //PlaybackWindow.AddVideoEffect();
+        //PlaybackWindow.RemoveAllEffects();
+
+        // Other?
+        //PlaybackWindow.RealTimePlayback
+        //PlaybackWindow.ProtectionManager
+
+        private void HandleAddMarkerClicked(Object sender, RoutedEventArgs e)
         {
-            PlaybackWindow.Stop();
-        }
+            DefaultViewModel.PauseCommand.Execute(null);
 
-        private void HandleBack5Clicked(Object sender, RoutedEventArgs e)
-        {
-            SeekToPosition(TimeSpan.FromSeconds(-5));
-        }
+            // Show a flyout that displays the current marker details
+            var flyout = (Flyout)FlyoutBase.GetAttachedFlyout((FrameworkElement)sender);
+            var flyoutContent = (FrameworkElement)flyout.Content;
 
-        private void HandleForward5Clicked(Object sender, RoutedEventArgs e)
-        {
-            SeekToPosition(TimeSpan.FromSeconds(5));
-        }
-
-        private void SeekToPosition(TimeSpan newPosition)
-        {
-            //PlaybackWindow.SeekCompleted
-            
-            // Make sure that seek is an option
-            if (!PlaybackWindow.CanSeek) return;
-
-            // Pause any current playback
-            if (PlaybackWindow.CanPause) PlaybackWindow.Pause();
-
-            // Determine the new position
-            var newPos = PlaybackWindow.Position + newPosition;
-
-            // Make sure the new position is "in bounds"
-            if (newPos < TimeSpan.FromMilliseconds(0))
+            var newFileMarker = new FileMarker
             {
-                newPos = TimeSpan.FromMilliseconds(0);
-            }
+                Time = DefaultViewModel.GetCurrentPlaybackPosition()
+            };
 
-            // Note that NaturalDuration is "Automatic" until after MediaOpened event is raised
-            var duration = PlaybackWindow.NaturalDuration;
-            if (duration.HasTimeSpan)
-            {
-                if (newPos > duration.TimeSpan) newPos = duration.TimeSpan;
-            }
+            var viewModel = new FileMarkerViewModel(DefaultViewModel, newFileMarker);
 
-            // Finally, set the target position
-            PlaybackWindow.Position = newPos;
+            flyoutContent.DataContext = viewModel;
+            flyout.ShowAt((FrameworkElement)sender);
         }
 
-        private void HandleSloMoCheckChanged(Object sender, RoutedEventArgs e)
+        private void HandleUpdateMarkerClicked(Object sender, RoutedEventArgs e)
         {
-            if (PlaybackWindow.CanPause) PlaybackWindow.Pause();
+            var marker = DefaultViewModel.CurrentFileMarker;
 
-            var checkBox = (CheckBox) sender;
-            var playbackRate = checkBox.IsChecked == true ? 0.5 : 1.0;
-            PlaybackWindow.DefaultPlaybackRate = playbackRate;
+            // Show a flyout that displays the current marker details
+            var flyout = (Flyout)FlyoutBase.GetAttachedFlyout((FrameworkElement)sender);
+            var flyoutContent = (FrameworkElement)flyout.Content;
 
-            //PlaybackWindow.PlaybackRate
-            //PlaybackWindow.RateChanged
-        }
+            var viewModel = new FileMarkerViewModel(DefaultViewModel, marker);
 
-        private Boolean IsFileSupported(String fileType)
-        {
-            return PlaybackWindow.CanPlayType(fileType) != MediaCanPlayResponse.NotSupported;
+            flyoutContent.DataContext = viewModel;
+            flyout.ShowAt((FrameworkElement)sender);
         }
     }
 
-    public class EnumTextValueConverter : IValueConverter
+    public class DesignFileMarkerViewModel : FileMarkerViewModel
     {
-        /// <summary>
-        /// Modifies the source data before passing it to the target for display in the UI.
-        /// </summary>
-        /// <param name="value">The source data being passed to the target.</param>
-        /// <param name="targetType">The type of the target property. This uses a different type depending on whether you're programming with Microsoft .NET or Visual C++ component extensions (C++/CX). See Remarks.</param>
-        /// <param name="parameter">An optional parameter to be used in the converter logic.</param>
-        /// <param name="language">The language of the conversion.</param>
-        /// <returns>
-        /// The value to be passed to the target dependency property.
-        /// </returns>
-        public Object Convert(Object value, Type targetType, Object parameter, String language)
+        public DesignFileMarkerViewModel()
+            : base(new PlaybackViewModel(null, null), new FileMarker())
         {
-            var mediaElementStateValue = (Enum) value;
-            return mediaElementStateValue.ToString();
-        }
-
-        /// <summary>
-        /// Modifies the target data before passing it to the source object. This method is called only in TwoWay bindings.
-        /// </summary>
-        /// <param name="value">The target data being passed to the source.</param>
-        /// <param name="targetType">The type of the target property, specified by a helper structure that wraps the type name.</param>
-        /// <param name="parameter">An optional parameter to be used in the converter logic.</param>
-        /// <param name="language">The language of the conversion.</param>
-        /// <returns>
-        /// The value to be passed to the source object.
-        /// </returns>
-        /// <exception cref="System.NotImplementedException"></exception>
-        public Object ConvertBack(Object value, Type targetType, Object parameter, String language)
-        {
-            throw new NotImplementedException();
         }
     }
 }

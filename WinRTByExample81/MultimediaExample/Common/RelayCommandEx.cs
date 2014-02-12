@@ -1,19 +1,19 @@
-﻿using System;
+using System;
 using System.Windows.Input;
 
 namespace MultimediaExample.Common
 {
     /// <summary>
     /// A command whose sole purpose is to relay its functionality 
-    /// to other objects by invoking delegates. 
+    /// to other objects by invoking delegates. (Including parameters) 
     /// The default return value for the CanExecute method is 'true'.
     /// <see cref="RaiseCanExecuteChanged"/> needs to be called whenever
     /// <see cref="CanExecute"/> is expected to return a different value.
     /// </summary>
-    public class RelayCommand : ICommand
+    public class RelayCommandEx : ICommand
     {
-        private readonly Action _execute;
-        private readonly Func<bool> _canExecute;
+        private readonly Action<object> _execute;
+        private readonly Func<Object, Boolean> _canExecute;
 
         /// <summary>
         /// Raised when RaiseCanExecuteChanged is called.
@@ -24,7 +24,7 @@ namespace MultimediaExample.Common
         /// Creates a new command that can always execute.
         /// </summary>
         /// <param name="execute">The execution logic.</param>
-        public RelayCommand(Action execute)
+        public RelayCommandEx(Action<Object> execute)
             : this(execute, null)
         {
         }
@@ -34,7 +34,7 @@ namespace MultimediaExample.Common
         /// </summary>
         /// <param name="execute">The execution logic.</param>
         /// <param name="canExecute">The execution status logic.</param>
-        public RelayCommand(Action execute, Func<bool> canExecute)
+        public RelayCommandEx(Action<Object> execute, Func<Object, Boolean> canExecute)
         {
             if (execute == null)
                 throw new ArgumentNullException("execute");
@@ -49,9 +49,9 @@ namespace MultimediaExample.Common
         /// Data used by the command. If the command does not require data to be passed, this object can be set to null.
         /// </param>
         /// <returns>true if this command can be executed; otherwise, false.</returns>
-        public bool CanExecute(object parameter)
+        public bool CanExecute(Object parameter)
         {
-            return _canExecute == null ? true : _canExecute();
+            return _canExecute == null || _canExecute(parameter);
         }
 
         /// <summary>
@@ -60,9 +60,9 @@ namespace MultimediaExample.Common
         /// <param name="parameter">
         /// Data used by the command. If the command does not require data to be passed, this object can be set to null.
         /// </param>
-        public void Execute(object parameter)
+        public void Execute(Object parameter)
         {
-            _execute();
+            _execute(parameter);
         }
 
         /// <summary>
