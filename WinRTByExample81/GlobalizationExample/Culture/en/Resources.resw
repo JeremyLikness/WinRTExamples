@@ -123,6 +123,9 @@
   <data name="Dynamic" xml:space="preserve">
     <value>This is dynamic text</value>
   </data>
+  <data name="FormattedNumber" xml:space="preserve">
+    <value>The number is {0} and the percentage is {1}.</value>
+  </data>
   <data name="Header.Text" xml:space="preserve">
     <value>Example of Globalization in a Windows Store App</value>
   </data>
