@@ -42,6 +42,7 @@
                        Style="{StaticResource SubheaderTextBlockStyle}"/>
             <TextBlock Text="{Binding Path=SimpleDate, Converter={StaticResource DateConverter}, ConverterLanguage='ar-sa'}"
                        Style="{StaticResource SubheaderTextBlockStyle}"/>
+            <TextBlock Text="{Binding Path=FormattedNumber}" Style="{StaticResource SubheaderTextBlockStyle}"/>
         </StackPanel>
         
     </Grid>
