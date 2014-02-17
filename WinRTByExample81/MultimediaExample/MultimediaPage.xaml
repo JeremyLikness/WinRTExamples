@@ -1,6 +1,6 @@
 ﻿<Page
     x:Name="PageRoot"
-    x:Class="MultimediaExample.MainPage"
+    x:Class="MultimediaExample.MultimediaPage"
     DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -93,7 +93,7 @@
                                                 </Style>
                                             </Grid.Resources>
                                             <local:FileMarkerControl Grid.Row="0"/>
-                                            <Button Grid.Row="1" Content="Add" Command="{Binding PlaybackViewModel.AddMarkerCommand}" CommandParameter="{Binding FileMarker}" HorizontalAlignment="Stretch"/>
+                                            <Button Grid.Row="1" Content="Add" Command="{Binding MultimediaViewModel.AddMarkerCommand}" CommandParameter="{Binding FileMarker}" HorizontalAlignment="Stretch"/>
                                         </Grid>
                                     </Flyout>
                                 </FlyoutBase.AttachedFlyout>
@@ -215,49 +215,26 @@
                 </Border>
                 <Border Grid.Row="1">
                     <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
                         <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Audio" Style="{StaticResource BlockHeaderTextBlockStyle}"/>
-                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Is Audio Only:"/>
-                        <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding IsAudioOnly, ElementName=PlaybackWindow, Mode=OneWay}" IsEnabled="False"/>
-                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Category:"/>
-                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding AudioCategory, ElementName=PlaybackWindow, Mode=OneWay, Converter={StaticResource EnumTextValueConverter}}"/>
-                        <TextBlock Grid.Row="2" Grid.Column="2" Text="Device Type:"/>
-                        <TextBlock Grid.Row="2" Grid.Column="3" Text="{Binding AudioCategory, ElementName=PlaybackWindow, Mode=OneWay, Converter={StaticResource EnumTextValueConverter}}"/>
-                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Stream Count:"/>
-                        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding AudioStreamCount, ElementName=PlaybackWindow, Mode=OneWay}"/>
-                        <TextBlock Grid.Row="3" Grid.Column="2" Text="Stream Index:"/>
-                        <TextBlock Grid.Row="3" Grid.Column="3" Text="{Binding AudioStreamIndex, ElementName=PlaybackWindow, Mode=OneWay}"/>
-                        <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="5">
+                        <Slider Grid.Row="1" Grid.Column="0" Header="Volume:" Minimum="0" Maximum="1" SmallChange="0.01" StepFrequency="0.1" LargeChange="0.1" Value="{Binding Volume, ElementName=PlaybackWindow, Mode=TwoWay}" Margin="5,0"/>
+                        <Grid Grid.Row="1" Grid.Column="1" Margin="10,0">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Vol:"/>
-                            <Slider Grid.Row="0" Grid.Column="1" Minimum="0" Maximum="1" SmallChange="0.01" StepFrequency="0.1" LargeChange="0.1" Value="{Binding Volume, ElementName=PlaybackWindow, Mode=TwoWay}"/>
-                            <TextBlock Grid.Row="0" Grid.Column="2" Text="Muted:" VerticalAlignment="Bottom"/>
-                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Bal:"/>
-                            <Slider Grid.Row="1" Grid.Column="1" Minimum="-1" Maximum="1" SmallChange="0.02" StepFrequency="0.2" LargeChange="0.2" Value="{Binding Balance, ElementName=PlaybackWindow, Mode=TwoWay}"/>
-                            <CheckBox Grid.Row="1" Grid.Column="2" IsChecked="{Binding IsMuted, ElementName=PlaybackWindow, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                            <TextBlock Grid.Row="0" Text="Muted:"/>
+                            <CheckBox Grid.Row="1" IsChecked="{Binding IsMuted, ElementName=PlaybackWindow, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,12"/>
                         </Grid>
+                        <Slider Grid.Row="2" Grid.Column="0" Header="Balance:" Minimum="-1" Maximum="1" SmallChange="0.02" StepFrequency="0.2" LargeChange="0.2" Value="{Binding Balance, ElementName=PlaybackWindow, Mode=TwoWay}" Margin="5,0"/>
                     </Grid>
                 </Border>
                 <Border Grid.Row="2">
@@ -276,10 +253,8 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" Text="Video" Style="{StaticResource BlockHeaderTextBlockStyle}"/>
+                        <TextBlock Grid.Row="0" Text="Information" Style="{StaticResource BlockHeaderTextBlockStyle}"/>
                         <TextBlock Grid.Row="1" Grid.Column="0" Text="Aspect Ratio:"/>
                         <StackPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal">
                             <TextBlock Text="{Binding AspectRatioWidth, ElementName=PlaybackWindow, Mode=OneWay}"/>
@@ -290,6 +265,17 @@
                         <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding NaturalVideoWidth, ElementName=PlaybackWindow, Mode=OneWay}"/>
                         <TextBlock Grid.Row="2" Grid.Column="2" Text="Height:"/>
                         <TextBlock Grid.Row="2" Grid.Column="3" Text="{Binding NaturalVideoHeight, ElementName=PlaybackWindow, Mode=OneWay}"/>
+
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Is Audio Only:"/>
+                        <CheckBox Grid.Row="3" Grid.Column="1" IsChecked="{Binding IsAudioOnly, ElementName=PlaybackWindow, Mode=OneWay}" IsEnabled="False"/>
+                        <TextBlock Grid.Row="4" Grid.Column="0" Text="Category:"/>
+                        <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding AudioCategory, ElementName=PlaybackWindow, Mode=OneWay, Converter={StaticResource EnumTextValueConverter}}"/>
+                        <TextBlock Grid.Row="4" Grid.Column="2" Text="Device Type:"/>
+                        <TextBlock Grid.Row="4" Grid.Column="3" Text="{Binding AudioCategory, ElementName=PlaybackWindow, Mode=OneWay, Converter={StaticResource EnumTextValueConverter}}"/>
+                        <TextBlock Grid.Row="5" Grid.Column="0" Text="Stream Count:"/>
+                        <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding AudioStreamCount, ElementName=PlaybackWindow, Mode=OneWay}"/>
+                        <TextBlock Grid.Row="5" Grid.Column="2" Text="Stream Index:"/>
+                        <TextBlock Grid.Row="5" Grid.Column="3" Text="{Binding AudioStreamIndex, ElementName=PlaybackWindow, Mode=OneWay}"/>
                     </Grid>
                 </Border>
             </Grid>
@@ -316,9 +302,6 @@
             <AppBarButton Icon="Add" Label="Choose Files" Command="{Binding ChooseFilesCommand}"/>
             <AppBarButton Icon="Camera" Label="MediaCapture" Command="{Binding ShowMediaCaptureCommand}"/>
             <AppBarButton Icon="Camera" Label="CameraCaptureUI" Command="{Binding ShowCameraCaptureCommand}"/>
-            <CommandBar.SecondaryCommands>
-                <AppBarButton Icon="Clear" Label="Remove Selected"/>
-            </CommandBar.SecondaryCommands>
         </CommandBar>
     </Page.BottomAppBar>
 </Page>
