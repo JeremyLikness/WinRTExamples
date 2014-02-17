@@ -9,20 +9,21 @@ using Windows.ApplicationModel;
 using Windows.Media.Capture;
 using Windows.Storage;
 using Windows.UI.Popups;
+using Windows.UI.Xaml.Controls;
 using MultimediaExample.Annotations;
 using MultimediaExample.Common;
 
 namespace MultimediaExample
 {
-    public class PlaybackViewModel : INotifyPropertyChanged
+    public class MultimediaViewModel : INotifyPropertyChanged
     {
         #region Fields
 
-        private readonly IPlaybackWindow _playbackWindowProxy;
-        private readonly Action<Type> _navigationCallback;
+        private readonly IMediaElementWrapper _mediaElementWrapper;
+        private readonly INavigate _navigationHost;
 
-        private readonly ObservableCollection<FileData> _playbackFiles = new ObservableCollection<FileData>();
-        private FileData _currentPlaybackFile;
+        private readonly ObservableCollection<MultimediaFileDetails> _playbackFiles = new ObservableCollection<MultimediaFileDetails>();
+        private MultimediaFileDetails _currentPlaybackFile;
         private FileMarker _currentFileMarker;
         private Boolean _isSlowMotionPlayback;
 
@@ -45,20 +46,19 @@ namespace MultimediaExample
         #region Constructor(s) and Initialization
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PlaybackViewModel" /> class.
+        /// Initializes a new instance of the <see cref="MultimediaViewModel" /> class.
         /// </summary>
-        /// <param name="navigationCallback">The navigation callback.</param>
-        /// <param name="playbackWindowProxy">The playback window proxy.</param>
+        /// <param name="mediaElementwrapper">The media element wrapper.</param>
+        /// <param name="navigationHost">The navigation host.</param>
         /// <exception cref="System.ArgumentNullException">canAddFileCallback</exception>
-        public PlaybackViewModel(IPlaybackWindow playbackWindowProxy, Action<Type> navigationCallback)
+        public MultimediaViewModel(IMediaElementWrapper mediaElementwrapper, INavigate navigationHost)
         {
             if (DesignMode.DesignModeEnabled) return;
 
-            if (playbackWindowProxy == null) throw new ArgumentNullException("playbackWindowProxy");
-            if (navigationCallback == null) throw new ArgumentNullException("navigationCallback");
-
-            _playbackWindowProxy = playbackWindowProxy;
-            _navigationCallback = navigationCallback;
+            if (mediaElementwrapper == null) throw new ArgumentNullException("mediaElementwrapper");
+            if (navigationHost == null) throw new ArgumentNullException("navigationHost");
+            _mediaElementWrapper = mediaElementwrapper;
+            _navigationHost = navigationHost;
         } 
 
         #endregion
@@ -67,14 +67,14 @@ namespace MultimediaExample
 
         public TimeSpan GetCurrentPlaybackPosition()
         {
-            return _playbackWindowProxy.CurrentPosition;
+            return _mediaElementWrapper.CurrentPosition;
         } 
 
         #endregion
 
         #region Properties
 
-        public IList<FileData> PlaybackFiles
+        public IList<MultimediaFileDetails> PlaybackFiles
         {
             get { return _playbackFiles; }
         }
@@ -87,11 +87,11 @@ namespace MultimediaExample
                 if (value.Equals(_isSlowMotionPlayback)) return;
                 _isSlowMotionPlayback = value;
                 OnPropertyChanged();
-                _playbackWindowProxy.SetSlowMotion(IsSlowMotionPlayback);
+                _mediaElementWrapper.SetSlowMotion(IsSlowMotionPlayback);
             }
         }
 
-        public FileData CurrentPlaybackFile
+        public MultimediaFileDetails CurrentPlaybackFile
         {
             get { return _currentPlaybackFile; }
             set
@@ -102,15 +102,15 @@ namespace MultimediaExample
 
                 UpdateCommands();
 
-                _playbackWindowProxy.SetSource(CurrentPlaybackFile == null ? null : CurrentPlaybackFile.PlaybackFile);
+                _mediaElementWrapper.SetSource(CurrentPlaybackFile == null ? null : CurrentPlaybackFile.PlaybackFile);
 
                 // Reset the markers
-                _playbackWindowProxy.ClearMarkers();
+                _mediaElementWrapper.ClearAllMarkers();
                 if (CurrentPlaybackFile != null)
                 {
                     foreach (var marker in CurrentPlaybackFile.FileMarkers)
                     {
-                        _playbackWindowProxy.AddMarker(marker.Name, marker.Time);
+                        _mediaElementWrapper.AddMarker(marker.Name, marker.Time);
                     }
                 }
             }
@@ -257,12 +257,12 @@ namespace MultimediaExample
 
         private void ShowMediaCapture()
         {
-            _navigationCallback.Invoke(typeof(MediaCapturePage));
+            _navigationHost.Navigate(typeof(MediaCapturePage));
         }
         
         private void RemoveSelectedVideo()
         {
-            _playbackWindowProxy.Stop();
+            _mediaElementWrapper.Stop();
             PlaybackFiles.Remove(CurrentPlaybackFile);
         }
 
@@ -277,7 +277,7 @@ namespace MultimediaExample
             var fileMarker = parameter as FileMarker;
             if (fileMarker == null) return;
             CurrentPlaybackFile.FileMarkers.Add(fileMarker);
-            _playbackWindowProxy.AddMarker(fileMarker.Name, fileMarker.Time);
+            _mediaElementWrapper.AddMarker(fileMarker.Name, fileMarker.Time);
         }
 
         private Boolean CanAddMarker(Object parameter)
@@ -288,7 +288,7 @@ namespace MultimediaExample
         private void RemoveSelectedMarker()
         {
             if (CurrentFileMarker == null) return;
-            _playbackWindowProxy.RemoveMarker(CurrentFileMarker.Time);
+            _mediaElementWrapper.RemoveMarker(CurrentFileMarker.Time);
         }
 
         private Boolean CanRemoveSelectedMarker()
@@ -298,7 +298,7 @@ namespace MultimediaExample
 
         private void Play()
         {
-            _playbackWindowProxy.Play();
+            _mediaElementWrapper.Play();
         }
 
         private Boolean CanPlay()
@@ -308,18 +308,18 @@ namespace MultimediaExample
 
         private void Pause()
         {
-            _playbackWindowProxy.Pause();
+            _mediaElementWrapper.Pause();
         }
 
         private Boolean CanPause()
         {
             return CurrentPlaybackFile != null
-                && _playbackWindowProxy.CanPause();
+                && _mediaElementWrapper.CanPause();
         }
 
         private void Stop()
         {
-            _playbackWindowProxy.Stop();
+            _mediaElementWrapper.Stop();
         }
 
         private Boolean CanStop()
@@ -329,18 +329,18 @@ namespace MultimediaExample
 
         private void Offset(TimeSpan timeToOffset)
         {
-            _playbackWindowProxy.Offset(timeToOffset);
+            _mediaElementWrapper.Offset(timeToOffset);
         }
 
         private Boolean CanOffset()
         {
             return CurrentPlaybackFile != null
-                   && _playbackWindowProxy.CanSeek();
+                   && _mediaElementWrapper.CanSeek();
         }
 
         private void Seek(TimeSpan timeToSeek)
         {
-            _playbackWindowProxy.Seek(timeToSeek);
+            _mediaElementWrapper.Seek(timeToSeek);
         }
 
         #endregion
@@ -354,7 +354,7 @@ namespace MultimediaExample
             {
                 if (CanAddFile(fileToAdd))
                 {
-                    PlaybackFiles.Add(new FileData {PlaybackFile = fileToAdd});
+                    PlaybackFiles.Add(new MultimediaFileDetails {PlaybackFile = fileToAdd});
                 }
                 else
                 {
@@ -377,19 +377,10 @@ namespace MultimediaExample
 
         private Boolean CanAddFile(IStorageFile fileToAdd)
         {
-            var result = _playbackWindowProxy.IsFileTypeSupported(fileToAdd.FileType);
+            var result = _mediaElementWrapper.IsFileTypeSupported(fileToAdd.FileType);
             return result;
         } 
 
         #endregion
-    }
-
-    public class FileData
-    {
-        private readonly ObservableCollection<FileMarker> _fileMarkers = new ObservableCollection<FileMarker>();
-
-        public IStorageFile PlaybackFile { get; set; }
-
-        public IList<FileMarker> FileMarkers { get { return _fileMarkers; } }
     }
 }

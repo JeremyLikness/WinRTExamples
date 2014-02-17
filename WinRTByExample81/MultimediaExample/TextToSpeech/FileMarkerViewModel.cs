@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using Windows.Media.SpeechSynthesis;
@@ -22,17 +21,17 @@ namespace MultimediaExample
         /// <summary>
         /// Initializes a new instance of the <see cref="FileMarkerViewModel"/> class.
         /// </summary>
-        /// <param name="playbackViewModel">The playback view model.</param>
+        /// <param name="multimediaViewModel">The multimedia view model.</param>
         /// <param name="fileMarker">The file marker.</param>
-        public FileMarkerViewModel(PlaybackViewModel playbackViewModel, FileMarker fileMarker)
+        public FileMarkerViewModel(MultimediaViewModel multimediaViewModel, FileMarker fileMarker)
         {
-            PlaybackViewModel = playbackViewModel;
+            MultimediaViewModel = multimediaViewModel;
             FileMarker = fileMarker;
         } 
 
         #endregion
 
-        public PlaybackViewModel PlaybackViewModel { get; private set; }
+        public MultimediaViewModel MultimediaViewModel { get; private set; }
 
         public FileMarker FileMarker { get; private set; }
 

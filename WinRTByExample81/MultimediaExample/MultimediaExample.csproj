@@ -130,10 +130,11 @@
     </Compile>
     <Compile Include="Common\EnumTextValueConverter.cs" />
     <Compile Include="Common\RelayCommandEx.cs" />
+    <Compile Include="MultimediaFileDetails.cs" />
     <Compile Include="TextToSpeech\FileMarker.cs" />
     <Compile Include="TextToSpeech\FileMarkerViewModel.cs" />
     <Compile Include="FilePickerHelper.cs" />
-    <Compile Include="IPlaybackWindow.cs" />
+    <Compile Include="Playback\IMediaElementWrapper.cs" />
     <Compile Include="MediaCapture\MediaCapturePage.xaml.cs">
       <DependentUpon>MediaCapturePage.xaml</DependentUpon>
     </Compile>
@@ -143,13 +144,13 @@
     <Compile Include="Common\ObservableDictionary.cs" />
     <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
-    <Compile Include="MainPage.xaml.cs">
-      <DependentUpon>MainPage.xaml</DependentUpon>
+    <Compile Include="MultimediaPage.xaml.cs">
+      <DependentUpon>MultimediaPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="MediaCapture\MediaCaptureHelper.cs" />
     <Compile Include="MediaCapture\MediaCaptureViewModel.cs" />
-    <Compile Include="PlaybackViewModel.cs" />
-    <Compile Include="PlaybackWindowProxy.cs" />
+    <Compile Include="MultimediaViewModel.cs" />
+    <Compile Include="Playback\MediaElementWrapper.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TextToSpeech\FileMarkerControl.xaml.cs">
@@ -174,7 +175,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainPage.xaml">
+    <Page Include="MultimediaPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

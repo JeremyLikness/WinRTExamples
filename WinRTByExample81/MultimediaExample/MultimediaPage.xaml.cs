@@ -13,25 +13,25 @@ namespace MultimediaExample
     /// <summary>
     /// A basic page that provides characteristics common to most applications.
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class MultimediaPage : Page
     {
 
         #region Fields
 
         private readonly NavigationHelper _navigationHelper;
-        private readonly PlaybackViewModel _defaultViewModel;
+        private readonly MultimediaViewModel _defaultViewModel;
 
         #endregion
 
         #region Constructor(s) and Initialization
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MainPage"/> class.
+        /// Initializes a new instance of the <see cref="MultimediaPage"/> class.
         /// </summary>
-        public MainPage()
+        public MultimediaPage()
         {
-            var playbackWindowProxy = new PlaybackWindowProxy();
-            _defaultViewModel = new PlaybackViewModel(playbackWindowProxy, x => Frame.Navigate(x));
+            var playbackWindowProxy = new MediaElementWrapper();
+            _defaultViewModel = new MultimediaViewModel(playbackWindowProxy, Frame);
 
             InitializeComponent();
 
@@ -46,7 +46,7 @@ namespace MultimediaExample
         /// <summary>
         /// This can be changed to a strongly typed view model.
         /// </summary>
-        public PlaybackViewModel DefaultViewModel
+        public MultimediaViewModel DefaultViewModel
         {
             get { return _defaultViewModel; }
         }
@@ -205,7 +205,7 @@ namespace MultimediaExample
     public class DesignFileMarkerViewModel : FileMarkerViewModel
     {
         public DesignFileMarkerViewModel()
-            : base(new PlaybackViewModel(null, null), new FileMarker())
+            : base(new MultimediaViewModel(null, null), new FileMarker())
         {
         }
     }
