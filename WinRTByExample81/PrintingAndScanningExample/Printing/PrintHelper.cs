@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Windows.Graphics.Printing;
 using Windows.Graphics.Printing.OptionDetails;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Printing;
 
@@ -15,7 +15,7 @@ namespace PrintingAndScanningExample
     {
         #region Fields
 
-        private readonly SynchronizationContext _syncContext = SynchronizationContext.Current;
+        private readonly CoreDispatcher _dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
 
         private readonly PrintDocument _printDocument;
 
@@ -143,13 +143,13 @@ namespace PrintingAndScanningExample
 
             // Set the document source for the current print job.
             // This MUST happen on the UI thread.
-            _syncContext.Post(x =>
+            _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 args.SetSource(_printDocument.DocumentSource);
 
                 // Complete the deferral to indicate completion
                 deferral.Complete();
-            }, null);
+            });
         }
 
         #endregion
@@ -229,7 +229,8 @@ namespace PrintingAndScanningExample
             {
                 // Invalidate the preview content to force it to refresh.
                 // This has to happen on the UI thread.
-                _syncContext.Post(x => _printDocument.InvalidatePreview(), null);
+                _dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                    () => _printDocument.InvalidatePreview());
             }
         }
 

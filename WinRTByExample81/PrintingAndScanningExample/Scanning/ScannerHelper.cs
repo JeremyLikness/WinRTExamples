@@ -27,8 +27,7 @@ namespace PrintingAndScanningExample
                     Name = x.Name,
                     IsDefault = x.IsDefault,
                     IsEnabled = x.IsEnabled,
-                })
-                .ToList();
+                });
             return result;
 
             // Alternatively, a watcher can be used, which raises events as items are located/added/removed/updated:
