@@ -65,6 +65,9 @@ namespace InputsExample
 
             SizeChanged += OnSizeChanged;
 
+            Window.Current.CoreWindow.KeyDown += (sender, args) => HandleKeyDown(args);
+            Window.Current.CoreWindow.KeyUp += (sender, args) => HandleKeyUp(args);
+
             // Subscribe to changes in the input settings
             _inputSettings.PropertyChanged += (sender, args) => UpdateStateFromInputSettings();
 
@@ -273,7 +276,7 @@ namespace InputsExample
             Focus(FocusState.Programmatic);
         }
 
-        protected override void OnKeyDown(KeyRoutedEventArgs args)
+        private void HandleKeyDown(KeyEventArgs args)
         {
             // Check for shift, control, alt (AKA VirtualKey.Menu)
             var currentWindow = CoreWindow.GetForCurrentThread();
@@ -288,18 +291,19 @@ namespace InputsExample
                 (altState & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
 
             System.Diagnostics.Debug.WriteLine("KeyDown: {0} WasDown = {1}, Ctrl={2}, Shift={3}, Alt={4}", 
-                args.Key,
+                args.VirtualKey,
                 args.KeyStatus.WasKeyDown, 
                 isControlKeyPressed,
                 isShiftKeyPressed,
                 isAltKeyPressed);
         }
 
-        protected override void OnKeyUp(KeyRoutedEventArgs args)
+        private void HandleKeyUp(KeyEventArgs args)
         {
-            System.Diagnostics.Debug.WriteLine("KeyUp: {0} - {1}, {2}", args.Key, args.KeyStatus.WasKeyDown, args.KeyStatus.IsKeyReleased);
-            if (args.Key == VirtualKey.B) CreateShape(ShapeModel.ShapeType.Ball);
-            if (args.Key == VirtualKey.S) CreateShape(ShapeModel.ShapeType.Square);
+            // invoked anytime a key is pressed down, independent of focus
+            System.Diagnostics.Debug.WriteLine("KeyUp: {0} - {1}, {2}", args.VirtualKey, args.KeyStatus.WasKeyDown, args.KeyStatus.IsKeyReleased);
+            if (args.VirtualKey == VirtualKey.B) CreateShape(ShapeModel.ShapeType.Ball);
+            if (args.VirtualKey == VirtualKey.S) CreateShape(ShapeModel.ShapeType.Square);
         }
 
         private void HandlePointerDetailsPressed(Object sender, PointerRoutedEventArgs e)

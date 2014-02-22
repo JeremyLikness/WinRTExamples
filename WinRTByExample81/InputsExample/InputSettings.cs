@@ -282,9 +282,9 @@ namespace InputsExample
             IsMouseAvailable = devices.Any(x => x.PointerDeviceType == PointerDeviceType.Mouse);
             IsPenAvailable = devices.Any(x => x.PointerDeviceType == PointerDeviceType.Pen);
 
-            if (!IsTouchAvailable) PointerSupportTouch = false; 
-            if (!IsMouseAvailable) PointerSupportMouse = false;
-            if (!IsPenAvailable) PointerSupportPen = false;
+            PointerSupportTouch = IsTouchAvailable;
+            PointerSupportMouse = IsMouseAvailable;
+            PointerSupportPen = IsPenAvailable;
         }
     }
 }
