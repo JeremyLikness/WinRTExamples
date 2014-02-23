@@ -10,17 +10,30 @@ namespace MultimediaExample
     {
         #region Fields
 
-        private MediaElement _mediaElement; 
+        private readonly MediaElement _mediaElement; 
 
         #endregion
 
-        public void Initialize(MediaElement mediaElement)
+        #region Constructor(s) and Initialization
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MediaElementWrapper"/> class.
+        /// </summary>
+        /// <param name="mediaElement">The media element.</param>
+        /// <exception cref="System.ArgumentNullException">mediaElement</exception>
+        public MediaElementWrapper(MediaElement mediaElement)
         {
             if (mediaElement == null) throw new ArgumentNullException("mediaElement");
             _mediaElement = mediaElement;
-        }
+        } 
+
+        #endregion
 
         #region IMediaElementWrapper Implementation
+
+        public void SetIncludedSource()
+        {
+        }
 
         /// <summary>
         /// Sets the given file as the source media to play.
@@ -32,9 +45,26 @@ namespace MultimediaExample
             {
                 var stream = await fileToPlay.OpenReadAsync();
                 _mediaElement.SetSource(stream, fileToPlay.ContentType);
-                //_playbackWindow.SetMediaStreamSource();
-                //_playbackWindow.SetSource(IRandomAccessStream, mimeType);
-                //_playbackWindow.Source = Uri
+
+                // Other "Set Source" alternatives inlcude:
+
+                // Setting the source to a URI:
+                //_mediaElement.Source = new Uri("ms-appx:///Assets/Sample.wmv");
+
+                // Using Set Media Stream Source:
+                //var mediaStreamSource =
+                //    new MediaStreamSource(new VideoStreamDescriptor(VideoEncodingProperties.CreateH264()),
+                //        new AudioStreamDescriptor(AudioEncodingProperties.CreateMp3(48000, 2, 32)));
+                //mediaStreamSource.SampleRequested += (sender, args) =>
+                //                                     {
+                //                                         if (args.Request.StreamDescriptor is AudioStreamDescriptor)
+                //                                         {
+                //                                             var sample = new MediaStreamSample();
+                //                                             sample.Buffer.
+                //                                         }
+
+                //                                     }
+                //_mediaElement.SetMediaStreamSource(mediaStreamSource);
             }
         }
 
@@ -135,9 +165,6 @@ namespace MultimediaExample
 
             var playbackRate = isSlowMotion ? 0.5 : 1.0;
             _mediaElement.DefaultPlaybackRate = playbackRate;
-
-            //PlaybackWindow.PlaybackRate
-            //PlaybackWindow.RateChanged
         }
 
         /// <summary>
@@ -172,15 +199,9 @@ namespace MultimediaExample
             _mediaElement.Markers.Remove(matchingMarker);
         }
 
-        /// <summary>
-        /// Clears all of the markers from the current source in the <see cref="Windows.UI.Xaml.Controls.MediaElement" />.
-        /// </summary>
-        public void ClearAllMarkers()
-        {
-            _mediaElement.Markers.Clear();
-        }
-
         #endregion
+
+        #region Helper Methods
 
         private void SetPosition(TimeSpan position)
         {
@@ -190,15 +211,17 @@ namespace MultimediaExample
                 position = TimeSpan.FromMilliseconds(0);
             }
 
-            // Note that NaturalDuration is "Automatic" until after MediaOpened event is raised
+            // Note that NaturalDuration returns "Automatic" until after 
+            // the MediaOpened event has been  raised
             var duration = _mediaElement.NaturalDuration;
             if (duration.HasTimeSpan)
             {
                 if (position > duration.TimeSpan) position = duration.TimeSpan;
             }
 
-
             _mediaElement.Position = position;
-        }
+        } 
+
+        #endregion
     }
 }

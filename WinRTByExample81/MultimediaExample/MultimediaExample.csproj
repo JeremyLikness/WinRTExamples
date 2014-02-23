@@ -128,12 +128,14 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Common\DurationDisplayConverter.cs" />
     <Compile Include="Common\EnumTextValueConverter.cs" />
     <Compile Include="Common\RelayCommandEx.cs" />
-    <Compile Include="MultimediaFileDetails.cs" />
+    <Compile Include="TextToSpeech\DesignFileMarkerViewModel.cs" />
+    <Compile Include="Playback\MultimediaFileDetails.cs" />
     <Compile Include="TextToSpeech\FileMarker.cs" />
     <Compile Include="TextToSpeech\FileMarkerViewModel.cs" />
-    <Compile Include="FilePickerHelper.cs" />
+    <Compile Include="Playback\FilePickerHelper.cs" />
     <Compile Include="Playback\IMediaElementWrapper.cs" />
     <Compile Include="MediaCapture\MediaCapturePage.xaml.cs">
       <DependentUpon>MediaCapturePage.xaml</DependentUpon>
