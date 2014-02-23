@@ -10,6 +10,8 @@ using Windows.UI.Xaml.Navigation;
 
 namespace PrimeCheckerExample
 {
+    using System.ServiceModel;
+
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
@@ -23,6 +25,14 @@ namespace PrimeCheckerExample
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            try
+            {
+                throw new ActionNotSupportedException("This is for demonstration purposes only.");
+            }
+            catch
+            {
+                
+            }
         }
 
         /// <summary>
