@@ -20,7 +20,7 @@ namespace MultimediaExample
         #region Fields
 
         private readonly IMediaElementWrapper _mediaElementWrapper;
-        private readonly INavigate _navigationHost;
+        private INavigate _navigationHost;
 
         private readonly ObservableCollection<MultimediaFileDetails> _playbackFiles = new ObservableCollection<MultimediaFileDetails>();
         private MultimediaFileDetails _currentPlaybackFile;
@@ -49,17 +49,14 @@ namespace MultimediaExample
         /// Initializes a new instance of the <see cref="MultimediaViewModel" /> class.
         /// </summary>
         /// <param name="mediaElementwrapper">The media element wrapper.</param>
-        /// <param name="navigationHost">The navigation host.</param>
         /// <exception cref="System.ArgumentNullException">canAddFileCallback</exception>
-        public MultimediaViewModel(IMediaElementWrapper mediaElementwrapper, INavigate navigationHost)
+        public MultimediaViewModel(IMediaElementWrapper mediaElementwrapper)
         {
             if (DesignMode.DesignModeEnabled) return;
 
             if (mediaElementwrapper == null) throw new ArgumentNullException("mediaElementwrapper");
-            if (navigationHost == null) throw new ArgumentNullException("navigationHost");
             _mediaElementWrapper = mediaElementwrapper;
-            _navigationHost = navigationHost;
-        } 
+        }
 
         #endregion
 
@@ -73,6 +70,24 @@ namespace MultimediaExample
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Gets or sets the navigation host.
+        /// </summary>
+        /// <value>
+        /// The navigation host.
+        /// </value>
+        public INavigate NavigationHost
+        {
+            get { return _navigationHost; }
+            set
+            {
+                if (Equals(value, _navigationHost)) return;
+                _navigationHost = value;
+                OnPropertyChanged();
+                ShowMediaCaptureCommand.RaiseCanExecuteChanged();
+            }
+        }
 
         public IList<MultimediaFileDetails> PlaybackFiles
         {
@@ -104,8 +119,6 @@ namespace MultimediaExample
 
                 _mediaElementWrapper.SetSource(CurrentPlaybackFile == null ? null : CurrentPlaybackFile.PlaybackFile);
 
-                // Reset the markers
-                _mediaElementWrapper.ClearAllMarkers();
                 if (CurrentPlaybackFile != null)
                 {
                     foreach (var marker in CurrentPlaybackFile.FileMarkers)
@@ -257,7 +270,11 @@ namespace MultimediaExample
 
         private void ShowMediaCapture()
         {
-            _navigationHost.Navigate(typeof(MediaCapturePage));
+            var navigationHost = NavigationHost;
+            if (navigationHost != null)
+            {
+                navigationHost.Navigate(typeof(MediaCapturePage));    
+            }
         }
         
         private void RemoveSelectedVideo()

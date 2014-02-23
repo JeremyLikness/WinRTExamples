@@ -86,10 +86,5 @@ namespace MultimediaExample
         /// </summary>
         /// <param name="markerTime">The marker time.</param>
         void RemoveMarker(TimeSpan markerTime);
-
-        /// <summary>
-        /// Clears all of the markers from the current source in the <see cref="Windows.UI.Xaml.Controls.MediaElement"/>.
-        /// </summary>
-        void ClearAllMarkers();
     }
 }

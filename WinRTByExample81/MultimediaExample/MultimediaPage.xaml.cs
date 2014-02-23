@@ -15,11 +15,9 @@ namespace MultimediaExample
     /// </summary>
     public sealed partial class MultimediaPage : Page
     {
-
         #region Fields
 
         private readonly NavigationHelper _navigationHelper;
-        private readonly MultimediaViewModel _defaultViewModel;
 
         #endregion
 
@@ -30,13 +28,13 @@ namespace MultimediaExample
         /// </summary>
         public MultimediaPage()
         {
-            var playbackWindowProxy = new MediaElementWrapper();
-            _defaultViewModel = new MultimediaViewModel(playbackWindowProxy, Frame);
-
             InitializeComponent();
 
-            // Wait to pass the control until after the control has been created
-            playbackWindowProxy.Initialize(PlaybackWindow);
+            // Wait to create a wrapper for the MediaElement control 
+            // until after the control has been created in InitializeComponent
+            var mediaElementWrapper = new MediaElementWrapper(PlaybackWindow);
+            ViewModel = new MultimediaViewModel(mediaElementWrapper);
+            DataContext = ViewModel;
 
             _navigationHelper = new NavigationHelper(this);
             _navigationHelper.LoadState += navigationHelper_LoadState;
@@ -46,10 +44,7 @@ namespace MultimediaExample
         /// <summary>
         /// This can be changed to a strongly typed view model.
         /// </summary>
-        public MultimediaViewModel DefaultViewModel
-        {
-            get { return _defaultViewModel; }
-        }
+        public MultimediaViewModel ViewModel { get; private set; }
 
         /// <summary>
         /// NavigationHelper is used on each page to aid in navigation and 
@@ -104,12 +99,14 @@ namespace MultimediaExample
         {
             _navigationHelper.OnNavigatedTo(e);
 
+            // Inform the view model of the frame to use when it needs to issue a navigation request
+            ViewModel.NavigationHost = Frame;
+
             PlaybackWindow.MediaOpened += (sender, args) => Debug.WriteLine("Media Opened");
             PlaybackWindow.MediaFailed += (sender, args) => Debug.WriteLine("Media Failed");
             PlaybackWindow.MediaEnded += HandlePlaybackWindowMediaEnded;
 
             PlaybackWindow.VolumeChanged += (sender, args) => Debug.WriteLine("Volume Changed");
-
 
             PlaybackWindow.MarkerReached += HandlePlaybackWindowMarkerReached;
         }
@@ -125,52 +122,39 @@ namespace MultimediaExample
 
         private void HandlePlaybackWindowMediaEnded(Object sender, RoutedEventArgs routedEventArgs)
         {
-            Debug.WriteLine(PlaybackWindow.Source);
-            var currentIndex = DefaultViewModel.PlaybackFiles.IndexOf(DefaultViewModel.CurrentPlaybackFile);
+            var currentIndex = ViewModel.PlaybackFiles.IndexOf(ViewModel.CurrentPlaybackFile);
             var newIndex = currentIndex + 1;
-            if (newIndex < DefaultViewModel.PlaybackFiles.Count())
+            if (newIndex < ViewModel.PlaybackFiles.Count())
             {
-                var newFile = DefaultViewModel.PlaybackFiles[newIndex];
-                DefaultViewModel.CurrentPlaybackFile = newFile;
+                var newFile = ViewModel.PlaybackFiles[newIndex];
+                ViewModel.CurrentPlaybackFile = newFile;
             }
         }
 
-        private void HandlePlaybackWindowMarkerReached(Object sender, TimelineMarkerRoutedEventArgs e)
+        private void HandlePlaybackWindowMarkerReached
+            (Object sender, TimelineMarkerRoutedEventArgs e)
         {
             PlaybackWindow.Pause();
-            var matchingMarker = DefaultViewModel.CurrentPlaybackFile.FileMarkers.FirstOrDefault(x => x.Time == e.Marker.Time);
-            DefaultViewModel.CurrentFileMarker = matchingMarker;
-            TextToSpeechHelper.PlayContentAsync(matchingMarker.TextToSpeechContent, matchingMarker.IsSsml, matchingMarker.SelectedVoiceId);
+
+            var markerItemTime = e.Marker.Time;
+            var matchingFileMarker = ViewModel.CurrentPlaybackFile.FileMarkers.
+                FirstOrDefault(x => x.Time == markerItemTime);
+            if (matchingFileMarker == null) return;
+
+            ViewModel.CurrentFileMarker = matchingFileMarker;
+            TextToSpeechHelper.PlayContentAsync(
+                matchingFileMarker.TextToSpeechContent, 
+                matchingFileMarker.IsSsml, 
+                matchingFileMarker.SelectedVoiceId);
         } 
 
         #endregion
 
-        // Buffering and Download
-        //PlaybackWindow.DownloadProgress
-        //PlaybackWindow.DownloadProgressChanged
-        //PlaybackWindow.DownloadProgressOffset (relates to seek-ahead)
-        //PlaybackWindow.BufferingProgress (0-1)...percentage
-
-        // Markers
-        //PlaybackWindow.Markers --> TimelineMarkerCollection
-        //PlaybackWindow.MarkerReached
-
-        // PlayTo
-        //PlaybackWindow.PlayToPreferredSourceUri
-        //PlaybackWindow.PlayToSource
-
-        // Effects          
-        //PlaybackWindow.AddAudioEffect();
-        //PlaybackWindow.AddVideoEffect();
-        //PlaybackWindow.RemoveAllEffects();
-
-        // Other?
-        //PlaybackWindow.RealTimePlayback
-        //PlaybackWindow.ProtectionManager
+        #region Marker management events
 
         private void HandleAddMarkerClicked(Object sender, RoutedEventArgs e)
         {
-            DefaultViewModel.PauseCommand.Execute(null);
+            ViewModel.PauseCommand.Execute(null);
 
             // Show a flyout that displays the current marker details
             var flyout = (Flyout)FlyoutBase.GetAttachedFlyout((FrameworkElement)sender);
@@ -178,10 +162,10 @@ namespace MultimediaExample
 
             var newFileMarker = new FileMarker
             {
-                Time = DefaultViewModel.GetCurrentPlaybackPosition()
+                Time = ViewModel.GetCurrentPlaybackPosition()
             };
 
-            var viewModel = new FileMarkerViewModel(DefaultViewModel, newFileMarker);
+            var viewModel = new FileMarkerViewModel(ViewModel, newFileMarker);
 
             flyoutContent.DataContext = viewModel;
             flyout.ShowAt((FrameworkElement)sender);
@@ -189,24 +173,18 @@ namespace MultimediaExample
 
         private void HandleUpdateMarkerClicked(Object sender, RoutedEventArgs e)
         {
-            var marker = DefaultViewModel.CurrentFileMarker;
+            var marker = ViewModel.CurrentFileMarker;
 
             // Show a flyout that displays the current marker details
             var flyout = (Flyout)FlyoutBase.GetAttachedFlyout((FrameworkElement)sender);
             var flyoutContent = (FrameworkElement)flyout.Content;
 
-            var viewModel = new FileMarkerViewModel(DefaultViewModel, marker);
+            var viewModel = new FileMarkerViewModel(ViewModel, marker);
 
             flyoutContent.DataContext = viewModel;
             flyout.ShowAt((FrameworkElement)sender);
-        }
-    }
+        } 
 
-    public class DesignFileMarkerViewModel : FileMarkerViewModel
-    {
-        public DesignFileMarkerViewModel()
-            : base(new MultimediaViewModel(null, null), new FileMarker())
-        {
-        }
+        #endregion
     }
 }
