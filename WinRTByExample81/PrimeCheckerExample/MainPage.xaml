@@ -1,0 +1,16 @@
+﻿<Page
+    x:Class="PrimeCheckerExample.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PrimeCheckerExample"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <StackPanel HorizontalAlignment="Stretch" Margin="50" Orientation="Vertical">
+            <Button Click="ButtonOnClick">Compute Primes</Button>
+            <ListBox x:Name="Primes" Width="200" Height="400"/>
+        </StackPanel>
+    </Grid>
+</Page>
