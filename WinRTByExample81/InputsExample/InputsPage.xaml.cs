@@ -65,9 +65,6 @@ namespace InputsExample
 
             SizeChanged += OnSizeChanged;
 
-            Window.Current.CoreWindow.KeyDown += (sender, args) => HandleKeyDown(args);
-            Window.Current.CoreWindow.KeyUp += (sender, args) => HandleKeyUp(args);
-
             // Subscribe to changes in the input settings
             _inputSettings.PropertyChanged += (sender, args) => UpdateStateFromInputSettings();
 
@@ -124,11 +121,25 @@ namespace InputsExample
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             _navigationHelper.OnNavigatedTo(e);
+
+            // Since the source of these events is the current application Window, it is imporatnt to pair 
+            // an un-subscription to them in the OnNavigatedFrom override, or a memory leak will occur, since
+            // the event handler will keep the page object alive.
+            Window.Current.CoreWindow.KeyDown += HandleKeyDown;
+            Window.Current.CoreWindow.CharacterReceived += HandleCharacterReceived;
+            Window.Current.CoreWindow.KeyUp += HandleKeyUp;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             _navigationHelper.OnNavigatedFrom(e);
+
+            // Since the source of these events is the current application Window, it is imporatnt to pair 
+            // an un-subscription to them in the OnNavigatedFrom override, or a memory leak will occur, since
+            // the event handler will keep the page object alive.
+            Window.Current.CoreWindow.KeyDown -= HandleKeyDown;
+            Window.Current.CoreWindow.CharacterReceived -= HandleCharacterReceived;
+            Window.Current.CoreWindow.KeyUp -= HandleKeyUp;
         }
 
         #endregion
@@ -270,14 +281,18 @@ namespace InputsExample
             await messageDialog.ShowAsync();
         }
 
-        private void HandleBackgroundTapped(Object sender, TappedRoutedEventArgs e)
+        private void HandleKeyDown(CoreWindow sender, KeyEventArgs args)
         {
-            // Adding this extra tap handler so that clicking on the background causes something to get focus so that keybaord actions can be raised/caught.
-            Focus(FocusState.Programmatic);
-        }
 
-        private void HandleKeyDown(KeyEventArgs args)
-        {
+            KeyRoutedEventArgs args2;
+            //args2.Handled
+            //args2.Key         // VirtualKey
+            //args2.KeyStatus   // CorePhysicalKeyStatus
+
+            //args.Handled
+            //args.VirtualKey   // VirtualKey
+            //args.KeyStatus    // CorePhysicalKeyStatus
+
             // Check for shift, control, alt (AKA VirtualKey.Menu)
             var currentWindow = CoreWindow.GetForCurrentThread();
             var ctrlState = currentWindow.GetKeyState(VirtualKey.Control);
@@ -298,12 +313,32 @@ namespace InputsExample
                 isAltKeyPressed);
         }
 
-        private void HandleKeyUp(KeyEventArgs args)
+        private void HandleCharacterReceived(CoreWindow sender, CharacterReceivedEventArgs args)
+        {
+            // Args.KeyCode returns an Int32 for the interpreted character
+            var interpretedChar = Convert.ToChar(args.KeyCode);
+            System.Diagnostics.Debug.WriteLine("CharactedReceived:  {0}, AKA {1}", args.KeyCode, interpretedChar);
+        }
+
+
+        private void HandleKeyUp(CoreWindow sender, KeyEventArgs args)
         {
             // invoked anytime a key is pressed down, independent of focus
             System.Diagnostics.Debug.WriteLine("KeyUp: {0} - {1}, {2}", args.VirtualKey, args.KeyStatus.WasKeyDown, args.KeyStatus.IsKeyReleased);
             if (args.VirtualKey == VirtualKey.B) CreateShape(ShapeModel.ShapeType.Ball);
             if (args.VirtualKey == VirtualKey.S) CreateShape(ShapeModel.ShapeType.Square);
+        }
+
+        protected override void OnKeyDown(KeyRoutedEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("UIElement - OnKeyDown");
+            base.OnKeyDown(e);
+        }
+
+        protected override void OnKeyUp(KeyRoutedEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("UIElement - OnKeyUp");
+            base.OnKeyDown(e);
         }
 
         private void HandlePointerDetailsPressed(Object sender, PointerRoutedEventArgs e)

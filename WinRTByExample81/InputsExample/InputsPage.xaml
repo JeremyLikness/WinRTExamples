@@ -44,7 +44,7 @@
                         IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,30,40"/>
         </Grid>
 
-        <Grid Grid.Row="1" Grid.ColumnSpan="2" Margin="116,0,116,46" Background="Transparent" Tapped="HandleBackgroundTapped">
+        <Grid Grid.Row="1" Grid.ColumnSpan="2" Margin="116,0,116,46" Background="Transparent">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
