@@ -30,7 +30,7 @@ namespace MultimediaExample
             _viewModel = new MediaCaptureViewModel(mediaCaptureHelper);
             _viewModel.UpdateCaptureDevices();
 
-            mediaCaptureHelper.CaptureHasBeenReset += (sender, args) => mediaCaptureHelper.StartCapturePreview(CaptureElementItem);
+            mediaCaptureHelper.CaptureSettingsReset  += (sender, args) => mediaCaptureHelper.StartCapturePreview(CaptureElementItem);
             //_viewModel.CaptureCompleted += (o, args) => Frame.GoBack();
             
             InitializeComponent();

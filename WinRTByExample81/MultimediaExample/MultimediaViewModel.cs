@@ -261,7 +261,7 @@ namespace MultimediaExample
 
         private async void ShowCameraCapture()
         {
-            var capturedFile = await CaptureUIHelper.CameraUICaptureAsync(CameraCaptureUIMode.PhotoOrVideo);
+            var capturedFile = await CameraCaptureUIHelper.CaptureAsync(CameraCaptureUIMode.Video);
             if (capturedFile != null)
             {
                 AddFiles(new[] {capturedFile});

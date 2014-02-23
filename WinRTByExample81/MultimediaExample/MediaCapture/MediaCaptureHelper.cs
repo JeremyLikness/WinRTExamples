@@ -6,7 +6,6 @@ using Windows.ApplicationModel;
 using Windows.Devices.Enumeration;
 using Windows.Media.Capture;
 using Windows.Media.MediaProperties;
-using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -53,6 +52,8 @@ namespace MultimediaExample
 
         #endregion
 
+        #region Capture device enumeration & selection
+
         public async Task<IEnumerable<DeviceInformation>> GetVideoCaptureDevicesAsync()
         {
             return (await DeviceInformation.FindAllAsync(DeviceClass.VideoCapture)).ToList();
@@ -81,7 +82,11 @@ namespace MultimediaExample
                 _audioDeviceToUse = value;
                 ApplySettings();
             }
-        }
+        } 
+
+        #endregion
+
+        #region Video quality enumeration & selection
 
         public IEnumerable<VideoEncodingQuality> VideoQualities
         {
@@ -90,13 +95,9 @@ namespace MultimediaExample
 
         public VideoEncodingQuality VideoQualityToUse { get; set; }
 
-        public event EventHandler CaptureHasBeenReset;
+        #endregion
 
-        private void OnCaptureHasBeenReset()
-        {
-            var handler = CaptureHasBeenReset;
-            if (handler != null) handler(this, EventArgs.Empty);
-        }
+        #region Capture preview and actual capture
 
         public async void StartCapturePreview(CaptureElement captureUIElement)
         {
@@ -144,15 +145,27 @@ namespace MultimediaExample
 
             captureJob.StartCaptureAsync(profile);
             return captureJob;
-        }
+        } 
+
+        #endregion
+
+        #region Capture settings
 
         public void ShowSettings()
         {
             if (_captureManager == null) throw new InvalidOperationException("Capture Manager has not been initialized.");
 
             // Display capture options UI
-            CameraOptionsUI.Show(_captureManager); 
+            CameraOptionsUI.Show(_captureManager);
         }
+
+        public event EventHandler CaptureSettingsReset;
+
+        private void OnCaptureSettingsReset()
+        {
+            var handler = CaptureSettingsReset;
+            if (handler != null) handler(this, EventArgs.Empty);
+        } 
 
         private async void ApplySettings()
         {
@@ -172,32 +185,10 @@ namespace MultimediaExample
             await captureManager.InitializeAsync(settings);
 
             _captureManager = captureManager;
-            OnCaptureHasBeenReset();
-        }
-    }
-
-    public class MediaCaptureJob
-    {
-        private readonly MediaCapture _captureManager;
-        private readonly IStorageFile _capturedFile;
-
-        public MediaCaptureJob(MediaCapture captureManager, IStorageFile fileToCapture)
-        {
-            if (captureManager == null) throw new ArgumentNullException("captureManager");
-            if (fileToCapture == null) throw new ArgumentNullException("fileToCapture");
-            _captureManager = captureManager;
-            _capturedFile = fileToCapture;
+            OnCaptureSettingsReset();
         }
 
-        public async void StartCaptureAsync(MediaEncodingProfile profile)
-        {
-            await _captureManager.StartRecordToStorageFileAsync(profile, _capturedFile);
-        }
 
-        public async Task<IStorageFile> StopCaptureAsync()
-        {
-            await _captureManager.StopRecordAsync();
-            return _capturedFile;
-        }
+        #endregion
     }
 }

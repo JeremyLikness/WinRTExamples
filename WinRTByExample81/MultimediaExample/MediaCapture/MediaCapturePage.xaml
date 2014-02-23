@@ -83,10 +83,7 @@
                     </Grid>
                 </Border>
                 <Border Grid.Column="1" Style="{StaticResource BlockBorderStyle}">
-                    <Grid>
-                        <CaptureElement x:Name="CaptureElementItem" Grid.Row="0" Height="400"/>
-                        <TextBlock Grid.Row="1" Text="{Binding StatusText}"/>
-                    </Grid>
+                    <CaptureElement x:Name="CaptureElementItem" Grid.Row="0" Height="400"/>
                 </Border>
             </Grid>
         </Grid>
