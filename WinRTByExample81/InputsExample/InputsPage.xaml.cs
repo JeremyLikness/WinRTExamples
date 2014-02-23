@@ -283,16 +283,6 @@ namespace InputsExample
 
         private void HandleKeyDown(CoreWindow sender, KeyEventArgs args)
         {
-
-            KeyRoutedEventArgs args2;
-            //args2.Handled
-            //args2.Key         // VirtualKey
-            //args2.KeyStatus   // CorePhysicalKeyStatus
-
-            //args.Handled
-            //args.VirtualKey   // VirtualKey
-            //args.KeyStatus    // CorePhysicalKeyStatus
-
             // Check for shift, control, alt (AKA VirtualKey.Menu)
             var currentWindow = CoreWindow.GetForCurrentThread();
             var ctrlState = currentWindow.GetKeyState(VirtualKey.Control);
