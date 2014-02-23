@@ -131,6 +131,7 @@
     <Compile Include="Common\DurationDisplayConverter.cs" />
     <Compile Include="Common\EnumTextValueConverter.cs" />
     <Compile Include="Common\RelayCommandEx.cs" />
+    <Compile Include="MediaCapture\MediaCaptureJob.cs" />
     <Compile Include="TextToSpeech\DesignFileMarkerViewModel.cs" />
     <Compile Include="Playback\MultimediaFileDetails.cs" />
     <Compile Include="TextToSpeech\FileMarker.cs" />
@@ -140,7 +141,7 @@
     <Compile Include="MediaCapture\MediaCapturePage.xaml.cs">
       <DependentUpon>MediaCapturePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CaptureUI\CaptureHelper.cs" />
+    <Compile Include="MediaCapture\CameraCaptureUIHelper.cs" />
     <Compile Include="Common\BooleanToVisibilityConverter.cs" />
     <Compile Include="Common\NavigationHelper.cs" />
     <Compile Include="Common\ObservableDictionary.cs" />
@@ -186,7 +187,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="CaptureUI\" />
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>
   </PropertyGroup>

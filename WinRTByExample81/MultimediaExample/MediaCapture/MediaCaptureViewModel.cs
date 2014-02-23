@@ -6,7 +6,6 @@ using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using Windows.Devices.Enumeration;
 using Windows.Media.MediaProperties;
-using Windows.Storage;
 using MultimediaExample.Annotations;
 using MultimediaExample.Common;
 
@@ -17,8 +16,6 @@ namespace MultimediaExample
         #region Fields
 
         private readonly MediaCaptureHelper _mediaCaptureHelper;
-
-        private String _statusText;
 
         private MediaCaptureJob _currentCaptureJob;
         private Boolean _isCapturing;
@@ -32,11 +29,22 @@ namespace MultimediaExample
 
         #endregion
 
+        #region Constructor(s) and Initialization
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MediaCaptureViewModel"/> class.
+        /// </summary>
+        /// <param name="mediaCaptureHelper">The media capture helper.</param>
+        /// <exception cref="System.ArgumentNullException">mediaCaptureHelper</exception>
         public MediaCaptureViewModel(MediaCaptureHelper mediaCaptureHelper)
         {
             if (mediaCaptureHelper == null) throw new ArgumentNullException("mediaCaptureHelper");
             _mediaCaptureHelper = mediaCaptureHelper;
-        }
+        } 
+
+        #endregion
+
+        #region Capture device enumeration and selection
 
         public async void UpdateCaptureDevices()
         {
@@ -52,17 +60,6 @@ namespace MultimediaExample
             foreach (var device in videoCaptureDevices)
             {
                 _videoCaptureDevices.Add(device);
-            }
-        }
-
-        public String StatusText
-        {
-            get { return _statusText; }
-            set
-            {
-                if (value == _statusText) return;
-                _statusText = value;
-                OnPropertyChanged();
             }
         }
 
@@ -96,7 +93,11 @@ namespace MultimediaExample
                 _mediaCaptureHelper.VideoDeviceToUse = value;
                 OnPropertyChanged();
             }
-        }
+        } 
+
+        #endregion
+
+        #region Video quality enumeration & selection
 
         public IEnumerable<VideoEncodingQuality> VideoQualities
         {
@@ -112,7 +113,11 @@ namespace MultimediaExample
                 _mediaCaptureHelper.VideoQualityToUse = value;
                 OnPropertyChanged();
             }
-        }
+        } 
+
+        #endregion
+
+        #region Capturing status
 
         public Boolean IsCapturing
         {
@@ -123,7 +128,11 @@ namespace MultimediaExample
                 _isCapturing = value;
                 OnPropertyChanged();
             }
-        }
+        } 
+
+        #endregion
+
+        #region Commands
 
         public ICommand ShowSettingsCommand
         {
@@ -138,7 +147,11 @@ namespace MultimediaExample
         public ICommand StopCaptureCommand
         {
             get { return _stopCaptureCommand ?? (_stopCaptureCommand = new RelayCommand(StopCapture)); }
-        }
+        } 
+
+        #endregion
+
+        #region Command Implementations
 
         private void ShowSettings()
         {
@@ -154,13 +167,15 @@ namespace MultimediaExample
             }
         }
 
-        private async void StopCapture()
+        private void StopCapture()
         {
-            var capturedFile = await _currentCaptureJob.StopCaptureAsync();
             IsCapturing = false;
-            OnCaptureCompleted(capturedFile);
-        }
-        
+        } 
+
+        #endregion
+
+        #region INotifyPropertyChanged Implementation
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
@@ -170,28 +185,6 @@ namespace MultimediaExample
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public event EventHandler<CaptureCompletedEventArgs> CaptureCompleted;
-
-        private void OnCaptureCompleted(IStorageFile capturedFile)
-        {
-            var handler = CaptureCompleted;
-            if (handler != null) handler(this, new CaptureCompletedEventArgs(capturedFile));
-        }
-    }
-
-    public class CaptureCompletedEventArgs : EventArgs
-    {
-        private readonly IStorageFile _capturedFile;
-
-        public CaptureCompletedEventArgs(IStorageFile capturedFile)
-        {
-            if (capturedFile == null) throw new ArgumentNullException("capturedFile");
-            _capturedFile = capturedFile;
-        }
-
-        public IStorageFile CapturedFile
-        {
-            get { return _capturedFile; }
-        }
+        #endregion
     }
 }

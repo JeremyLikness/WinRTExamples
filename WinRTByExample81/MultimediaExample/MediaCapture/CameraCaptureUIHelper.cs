@@ -7,19 +7,17 @@ using Windows.Storage.Pickers;
 
 namespace MultimediaExample
 {
-    public static class CaptureUIHelper
+    public static class CameraCaptureUIHelper
     {
-        public static async Task<IStorageFile> CameraUICaptureAsync(CameraCaptureUIMode captureMode)
+        public static async Task<IStorageFile> CaptureAsync(CameraCaptureUIMode captureMode)
         {
             var cameraUI = new CameraCaptureUI();
             var capturedMedia = await cameraUI.CaptureFileAsync(captureMode);
-
             if (capturedMedia == null) return null;
 
             // Set the default save to location based on the content MIME type
             var contentType = capturedMedia.ContentType;
-            PickerLocationId defaultLocation =
-                contentType.StartsWith("image", StringComparison.OrdinalIgnoreCase)
+            var defaultLocation = contentType.StartsWith("image")
                     ? PickerLocationId.PicturesLibrary
                     : PickerLocationId.VideosLibrary;
 
@@ -38,8 +36,8 @@ namespace MultimediaExample
             var fileToSaveTo = await savePicker.PickSaveFileAsync();
             if (fileToSaveTo == null) return null;
             
-            // Perform the Save and return the file
-            await capturedMedia.CopyAndReplaceAsync(fileToSaveTo);
+            // Move the file return the new file
+            await capturedMedia.MoveAndReplaceAsync(fileToSaveTo);
             return fileToSaveTo;
         }
     }
