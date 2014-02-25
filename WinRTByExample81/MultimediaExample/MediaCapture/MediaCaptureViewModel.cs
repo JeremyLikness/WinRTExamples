@@ -22,8 +22,10 @@ namespace MultimediaExample
 
         private readonly ObservableCollection<DeviceInformation> _audioCaptureDevices = new ObservableCollection<DeviceInformation>();
         private readonly ObservableCollection<DeviceInformation> _videoCaptureDevices = new ObservableCollection<DeviceInformation>();
+
+        private Boolean _isPreviewMirrored;
         
-        private RelayCommand _showSettingsCommand;
+        private RelayCommand _showCameraSettingsCommand;
         private RelayCommand _startCaptureCommand;
         private RelayCommand _stopCaptureCommand;
 
@@ -117,6 +119,22 @@ namespace MultimediaExample
 
         #endregion
 
+        #region Preview Settings
+
+        public Boolean IsPreviewMirrored
+        {
+            get { return _isPreviewMirrored; }
+            set
+            {
+                if (value.Equals(_isPreviewMirrored)) return;
+                _isPreviewMirrored = value;
+                _mediaCaptureHelper.SetPreviewMirroring(value);
+                OnPropertyChanged();
+            }
+        } 
+
+        #endregion
+
         #region Capturing status
 
         public Boolean IsCapturing
@@ -134,9 +152,9 @@ namespace MultimediaExample
 
         #region Commands
 
-        public ICommand ShowSettingsCommand
+        public ICommand ShowCameraSettingsCommand
         {
-            get { return _showSettingsCommand ?? (_showSettingsCommand = new RelayCommand(ShowSettings)); }
+            get { return _showCameraSettingsCommand ?? (_showCameraSettingsCommand = new RelayCommand(ShowCameraSettings)); }
         }
 
         public ICommand StartCaptureCommand
@@ -153,23 +171,29 @@ namespace MultimediaExample
 
         #region Command Implementations
 
-        private void ShowSettings()
+        private void ShowCameraSettings()
         {
-            _mediaCaptureHelper.ShowSettings();
+            _mediaCaptureHelper.ShowCameraSettings();
         }
 
         private async void StartCapture()
         {
-            _currentCaptureJob = await _mediaCaptureHelper.StartCaptureAsync();
-            if (_currentCaptureJob != null)
+            // Clear out any previous capture job
+            _currentCaptureJob = null;
+
+            // Start a new capture job
+            var captureJob = await _mediaCaptureHelper.StartCaptureAsync();
+            if (captureJob != null)
             {
                 IsCapturing = true;
+                _currentCaptureJob = captureJob;
             }
         }
 
-        private void StopCapture()
+        private async void StopCapture()
         {
             IsCapturing = false;
+            await _currentCaptureJob.StopCaptureAsync();
         } 
 
         #endregion

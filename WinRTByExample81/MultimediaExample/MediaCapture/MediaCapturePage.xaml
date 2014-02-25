@@ -69,21 +69,19 @@
                                 <Setter Property="Margin" Value="5"/>
                             </Style>
                         </Grid.Resources>
-                        <TextBlock Grid.Row="0" Text="Cameras:"/>
-                        <ComboBox Grid.Row="1" ItemsSource="{Binding VideoCaptureDevices}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedVideoCaptureDevice, Mode=TwoWay}"/>
-                        <TextBlock Grid.Row="2" Text="Microphones:"/>
-                        <ComboBox Grid.Row="3" ItemsSource="{Binding AudioCaptureDevices}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedAudioCaptureDevice, Mode=TwoWay}"/>
+                        <ComboBox Grid.Row="1" Header="Cameras:" ItemsSource="{Binding VideoCaptureDevices}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedVideoCaptureDevice, Mode=TwoWay}"/>
+                        <ComboBox Grid.Row="2" Header="Microphones:" ItemsSource="{Binding AudioCaptureDevices}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedAudioCaptureDevice, Mode=TwoWay}"/>
+                        <ComboBox Grid.Row="3" Header="Capture Quality:" ItemsSource="{Binding VideoQualities}" SelectedItem="{Binding SelectedVideoQuality, Mode=TwoWay}"/>
+                        <TextBlock Grid.Row="4" Text="Mirror Preview:"/>
+                        <CheckBox Grid.Row="5" IsChecked="{Binding IsPreviewMirrored, Mode=TwoWay}"/>
 
-                        <TextBlock Grid.Row="4" Text="Capture Quality:"/>
-                        <ComboBox Grid.Row="5" ItemsSource="{Binding VideoQualities}" SelectedItem="{Binding SelectedVideoQuality, Mode=TwoWay}"/>
-
-                        <Button Grid.Row="6" Content="Settings" HorizontalAlignment="Stretch" Command="{Binding ShowSettingsCommand}"/>
+                        <Button Grid.Row="6" Content="Camera Settings" HorizontalAlignment="Stretch" Command="{Binding ShowCameraSettingsCommand}"/>
                         <Button Grid.Row="7" Content="Start Capture" HorizontalAlignment="Stretch" Command="{Binding StartCaptureCommand}" Visibility="{Binding IsCapturing, Converter={StaticResource IfFalseThenVisible}}"/>
                         <Button Grid.Row="7" Content="Stop Capture" HorizontalAlignment="Stretch" Command="{Binding StopCaptureCommand}" Visibility="{Binding IsCapturing, Converter={StaticResource IfTrueThenVisible}}"/>
                     </Grid>
                 </Border>
                 <Border Grid.Column="1" Style="{StaticResource BlockBorderStyle}">
-                    <CaptureElement x:Name="CaptureElementItem" Grid.Row="0" Height="400"/>
+                    <CaptureElement x:Name="CaptureElementItem" Grid.Row="0"/>
                 </Border>
             </Grid>
         </Grid>
