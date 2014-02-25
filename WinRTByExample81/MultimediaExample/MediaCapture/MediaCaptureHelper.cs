@@ -6,7 +6,6 @@ using Windows.ApplicationModel;
 using Windows.Devices.Enumeration;
 using Windows.Media.Capture;
 using Windows.Media.MediaProperties;
-using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -32,12 +31,6 @@ namespace MultimediaExample
             // Skip the HW and lifetime related actions when in design mode
             if (DesignMode.DesignModeEnabled) return;
 
-            Application.Current.Resuming += (o, e) =>
-            {
-                // Reset/restart on resume
-                ApplySettings();
-            };
-
             Application.Current.Suspending += async (o, e) =>
             {
                 if (_captureManager == null) return;
@@ -48,6 +41,12 @@ namespace MultimediaExample
                 _captureManager = null;
                 deferral.Complete();
             };
+
+            Application.Current.Resuming += (o, e) =>
+            {
+                // Reset/restart on application resume
+                ApplyDeviceSettings();
+            };
         }
 
         #endregion
@@ -56,12 +55,14 @@ namespace MultimediaExample
 
         public async Task<IEnumerable<DeviceInformation>> GetVideoCaptureDevicesAsync()
         {
-            return (await DeviceInformation.FindAllAsync(DeviceClass.VideoCapture)).ToList();
+            var devices = await DeviceInformation.FindAllAsync(DeviceClass.VideoCapture);
+            return devices;
         }
 
         public async Task<IEnumerable<DeviceInformation>> GetAudioCaptureDevicesAsync()
         {
-            return (await DeviceInformation.FindAllAsync(DeviceClass.AudioCapture)).ToList();
+            var devices = await DeviceInformation.FindAllAsync(DeviceClass.AudioCapture);
+            return devices;
         }
 
         public DeviceInformation VideoDeviceToUse
@@ -70,7 +71,7 @@ namespace MultimediaExample
             set
             {
                 _videoDeviceToUse = value;
-                ApplySettings();
+                ApplyDeviceSettings();
             }
         }
 
@@ -80,9 +81,88 @@ namespace MultimediaExample
             set
             {
                 _audioDeviceToUse = value;
-                ApplySettings();
+                ApplyDeviceSettings();
             }
-        } 
+        }
+
+        private async void ApplyDeviceSettings()
+        {
+            // Determine the current capture mode, based on device selections
+            var captureMode = StreamingCaptureMode.AudioAndVideo;
+            if (VideoDeviceToUse == null && AudioDeviceToUse == null) return;
+            if (VideoDeviceToUse != null && AudioDeviceToUse == null) 
+                captureMode = StreamingCaptureMode.Video;
+            if (VideoDeviceToUse == null && AudioDeviceToUse != null) 
+                captureMode = StreamingCaptureMode.Audio;
+
+            // Set up the initialization settings
+            var settings = new MediaCaptureInitializationSettings
+            {
+                StreamingCaptureMode = captureMode,
+                VideoDeviceId = VideoDeviceToUse == null 
+                                        ? String.Empty 
+                                        : VideoDeviceToUse.Id,
+                AudioDeviceId = AudioDeviceToUse == null 
+                                        ? String.Empty 
+                                        : AudioDeviceToUse.Id,
+            };
+
+            // Create and initialize a new MediaCapture instance
+            var captureManager = new MediaCapture();
+            try
+            {
+                await captureManager.InitializeAsync(settings);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                // The user has declined/blocked access to the camera/microphone
+                // Prompt the user properly to enable access
+                return;
+            }
+            _captureManager = captureManager;
+
+            // Raise the CaptureSettingsReset event
+            OnCaptureSettingsReset();
+        }
+
+        public event EventHandler CaptureSettingsReset;
+
+        private void OnCaptureSettingsReset()
+        {
+            var handler = CaptureSettingsReset;
+            if (handler != null) handler(this, EventArgs.Empty);
+        }
+
+        #endregion
+
+        #region Capture preview
+
+        /// <summary>
+        /// Starts the capture preview.
+        /// </summary>
+        /// <param name="captureUIElement">The capture UI element.</param>
+        /// <exception cref="System.ArgumentNullException">captureUIElement</exception>
+        public async void StartCapturePreview(CaptureElement captureUIElement)
+        {
+            if (captureUIElement == null) throw new ArgumentNullException("captureUIElement");
+
+            // Associate the MediaCapture instance with the CaptureElement 
+            // and start video preview
+            var captureMode = _captureManager.MediaCaptureSettings.StreamingCaptureMode;
+            if (captureMode == StreamingCaptureMode.Audio)
+            {
+                // No video to capture.  We're done.
+                return;
+            }
+
+            captureUIElement.Source = _captureManager;
+            await _captureManager.StartPreviewAsync();
+        }
+
+        public void SetPreviewMirroring(Boolean isPreviewMirrored)
+        {
+            _captureManager.SetPreviewMirroring(isPreviewMirrored);
+        }
 
         #endregion
 
@@ -97,98 +177,40 @@ namespace MultimediaExample
 
         #endregion
 
-        #region Capture preview and actual capture
-
-        public async void StartCapturePreview(CaptureElement captureUIElement)
-        {
-            if (captureUIElement == null) throw new ArgumentNullException("captureUIElement");
-
-            captureUIElement.Source = _captureManager;
-            await _captureManager.StartPreviewAsync();
-        }
-
-        private const String WindowsMediaExtension = ".wmv";
-        private const String MP4Extension = ".mp4";
+        #region Actual capture
 
         public async Task<MediaCaptureJob> StartCaptureAsync()
         {
             if (_captureManager == null) throw new InvalidOperationException("Capture Manager has not been initialized.");
-
-            // Save type options
-            var wmvFileSaveType = new KeyValuePair<String, IList<String>>("Windows Media", new List<String> { WindowsMediaExtension });
-            var mp4FileSaveType = new KeyValuePair<String, IList<String>>("MP4", new List<String> { ".mp4" });
-
-            // Get the file to save
-            var savePicker = new FileSavePicker
-                             {
-                                 SuggestedStartLocation = PickerLocationId.VideosLibrary,
-                                 SuggestedFileName = "Video Capture"
-                             };
-            savePicker.FileTypeChoices.Add(wmvFileSaveType);
-            savePicker.FileTypeChoices.Add(mp4FileSaveType);
-            var fileToSaveTo = await savePicker.PickSaveFileAsync();
-            if (fileToSaveTo == null) return null;
-
-            var captureJob = new MediaCaptureJob(_captureManager, fileToSaveTo);
-            MediaEncodingProfile profile;
-            switch (fileToSaveTo.FileType)
+            var captureJob = await MediaCaptureJob.CreateCaptureToFileJobAsync(_captureManager);
+            if (captureJob != null)
             {
-                case WindowsMediaExtension:
-                    profile = MediaEncodingProfile.CreateWmv(VideoQualityToUse);
-                    break;
-                case MP4Extension:
-                    profile = MediaEncodingProfile.CreateMp4(VideoQualityToUse);
-                    break;
-                default:
-                    throw new InvalidOperationException("Unknown file type selected");
+                captureJob.StartCaptureAsync(VideoQualityToUse);
             }
-
-            captureJob.StartCaptureAsync(profile);
             return captureJob;
         } 
 
         #endregion
 
-        #region Capture settings
+        #region Camera settings
 
-        public void ShowSettings()
+        public void ShowCameraSettings()
         {
-            if (_captureManager == null) throw new InvalidOperationException("Capture Manager has not been initialized.");
+            // If the capture manager has not been initialized, nothing to show
+            if (_captureManager == null) return;
+
+            var captureMode = _captureManager.MediaCaptureSettings.StreamingCaptureMode;
+            if (captureMode == StreamingCaptureMode.Audio)
+            {
+                // No video to capture.  We're done.
+                return;
+            }
 
             // Display capture options UI
             CameraOptionsUI.Show(_captureManager);
         }
 
-        public event EventHandler CaptureSettingsReset;
-
-        private void OnCaptureSettingsReset()
-        {
-            var handler = CaptureSettingsReset;
-            if (handler != null) handler(this, EventArgs.Empty);
-        } 
-
-        private async void ApplySettings()
-        {
-            var captureMode = StreamingCaptureMode.AudioAndVideo;
-            if (VideoDeviceToUse == null && AudioDeviceToUse == null) return;
-            if (VideoDeviceToUse != null && AudioDeviceToUse == null) captureMode = StreamingCaptureMode.Video;
-            if (VideoDeviceToUse == null && AudioDeviceToUse != null) captureMode = StreamingCaptureMode.Audio;
-
-            var settings = new MediaCaptureInitializationSettings
-            {
-                StreamingCaptureMode = captureMode,
-                VideoDeviceId = VideoDeviceToUse == null ? String.Empty : VideoDeviceToUse.Id,
-                AudioDeviceId = AudioDeviceToUse == null ? String.Empty : AudioDeviceToUse.Id,
-            };
-
-            var captureManager = new MediaCapture();
-            await captureManager.InitializeAsync(settings);
-
-            _captureManager = captureManager;
-            OnCaptureSettingsReset();
-        }
-
-
         #endregion
+
     }
 }

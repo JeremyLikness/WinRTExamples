@@ -30,8 +30,11 @@ namespace MultimediaExample
             _viewModel = new MediaCaptureViewModel(mediaCaptureHelper);
             _viewModel.UpdateCaptureDevices();
 
-            mediaCaptureHelper.CaptureSettingsReset  += (sender, args) => mediaCaptureHelper.StartCapturePreview(CaptureElementItem);
-            //_viewModel.CaptureCompleted += (o, args) => Frame.GoBack();
+            mediaCaptureHelper.CaptureSettingsReset  += (sender, args) =>
+            {
+                mediaCaptureHelper.StartCapturePreview(CaptureElementItem);
+                mediaCaptureHelper.SetPreviewMirroring(_viewModel.IsPreviewMirrored);
+            };
             
             InitializeComponent();
             _navigationHelper = new NavigationHelper(this);
