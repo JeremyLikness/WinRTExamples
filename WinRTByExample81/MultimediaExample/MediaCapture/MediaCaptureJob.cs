@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Media.Capture;
+using Windows.Media.Devices;
 using Windows.Media.MediaProperties;
 using Windows.Storage;
 using Windows.Storage.Pickers;
