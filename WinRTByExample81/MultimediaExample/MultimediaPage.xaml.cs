@@ -142,7 +142,7 @@ namespace MultimediaExample
             if (matchingFileMarker == null) return;
 
             ViewModel.CurrentFileMarker = matchingFileMarker;
-            TextToSpeechHelper.PlayContentAsync(
+            TextToSpeechHelper.SpeakContentAsync(
                 matchingFileMarker.TextToSpeechContent, 
                 matchingFileMarker.IsSsml, 
                 matchingFileMarker.SelectedVoiceId);

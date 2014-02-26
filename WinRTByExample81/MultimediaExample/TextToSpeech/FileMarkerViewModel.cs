@@ -47,7 +47,7 @@ namespace MultimediaExample
 
         private void Speak()
         {
-            TextToSpeechHelper.PlayContentAsync(FileMarker.TextToSpeechContent, FileMarker.IsSsml, FileMarker.SelectedVoiceId);
+            TextToSpeechHelper.SpeakContentAsync(FileMarker.TextToSpeechContent, FileMarker.IsSsml, FileMarker.SelectedVoiceId);
         }
 
         #region INotifyPropertyChanged Implementation
