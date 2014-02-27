@@ -32,7 +32,7 @@
 
         public LogEventListener(string name, string timeFormat)
         {
-            this.logName = string.Format("{0}_log.json", name.Replace(" ", "_"));
+            this.logName = string.Format("{0}_log.csv", name.Replace(" ", "_"));
             this.timeFormat = timeFormat;
             this.semaphore = new SemaphoreSlim(1);
             this.SetupLogFile();
@@ -62,7 +62,7 @@
         {
             var eventInfo =
             String.Format(
-                "{0}\t{1}\t{2}",
+                "{0},{1},{2}",
                 string.Format(this.timeFormat, DateTime.Now),
                 eventData.Level,
                 eventData.Payload[0]);

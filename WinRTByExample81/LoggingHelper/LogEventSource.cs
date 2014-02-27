@@ -1,10 +1,12 @@
 ﻿namespace LoggingHelper
 {
     using System.Diagnostics.Tracing;
+    using System.Runtime.CompilerServices;
 
     public sealed class LogEventSource : EventSource
     {
         private static readonly LogEventSource LogSource = new LogEventSource();
+        private const string UnknownMember = "UNKNOWN";
 
         public const int VerboseLevel= 1, InformationalLevel = 2, WarningLevel = 3, ErrorLevel = 4, CriticalLevel = 5;
 
@@ -17,33 +19,38 @@
         }
 
         [Event(VerboseLevel, Level = EventLevel.Verbose)]
-        public void Debug(string message)
+        public void Debug(string message, [CallerMemberName]string member = UnknownMember)
         {
-            this.WriteEvent(VerboseLevel, message);
+            this.WriteEvent(VerboseLevel, Format(message, member));
         }
 
         [Event(InformationalLevel, Level = EventLevel.Informational)]
-        public void Info(string message)
+        public void Info(string message, [CallerMemberName]string member = UnknownMember)
         {
-            this.WriteEvent(InformationalLevel, message);
+            this.WriteEvent(InformationalLevel, Format(message, member));
         }
 
         [Event(WarningLevel, Level = EventLevel.Warning)]
-        public void Warn(string message)
+        public void Warn(string message, [CallerMemberName]string member = UnknownMember)
         {
-            this.WriteEvent(WarningLevel, message);
+            this.WriteEvent(WarningLevel, Format(message, member));
         }
 
         [Event(ErrorLevel, Level = EventLevel.Error)]
-        public void Error(string message)
+        public void Error(string message, [CallerMemberName]string member = UnknownMember)
         {
-            this.WriteEvent(ErrorLevel, message);
+            this.WriteEvent(ErrorLevel, Format(message, member));
         }
 
         [Event(CriticalLevel, Level = EventLevel.Critical)]
-        public void Critical(string message)
+        public void Critical(string message, [CallerMemberName]string member = UnknownMember)
         {
-            this.WriteEvent(CriticalLevel, message);
+            this.WriteEvent(CriticalLevel, Format(message, member));
+        }
+
+        private static string Format(string message, string member)
+        {
+            return string.Format("{0},{1}", member, message);
         }
     }
 }
