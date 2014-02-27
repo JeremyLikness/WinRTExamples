@@ -15,7 +15,7 @@
     /// </summary>
     sealed partial class App
     {
-        private EventListener appListener;
+        private EventListener appListener, errorListener;
 
         /// <summary>
         /// Initializes the singleton Application object.  This is the first line of authored code
@@ -40,6 +40,8 @@
             {
                 appListener = new LogEventListener();
                 appListener.EnableEvents(LogEventSource.Log, EventLevel.Verbose);
+                errorListener = new LogEventListener("Errors");
+                errorListener.EnableEvents(LogEventSource.Log, EventLevel.Error);
                 LogEventSource.Log.Info("App initialized.");
             }
 

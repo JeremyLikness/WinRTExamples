@@ -28,6 +28,7 @@ namespace LoggingExample
     {
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
+        private Random random = new Random();
 
         /// <summary>
         /// NavigationHelper is used on each page to aid in navigation and 
@@ -86,6 +87,10 @@ namespace LoggingExample
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             navigationHelper.OnNavigatedTo(e);
+            if (random.NextDouble() < 0.3)
+            {
+                throw new Exception("This is a simulated exception event.");
+            }
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
