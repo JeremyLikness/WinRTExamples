@@ -99,7 +99,7 @@ namespace RestServiceExample.DataModel
                                       Id = id,
                                       Title = productJson["Name"].GetString(),
                                       Description = productJson["Description"].GetString(),
-                                      Price = double.Parse(productJson["Price"].GetString()),
+                                      Price = double.Parse(productJson["Price"].GetNumber().ToString()),
                                       Rating = (int)productJson["Rating"].GetNumber(),
                                       Location = new Uri(productUri, UriKind.Absolute)
                                   };
