@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
-  <Identity Name="a97c55ce-b023-42ff-af37-5ec350a7cad1" Publisher="CN=John" Version="1.0.0.0" />
+  <Identity Name="887b78db-015f-47ad-b794-aea958bc0ae4" Publisher="CN=John" Version="1.0.0.0" />
   <Properties>
-    <DisplayName>MultimediaExample</DisplayName>
+    <DisplayName>PackageAndDeployExample</DisplayName>
     <PublisherDisplayName>John</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -14,9 +14,9 @@
     <Resource Language="x-generate" />
   </Resources>
   <Applications>
-    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="MultimediaExample.App">
-      <m2:VisualElements DisplayName="Multimedia Example" Square150x150Logo="Assets\Logo.png" Square30x30Logo="Assets\SmallLogo.png" Description="Example that illustrates working with the multimedia APIs from WIndows Store Apps" ForegroundText="light" BackgroundColor="#464646">
-        <m2:DefaultTile ShortName="16 - Multimedia Example">
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="PackageAndDeployExample.App">
+      <m2:VisualElements DisplayName="Package and Deploy Example" Square150x150Logo="Assets\Logo.png" Square30x30Logo="Assets\SmallLogo.png" Description="Example that illustrates working with packaging and deployment features of Windows Store Apps" ForegroundText="light" BackgroundColor="#464646">
+        <m2:DefaultTile ShortName="19 - Packaging and Deployment Example">
           <m2:ShowNameOnTiles>
             <m2:ShowOn Tile="square150x150Logo" />
           </m2:ShowNameOnTiles>
@@ -31,7 +31,5 @@
   </Applications>
   <Capabilities>
     <Capability Name="internetClient" />
-    <DeviceCapability Name="webcam" />
-    <DeviceCapability Name="microphone" />
   </Capabilities>
 </Package>
