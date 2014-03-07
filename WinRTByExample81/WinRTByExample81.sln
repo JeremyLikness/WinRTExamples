@@ -212,9 +212,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoggingHelper", "LoggingHel
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoggingExample", "LoggingExample\LoggingExample.csproj", "{AB899BC5-BA01-4141-9CF7-8373E5B76BEF}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter19", "Chapter19", "{A5F5BF1F-45D9-4444-BB0A-FBA5713D0A14}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PackageAndDeployExample", "PackageAndDeployExample\PackageAndDeployExample.csproj", "{D0689D66-F329-44F0-9F89-ED90900639C8}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 81
+		SccNumberOfProjects = 82
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs04
 		SccLocalPath0 = .
@@ -538,6 +542,10 @@ Global
 		SccProjectTopLevelParentUniqueName80 = WinRTByExample81.sln
 		SccProjectName80 = LoggingExample
 		SccLocalPath80 = LoggingExample
+		SccProjectUniqueName81 = PackageAndDeployExample\\PackageAndDeployExample.csproj
+		SccProjectTopLevelParentUniqueName81 = WinRTByExample81.sln
+		SccProjectName81 = PackageAndDeployExample
+		SccLocalPath81 = PackageAndDeployExample
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -3150,6 +3158,42 @@ Global
 		{AB899BC5-BA01-4141-9CF7-8373E5B76BEF}.Release|x86.ActiveCfg = Release|x86
 		{AB899BC5-BA01-4141-9CF7-8373E5B76BEF}.Release|x86.Build.0 = Release|x86
 		{AB899BC5-BA01-4141-9CF7-8373E5B76BEF}.Release|x86.Deploy.0 = Release|x86
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Debug|ARM.ActiveCfg = Debug|ARM
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Debug|ARM.Build.0 = Debug|ARM
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Debug|ARM.Deploy.0 = Debug|ARM
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Debug|Mixed Platforms.Deploy.0 = Debug|x86
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Debug|Win32.ActiveCfg = Debug|x86
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Debug|Win32.Build.0 = Debug|x86
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Debug|Win32.Deploy.0 = Debug|x86
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Debug|x64.ActiveCfg = Debug|x64
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Debug|x64.Build.0 = Debug|x64
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Debug|x64.Deploy.0 = Debug|x64
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Debug|x86.ActiveCfg = Debug|x86
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Debug|x86.Build.0 = Debug|x86
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Debug|x86.Deploy.0 = Debug|x86
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Release|ARM.ActiveCfg = Release|ARM
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Release|ARM.Build.0 = Release|ARM
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Release|ARM.Deploy.0 = Release|ARM
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Release|Mixed Platforms.Build.0 = Release|x86
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Release|Mixed Platforms.Deploy.0 = Release|x86
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Release|Win32.ActiveCfg = Release|x86
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Release|Win32.Build.0 = Release|x86
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Release|Win32.Deploy.0 = Release|x86
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Release|x64.ActiveCfg = Release|x64
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Release|x64.Build.0 = Release|x64
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Release|x64.Deploy.0 = Release|x64
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Release|x86.ActiveCfg = Release|x86
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Release|x86.Build.0 = Release|x86
+		{D0689D66-F329-44F0-9F89-ED90900639C8}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -3235,5 +3279,6 @@ Global
 		{4CB95DBF-B918-40D0-A49B-1E0157A4D184} = {C49B4530-03A1-4F25-8B5F-422E8B74A2FE}
 		{6678AD9E-1578-4438-9269-3A61BEB7A022} = {C49B4530-03A1-4F25-8B5F-422E8B74A2FE}
 		{AB899BC5-BA01-4141-9CF7-8373E5B76BEF} = {C49B4530-03A1-4F25-8B5F-422E8B74A2FE}
+		{D0689D66-F329-44F0-9F89-ED90900639C8} = {A5F5BF1F-45D9-4444-BB0A-FBA5713D0A14}
 	EndGlobalSection
 EndGlobal

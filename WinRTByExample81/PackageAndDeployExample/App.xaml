@@ -1,0 +1,10 @@
+﻿<Application
+    x:Class="PackageAndDeployExample.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PackageAndDeployExample"
+    RequestedTheme="Light">
+    <Application.Resources>
+        <x:String x:Key="AppName">Packaging and Deployment</x:String>
+    </Application.Resources>
+</Application>
