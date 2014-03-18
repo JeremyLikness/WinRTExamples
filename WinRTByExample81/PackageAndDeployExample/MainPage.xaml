@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Name="pageRoot"
+    x:Name="PageRoot"
     x:Class="PackageAndDeployExample.MainPage"
     DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -8,9 +8,28 @@
     xmlns:common="using:PackageAndDeployExample.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=local:DeploymentViewModel}">
 
     <Page.Resources>
+        <common:BooleanToVisibilityConverter x:Key="IfTrueThenVisible" TrueValue="Visible"/>
+        <local:ProductListingSubProductsValueConverter x:Key="ProductListingSubProductsValueConverter"/>
+        <local:ProductLicenseLicensesValueConverter x:Key="ProductLicenseLicensesValueConverter"/>
+        <Style TargetType="Border" x:Key="BlockBorderStyle">
+            <Setter Property="BorderThickness" Value="{StaticResource FlyoutBorderThemeThickness}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource FlyoutBorderThemeBrush}"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+        <Style TargetType="TextBlock" BasedOn="{StaticResource BodyTextBlockStyle}">
+            <Setter Property="Margin" Value="3,0,5,10"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style x:Name="DetailsHeaderStyle" TargetType="TextBlock" BasedOn="{StaticResource BodyTextBlockStyle}">
+            <Setter Property="Margin" Value="3,0,5,10"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
     </Page.Resources>
 
     <!--
@@ -28,20 +47,147 @@
             <RowDefinition Height="140"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="0" Style="{StaticResource BlockBorderStyle}">
+                <Grid Width="320">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.Resources>
+                        <Style TargetType="Button">
+                            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                        </Style>
+                    </Grid.Resources>
+                    <Button Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Reset to Trial" Command="{Binding ResetToTrialCommand}"/>
+                    <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="Reset to Full" Command="{Binding ResetToFullCommand}"/>
+                    
+                    <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="In-App Purchase Items:"/>
+                    <ComboBox Grid.Row="3" Grid.Column="0" ItemsSource="{Binding ListingInformation, Converter={StaticResource ProductListingSubProductsValueConverter}}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedProductListing, Mode=TwoWay}"/>
+                    <Button Grid.Row="3" Grid.Column="1" Content="Purchase" Command="{Binding PurchaseInAppItemCommand}"/>
+                </Grid>
+            </Border>
+            <Border Grid.Column="1" Style="{StaticResource BlockBorderStyle}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Application Details:" Style="{StaticResource DetailsHeaderStyle}"/>
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="App ID:"/>
+                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding AppId}"/>
+
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Link:"/>
+                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding AppLink}"/>
+
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Name:"/>
+                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding ListingInformation.Name}"/>
+
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Description:"/>
+                    <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding ListingInformation.Description}"/>
+
+                    <TextBlock Grid.Row="5" Grid.Column="0" Text="Age Rating:"/>
+                    <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding ListingInformation.AgeRating}"/>
+
+                    <TextBlock Grid.Row="6" Grid.Column="0" Text="Market:"/>
+                    <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding ListingInformation.CurrentMarket}"/>
+
+                    <TextBlock Grid.Row="7" Grid.Column="0" Text="Formatted Price:"/>
+                    <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding ListingInformation.FormattedPrice}"/>
+
+                    <TextBlock Grid.Row="8" Grid.Column="0" Text="Product Listings:"/>
+                    <ListBox Grid.Row="8" Grid.Column="1" ItemsSource="{Binding ListingInformation, Converter={StaticResource ProductListingSubProductsValueConverter}}" Height="120">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Product Listing: " FontWeight="Bold"/>
+                                    <TextBlock Text=" ID: "/>
+                                    <TextBlock Text="{Binding ProductId}"/>
+                                    <TextBlock Text=" Name: "/>
+                                    <TextBlock Text="{Binding Name}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <TextBlock Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Text="License Details:" Style="{StaticResource DetailsHeaderStyle}"/>
+
+                    <TextBlock Grid.Row="10" Grid.Column="0" Text="Is Active:"/>
+                    <CheckBox Grid.Row="10" Grid.Column="1" IsChecked="{Binding LicenseInformation.IsActive}" IsEnabled="False"/>
+
+                    <TextBlock Grid.Row="11" Grid.Column="0" Text="Is Trial:"/>
+                    <StackPanel Grid.Row="11" Grid.Column="1" Orientation="Horizontal">
+                        <CheckBox IsChecked="{Binding LicenseInformation.IsTrial}" IsEnabled="False"/>
+
+                        <TextBlock Text="Trial Expiration:" Visibility="{Binding LicenseInformation.IsTrial, Converter={StaticResource IfTrueThenVisible}}"/>
+                        <TextBlock Text="{Binding LicenseInformation.ExpirationDate}" Visibility="{Binding LicenseInformation.IsTrial, Converter={StaticResource IfTrueThenVisible}}"/>
+
+                        <Button Content="Upgrade to Full" 
+                                IsEnabled="{Binding LicenseInformation.IsTrial}" 
+                                Command="{Binding UpgradeTrialCommand}"/>
+                    </StackPanel>
+
+                    <TextBlock Grid.Row="12" Grid.Column="0" Text="Product Licenses:"/>
+                    <ListBox Grid.Row="12" Grid.Column="1" ItemsSource="{Binding LicenseInformation, Converter={StaticResource ProductLicenseLicensesValueConverter}}" Height="120">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Product License: " FontWeight="Bold"/>
+                                    <TextBlock Text=" ID: "/>
+                                    <TextBlock Text="{Binding ProductId}"/>
+                                    <TextBlock Text=" Is Active: "/>
+                                    <TextBlock Text="{Binding IsActive}"/>
+                                    <TextBlock Text=" Expiration: "/>
+                                    <TextBlock Text="{Binding ExpirationDate}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                </Grid>
+            </Border>
+        </Grid>
 
         <!-- Back button and page title -->
-        <Grid>
+        <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="120"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="backButton" Margin="39,59,39,0" Command="{Binding NavigationHelper.GoBackCommand, ElementName=pageRoot}"
+            <Button x:Name="BackButton" Margin="39,59,39,0" Command="{Binding NavigationHelper.GoBackCommand, ElementName=PageRoot}"
                         Style="{StaticResource NavigationBackButtonNormalStyle}"
                         VerticalAlignment="Top"
                         AutomationProperties.Name="Back"
                         AutomationProperties.AutomationId="BackButton"
                         AutomationProperties.ItemType="Navigation Button"/>
-            <TextBlock x:Name="pageTitle" Text="{StaticResource AppName}" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
+            <TextBlock x:Name="PageTitle" Text="{StaticResource AppName}" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
                         IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,30,40"/>
         </Grid>
     </Grid>

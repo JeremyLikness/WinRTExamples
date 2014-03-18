@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+  <xs:element name="CurrentApp" type="CurrentAppDefinition"></xs:element>
+  <xs:complexType name="CurrentAppDefinition">
+    <xs:sequence>
+      <xs:element name="ListingInformation" type="ListingDefinition" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="LicenseInformation" type="LicenseDefinition" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Simulation" type="SimulationDefinition" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="ResponseCodes">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="S_OK">
+        <xs:annotation>
+          <xs:documentation>0x00000000</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="E_INVALIDARG">
+        <xs:annotation>
+          <xs:documentation>0x80070057</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="E_CANCELLED">
+        <xs:annotation>
+          <xs:documentation>0x800704C7</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="E_FAIL">
+        <xs:annotation>
+          <xs:documentation>0x80004005</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="E_OUTOFMEMORY">
+        <xs:annotation>
+          <xs:documentation>0x8007000E</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ERROR_ALREADY_EXISTS">
+        <xs:annotation>
+          <xs:documentation>0x800700B7</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="StoreMethodName">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="RequestAppPurchaseAsync_GetResult" id="RPPA" />
+      <xs:enumeration value="RequestProductPurchaseAsync_GetResult" id="RFPA" />
+      <xs:enumeration value="LoadListingInformationAsync_GetResult" id="LLIA" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="SimulationMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Interactive" />
+      <xs:enumeration value="Automatic" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="ListingDefinition">
+    <xs:sequence>
+      <xs:element name="App" type="AppListingDefinition" />
+      <xs:element name="Product" type="ProductListingDefinition" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="AppListingDefinition">
+    <xs:sequence>
+      <xs:element name="AppId" type="xs:string" minOccurs="1" maxOccurs="1" />
+      <xs:element name="LinkUri" type="xs:anyURI" minOccurs="1" maxOccurs="1" />
+      <xs:element name="CurrentMarket" type="xs:language" minOccurs="1" maxOccurs="1" />
+      <xs:element name="AgeRating" type="xs:unsignedInt" minOccurs="1" maxOccurs="1" />
+      <xs:element name="MarketData" type="MarketSpecificAppData" minOccurs="1" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="MarketSpecificAppData">
+    <xs:sequence>
+      <xs:element name="Name" type="xs:string" minOccurs="1" maxOccurs="1" />
+      <xs:element name="Description" type="xs:string" minOccurs="1" maxOccurs="1" />
+      <xs:element name="Price" type="xs:float" minOccurs="1" maxOccurs="1" />
+      <xs:element name="CurrencySymbol" type="xs:string" minOccurs="1" maxOccurs="1" />
+      <xs:element name="CurrencyCode" type="xs:string" minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+    <xs:attribute ref="xml:lang" use="required" />
+  </xs:complexType>
+  <xs:complexType name="MarketSpecificProductData">
+    <xs:sequence>
+      <xs:element name="Name" type="xs:string" minOccurs="1" maxOccurs="1" />
+      <xs:element name="Price" type="xs:float" minOccurs="1" maxOccurs="1" />
+      <xs:element name="CurrencySymbol" type="xs:string" minOccurs="1" maxOccurs="1" />
+      <xs:element name="CurrencyCode" type="xs:string" minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+    <xs:attribute ref="xml:lang" use="required" />
+  </xs:complexType>
+  <xs:complexType name="ProductListingDefinition">
+    <xs:sequence>
+      <xs:element name="MarketData" type="MarketSpecificProductData" minOccurs="1" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="ProductId" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="100"/>
+          <xs:pattern value="[^,]*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="LicenseDuration" type="xs:integer" use="optional" />
+  </xs:complexType>
+  <xs:complexType name="LicenseDefinition">
+    <xs:sequence>
+      <xs:element name="App" type="AppLicenseDefinition" />
+      <xs:element name="Product" type="ProductLicenseDefinition" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="AppLicenseDefinition">
+    <xs:sequence>
+      <xs:element name="IsActive" type="xs:boolean" minOccurs="1" maxOccurs="1" />
+      <xs:element name="IsTrial" type="xs:boolean" minOccurs="1" maxOccurs="1" />
+      <xs:element name="ExpirationDate" type="xs:dateTime" minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ProductLicenseDefinition">
+    <xs:sequence>
+      <xs:element name="IsActive" type="xs:boolean" minOccurs="1" maxOccurs="1" />
+      <xs:element name="ExpirationDate" type="xs:dateTime" minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+    <xs:attribute name="ProductId" type="xs:string" use="required" />
+  </xs:complexType>
+  <xs:complexType name="SimulationDefinition" >
+    <xs:sequence>
+      <xs:element name="DefaultResponse" type="DefaultResponseDefinition" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="SimulationMode" type="SimulationMode" use="optional" />
+  </xs:complexType>
+  <xs:complexType name="DefaultResponseDefinition">
+    <xs:attribute name="MethodName" type="StoreMethodName" use="required" />
+    <xs:attribute name="HResult" type="ResponseCodes" use="required" />
+  </xs:complexType>
+</xs:schema>
