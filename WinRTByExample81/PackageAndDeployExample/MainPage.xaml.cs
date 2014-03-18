@@ -12,14 +12,34 @@ namespace PackageAndDeployExample
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        #region Fields
 
         private readonly NavigationHelper _navigationHelper;
-        private readonly ObservableDictionary _defaultViewModel = new ObservableDictionary();
+        private readonly DeploymentViewModel _defaultViewModel = new DeploymentViewModel();
+
+        #endregion
+
+        #region Constructor(s) and Initialization
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MainPage"/> class.
+        /// </summary>
+        public MainPage()
+        {
+            InitializeComponent();
+
+            // Start out in Trial mode
+            DefaultViewModel.ResetToTrialCommand.Execute(null);
+
+            _navigationHelper = new NavigationHelper(this);
+            _navigationHelper.LoadState += navigationHelper_LoadState;
+            _navigationHelper.SaveState += navigationHelper_SaveState;
+        }
 
         /// <summary>
         /// This can be changed to a strongly typed view model.
         /// </summary>
-        public ObservableDictionary DefaultViewModel
+        public DeploymentViewModel DefaultViewModel
         {
             get { return _defaultViewModel; }
         }
@@ -31,15 +51,6 @@ namespace PackageAndDeployExample
         public NavigationHelper NavigationHelper
         {
             get { return _navigationHelper; }
-        }
-
-
-        public MainPage()
-        {
-            InitializeComponent();
-            _navigationHelper = new NavigationHelper(this);
-            _navigationHelper.LoadState += navigationHelper_LoadState;
-            _navigationHelper.SaveState += navigationHelper_SaveState;
         }
 
         /// <summary>
@@ -67,7 +78,9 @@ namespace PackageAndDeployExample
         /// serializable state.</param>
         private void navigationHelper_SaveState(object sender, SaveStateEventArgs e)
         {
-        }
+        } 
+
+        #endregion
 
         #region NavigationHelper registration
 
