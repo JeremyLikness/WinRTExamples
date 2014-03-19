@@ -80,14 +80,15 @@
                     <ComboBox Grid.Row="3" Grid.Column="0" ItemsSource="{Binding ListingInformation, Converter={StaticResource ProductListingSubProductsValueConverter}}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedProductListing, Mode=TwoWay}"/>
                     <Button Grid.Row="3" Grid.Column="1" Content="Purchase" Command="{Binding PurchaseInAppItemCommand}"/>
 
-                    <StackPanel Grid.Row="99" Grid.Column="0" Grid.ColumnSpan="2" Margin="10" Visibility="{Binding LicenseInformation.IsTrial, Converter={StaticResource IfTrueThenVisible}}">
+                    <StackPanel Grid.Row="99" Grid.Column="0" Grid.ColumnSpan="2" 
+                                Margin="10" 
+                                Visibility="{Binding LicenseInformation.IsTrial, Converter={StaticResource IfTrueThenVisible}}">
                         <TextBlock Text="Advertisement:" FontWeight="Bold"/>
                         <!-- Using test values for the ApplicationId, AdUnitId values -->
                         <!-- http://msdn.microsoft.com/en-us/library/advertising-windows-test-mode-values(v=msads.10).aspx -->
                         <ui:AdControl ApplicationId="d25517cb-12d4-4699-8bdc-52040c712cab" 
                                       AdUnitId="10043055" 
-                                      Width="300" Height="250" 
-                                      HorizontalAlignment="Center"/>
+                                      Width="300" Height="250"/>
                     </StackPanel>
                 </Grid>
             </Border>
