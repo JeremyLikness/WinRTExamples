@@ -1,5 +1,8 @@
 ﻿namespace LoggingExample
 {
+    using Windows.Foundation.Diagnostics;
+    using Windows.Storage;
+
     using LoggingExample.Common;
     using LoggingHelper;
     using System;
@@ -16,6 +19,13 @@
     sealed partial class App
     {
         private EventListener appListener, errorListener;
+
+        private bool winRtLoggingEnabled = false;
+
+        private LoggingLevel winRtLogLevel;
+
+        private LoggingSession session;
+        private LoggingChannel channel;
 
         /// <summary>
         /// Initializes the singleton Application object.  This is the first line of authored code
@@ -43,6 +53,16 @@
                 errorListener = new LogEventListener("Errors");
                 errorListener.EnableEvents(LogEventSource.Log, EventLevel.Error);
                 LogEventSource.Log.Info("App initialized.");
+
+                // winRT approach
+                channel = new LoggingChannel("WinRTChannel");
+                channel.LoggingEnabled += (o, args) =>
+                    {
+                        this.winRtLoggingEnabled = o.Enabled;
+                        this.winRtLogLevel = o.Level;
+                    };
+                session = new LoggingSession("WinRTSession");
+                session.AddLoggingChannel(channel);
             }
 
             // Do not repeat app initialization when the Window already has content,
@@ -64,12 +84,16 @@
                     // Restore the saved session state only when appropriate
                     try
                     {
-                        LogEventSource.Log.Info("Restoring saved session state.");
+                        const string Message = "Restoring saved session state.";
+                        LogEventSource.Log.Info(Message);
+                        channel.LogMessage(Message, LoggingLevel.Information);
                         await SuspensionManager.RestoreAsync();
                     }
                     catch (SuspensionManagerException ex)
                     {
-                        LogEventSource.Log.Error(string.Format("Error restoring saved session state: {0}", ex.Message));
+                        var message = string.Format("Error restoring saved session state: {0}", ex.Message);
+                        LogEventSource.Log.Error(message);
+                        channel.LogMessage(message, LoggingLevel.Error);
                         //Something went wrong restoring state.
                         //Assume there is no state and continue
                     }
@@ -87,7 +111,9 @@
             }
             // Ensure the current window is active
             Window.Current.Activate();
-            LogEventSource.Log.Info("Window activated.");
+            const string Msg = "Window activated."; 
+            LogEventSource.Log.Info(Msg);
+            channel.LogMessage(Msg, LoggingLevel.Information);            
         }
 
         /// <summary>
@@ -95,9 +121,13 @@
         /// </summary>
         /// <param name="sender">The Frame which failed navigation</param>
         /// <param name="e">Details about the navigation failure</param>
-        void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
+        async void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
-            LogEventSource.Log.Critical(string.Format("Failed to navigate to page: {0}", e.SourcePageType.FullName));
+            var message = string.Format("Failed to navigate to page: {0}", e.SourcePageType.FullName);
+            LogEventSource.Log.Critical(message);
+            channel.LogMessage(message, LoggingLevel.Critical);
+            var file =
+                await session.SaveToFileAsync(ApplicationData.Current.TemporaryFolder, "log_" + DateTime.Now.Ticks);
             throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
         }
 
@@ -110,7 +140,9 @@
         /// <param name="e">Details about the suspend request.</param>
         private async void OnSuspending(object sender, SuspendingEventArgs e)
         {
-            LogEventSource.Log.Info("Suspending app.");
+            const string SuspendMsg = "Suspending app.";
+            LogEventSource.Log.Info(SuspendMsg);
+            channel.LogMessage(SuspendMsg, LoggingLevel.Information);
             var deferral = e.SuspendingOperation.GetDeferral();
             await SuspensionManager.SaveAsync();
             deferral.Complete();
