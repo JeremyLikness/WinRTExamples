@@ -87,7 +87,7 @@ namespace LoggingExample
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             navigationHelper.OnNavigatedTo(e);
-            if (random.NextDouble() < 0.2)
+            if (random.NextDouble() < 0.4)
             {
                 throw new Exception("This is a simulated exception event.");
             }
