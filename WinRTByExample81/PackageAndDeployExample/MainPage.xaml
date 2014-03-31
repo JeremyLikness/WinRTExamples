@@ -48,7 +48,7 @@
             <RowDefinition Height="140"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        
+
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -75,7 +75,7 @@
                     </Grid.Resources>
                     <Button Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Reset to Trial" Command="{Binding ResetToTrialCommand}"/>
                     <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="Reset to Full" Command="{Binding ResetToFullCommand}"/>
-                    
+
                     <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="In-App Purchase Items:"/>
                     <ComboBox Grid.Row="3" Grid.Column="0" ItemsSource="{Binding ListingInformation, Converter={StaticResource ProductListingSubProductsValueConverter}}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedProductListing, Mode=TwoWay}"/>
                     <Button Grid.Row="3" Grid.Column="1" Content="Purchase" Command="{Binding PurchaseInAppItemCommand}"/>
@@ -93,101 +93,107 @@
                 </Grid>
             </Border>
             <Border Grid.Column="1" Style="{StaticResource BlockBorderStyle}">
-                <ScrollViewer>
-                    <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+                <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Application Details:" Style="{StaticResource DetailsHeaderStyle}"/>
+                    <ScrollViewer Grid.Row="0" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="509*"/>
+                                <ColumnDefinition Width="376*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="Application Details:" Style="{StaticResource DetailsHeaderStyle}"/>
 
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="App ID:"/>
-                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding AppId}"/>
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="App ID:"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding AppId}" Grid.ColumnSpan="2"/>
 
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Link:"/>
-                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding AppLink}"/>
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Link:"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding AppLink}" Grid.ColumnSpan="2"/>
 
-                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Name:"/>
-                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding ListingInformation.Name}"/>
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Name:"/>
+                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding ListingInformation.Name}" Grid.ColumnSpan="2"/>
 
-                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Description:"/>
-                    <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding ListingInformation.Description}"/>
+                            <TextBlock Grid.Row="4" Grid.Column="0" Text="Description:"/>
+                            <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding ListingInformation.Description}" Grid.ColumnSpan="2"/>
 
-                    <TextBlock Grid.Row="5" Grid.Column="0" Text="Age Rating:"/>
-                    <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding ListingInformation.AgeRating}"/>
+                            <TextBlock Grid.Row="5" Grid.Column="0" Text="Age Rating:"/>
+                            <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding ListingInformation.AgeRating}" Grid.ColumnSpan="2"/>
 
-                    <TextBlock Grid.Row="6" Grid.Column="0" Text="Market:"/>
-                    <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding ListingInformation.CurrentMarket}"/>
+                            <TextBlock Grid.Row="6" Grid.Column="0" Text="Market:"/>
+                            <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding ListingInformation.CurrentMarket}" Grid.ColumnSpan="2"/>
 
-                    <TextBlock Grid.Row="7" Grid.Column="0" Text="Formatted Price:"/>
-                    <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding ListingInformation.FormattedPrice}"/>
+                            <TextBlock Grid.Row="7" Grid.Column="0" Text="Formatted Price:"/>
+                            <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding ListingInformation.FormattedPrice}" Grid.ColumnSpan="2"/>
 
-                    <TextBlock Grid.Row="8" Grid.Column="0" Text="Product Listings:"/>
-                    <ListBox Grid.Row="8" Grid.Column="1" ItemsSource="{Binding ListingInformation, Converter={StaticResource ProductListingSubProductsValueConverter}}" Height="80">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="Product Listing: " FontWeight="Bold"/>
-                                    <TextBlock Text=" ID: "/>
-                                    <TextBlock Text="{Binding ProductId}"/>
-                                    <TextBlock Text=" Name: "/>
-                                    <TextBlock Text="{Binding Name}"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                            <TextBlock Grid.Row="8" Grid.Column="0" Text="Product Listings:" Margin="3,25,5,35"/>
+                            <ListBox Grid.Row="8" Grid.Column="1" ItemsSource="{Binding ListingInformation, Converter={StaticResource ProductListingSubProductsValueConverter}}" Height="80" Grid.ColumnSpan="2">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="Product Listing: " FontWeight="Bold"/>
+                                            <TextBlock Text=" ID: "/>
+                                            <TextBlock Text="{Binding ProductId}"/>
+                                            <TextBlock Text=" Name: "/>
+                                            <TextBlock Text="{Binding Name}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
 
-                    <TextBlock Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Text="License Details:" Style="{StaticResource DetailsHeaderStyle}"/>
+                            <TextBlock Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="3" Text="License Details:" Style="{StaticResource DetailsHeaderStyle}"/>
 
-                    <TextBlock Grid.Row="10" Grid.Column="0" Text="Is Active:"/>
-                    <CheckBox Grid.Row="10" Grid.Column="1" IsChecked="{Binding LicenseInformation.IsActive}" IsEnabled="False"/>
+                            <TextBlock Grid.Row="10" Grid.Column="0" Text="Is Active:"/>
+                            <CheckBox Grid.Row="10" Grid.Column="1" IsChecked="{Binding LicenseInformation.IsActive}" IsEnabled="False" Grid.ColumnSpan="2" Margin="0,2,0,1"/>
 
-                    <TextBlock Grid.Row="11" Grid.Column="0" Text="Is Trial:"/>
-                    <StackPanel Grid.Row="11" Grid.Column="1" Orientation="Horizontal">
-                        <CheckBox IsChecked="{Binding LicenseInformation.IsTrial}" IsEnabled="False"/>
+                            <TextBlock Grid.Row="11" Grid.Column="0" Text="Is Trial:" Margin="3,2,5,12"/>
+                            <StackPanel Grid.Row="11" Grid.Column="1" Orientation="Horizontal" Grid.ColumnSpan="2">
+                                <CheckBox IsChecked="{Binding LicenseInformation.IsTrial}" IsEnabled="False"/>
 
-                        <TextBlock Text="Trial Expiration:" Visibility="{Binding LicenseInformation.IsTrial, Converter={StaticResource IfTrueThenVisible}}"/>
-                        <TextBlock Text="{Binding LicenseInformation.ExpirationDate}" Visibility="{Binding LicenseInformation.IsTrial, Converter={StaticResource IfTrueThenVisible}}"/>
+                                <TextBlock Text="Trial Expiration:" Visibility="{Binding LicenseInformation.IsTrial, Converter={StaticResource IfTrueThenVisible}}"/>
+                                <TextBlock Text="{Binding LicenseInformation.ExpirationDate}" Visibility="{Binding LicenseInformation.IsTrial, Converter={StaticResource IfTrueThenVisible}}"/>
 
-                        <Button Content="Upgrade to Full" 
+                                <Button Content="Upgrade to Full" 
                                 IsEnabled="{Binding LicenseInformation.IsTrial}" 
                                 Command="{Binding UpgradeTrialCommand}"/>
-                    </StackPanel>
+                            </StackPanel>
 
-                    <TextBlock Grid.Row="12" Grid.Column="0" Text="Product Licenses:"/>
-                    <ListBox Grid.Row="12" Grid.Column="1" ItemsSource="{Binding LicenseInformation, Converter={StaticResource ProductLicenseLicensesValueConverter}}" Height="80">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="Product License: " FontWeight="Bold"/>
-                                    <TextBlock Text=" ID: "/>
-                                    <TextBlock Text="{Binding ProductId}"/>
-                                    <TextBlock Text=" Is Active: "/>
-                                    <TextBlock Text="{Binding IsActive}"/>
-                                    <TextBlock Text=" Expiration: "/>
-                                    <TextBlock Text="{Binding ExpirationDate}"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                    <StackPanel Grid.Row="99" Grid.Column="0" Grid.ColumnSpan="2" Visibility="{Binding LicenseInformation.IsTrial, Converter={StaticResource IfTrueThenVisible}}">
+                            <TextBlock Grid.Row="12" Grid.Column="0" Text="Product Licenses:" Margin="3,25,5,35"/>
+                            <ListBox Grid.Row="12" Grid.Column="1" ItemsSource="{Binding LicenseInformation, Converter={StaticResource ProductLicenseLicensesValueConverter}}" Height="80" Grid.ColumnSpan="2">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="Product License: " FontWeight="Bold"/>
+                                            <TextBlock Text=" ID: "/>
+                                            <TextBlock Text="{Binding ProductId}"/>
+                                            <TextBlock Text=" Is Active: "/>
+                                            <TextBlock Text="{Binding IsActive}"/>
+                                            <TextBlock Text=" Expiration: "/>
+                                            <TextBlock Text="{Binding ExpirationDate}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Grid>
+                    </ScrollViewer>
+                    <StackPanel Grid.Row="1" Visibility="{Binding LicenseInformation.IsTrial, Converter={StaticResource IfTrueThenVisible}}">
                         <TextBlock Text="Advertisement:" Style="{StaticResource DetailsHeaderStyle}"/>
                         <!-- Using test values for the ApplicationId, AdUnitId values -->
                         <!-- http://msdn.microsoft.com/en-us/library/advertising-windows-test-mode-values(v=msads.10).aspx -->
@@ -198,7 +204,6 @@
                                       Margin="0,10,0,0"/>
                     </StackPanel>
                 </Grid>
-                </ScrollViewer>
             </Border>
         </Grid>
 
