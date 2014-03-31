@@ -93,7 +93,8 @@
                 </Grid>
             </Border>
             <Border Grid.Column="1" Style="{StaticResource BlockBorderStyle}">
-                <Grid>
+                <ScrollViewer>
+                    <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
@@ -197,6 +198,7 @@
                                       Margin="0,10,0,0"/>
                     </StackPanel>
                 </Grid>
+                </ScrollViewer>
             </Border>
         </Grid>
 
