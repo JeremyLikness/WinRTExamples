@@ -81,7 +81,7 @@ namespace MultimediaExample
         /// </summary>
         public void Pause()
         {
-            if (CanPause()) _mediaElement.Pause();
+            if (_mediaElement.CanPause) _mediaElement.Pause();
         }
 
         /// <summary>
@@ -120,9 +120,6 @@ namespace MultimediaExample
         {
             //PlaybackWindow.SeekCompleted
 
-            // Make sure that seek is an option
-            if (!_mediaElement.CanSeek) return;
-
             // Pause any current playback
             Pause();
 
@@ -138,8 +135,6 @@ namespace MultimediaExample
         /// <param name="seekPosition">The seek position.</param>
         public void Seek(TimeSpan seekPosition)
         {
-            if (!_mediaElement.CanSeek) return;
-
             // Pause any current playback
             Pause();
 
@@ -205,6 +200,9 @@ namespace MultimediaExample
 
         private void SetPosition(TimeSpan position)
         {
+            // Make sure that seek is an option
+            if (!_mediaElement.CanSeek) return;
+
             // Make sure the new position is "in bounds"
             if (position < TimeSpan.FromMilliseconds(0))
             {

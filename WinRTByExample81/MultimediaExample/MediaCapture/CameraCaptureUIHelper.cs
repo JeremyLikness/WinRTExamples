@@ -9,7 +9,8 @@ namespace MultimediaExample
 {
     public static class CameraCaptureUIHelper
     {
-        public static async Task<IStorageFile> CaptureAsync(CameraCaptureUIMode captureMode)
+        public static async Task<IStorageFile> CaptureAsync
+            (CameraCaptureUIMode captureMode)
         {
             var cameraUI = new CameraCaptureUI();
             var capturedMedia = await cameraUI.CaptureFileAsync(captureMode);
